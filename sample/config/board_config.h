@@ -11,10 +11,10 @@
 **************************************************/
 /* General debug enable */
 #define GENERAL_DEBUG 					  1										//enable or disable app flow debug
-#define SD_LOG        					  1										//enable or disable SD card error logging
+#define SD_LOG        					  0										//enable or disable SD card error logging
 
 /* GPIOS */
-#define APP_GPIOTE_MAX_USERS              4										// Maximum number of users of the GPIOTE handler. Battery, base timer, watchdog and SD
+#define APP_GPIOTE_MAX_USERS              5										// Maximum number of users of the GPIOTE handler. Battery, base timer, watchdog and SD
 
 /* TIMERS */
 #define APP_TIMER_PRESCALER               2                                     // Value of the RTC1 PRESCALER register. 92us resolution
@@ -29,24 +29,24 @@
 #define IS_SRVC_CHANGED_CHARACT_PRESENT   0                                     // Include or not the service_changed characteristic.
 
 #ifdef BORON
-#define DEVICE_NAME                       "SETEC-15/16"							// Name of device. Will be included in the advertising data.
+#define DEVICE_NAME                       "Nordic_UART"							// Name of device. Will be included in the advertising data.
 #endif
 
 #define MANUFACTURER_NAME                 "FhP-AICOS"							// Manufacturer. Will be passed to Device Information Service.
 #define APPEARANCE                        0		         					      // Appearance. Used for whatever is needed. Random value for now.
 
-#define APP_ADV_INTERVAL                  160                                     // The advertising interval (in units of 0.625 ms)
-#define APP_ADV_TIMEOUT_IN_SECONDS        0                                          // The advertising timeout in units of seconds.
+#define APP_ADV_INTERVAL                  64                                     // The advertising interval (in units of 0.625 ms)
+#define APP_ADV_TIMEOUT_IN_SECONDS        180                                          // The advertising timeout in units of seconds.
 #define ADV_BTN_TIME       				  APP_TIMER_TICKS(2000, APP_TIMER_PRESCALER)  // Time that the button needs to be pressed before starting advertising in ticks (2s)
 
 #define MIN_CONN_INTERVAL                 100                                     // Minimum acceptable connection interval (ms).
 #define MAX_CONN_INTERVAL                 200                                     // Maximum acceptable connection interval (ms).
-#define SLAVE_LATENCY                     0                                       // Slave latency. Number of connection periods that the slave can ignore.
-#define CONN_SUP_TIMEOUT                  2000                                    // Connection supervisory timeout (2 second). Time to consider the connection as lost. (ms)
+#define SLAVE_LATENCY                     5                                       // Slave latency. Number of connection periods that the slave can ignore.
+#define CONN_SUP_TIMEOUT                  4000                                    // Connection supervisory timeout (2 second). Time to consider the connection as lost. (ms)
 
 #define FIRST_CONN_PARAMS_UPDATE_DELAY    APP_TIMER_TICKS(5000, APP_TIMER_PRESCALER)   // Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (5 second).
 #define NEXT_CONN_PARAMS_UPDATE_DELAY     APP_TIMER_TICKS(30000, APP_TIMER_PRESCALER)  // Time between each call to sd_ble_gap_conn_param_update after the first (30 seconds).
-#define MAX_CONN_PARAMS_UPDATE_COUNT      5                                       // Number of attempts before giving up the connection parameter negotiation.
+#define MAX_CONN_PARAMS_UPDATE_COUNT      3                                       // Number of attempts before giving up the connection parameter negotiation.
 
 #define SEC_PARAM_TIMEOUT                 30                                      // Timeout for Pairing Request or Security Request (in seconds).
 #define SEC_PARAM_BOND                    1                                       // Perform bonding.

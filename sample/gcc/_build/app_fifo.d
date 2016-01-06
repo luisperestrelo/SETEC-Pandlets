@@ -1,0 +1,27 @@
+_build/app_fifo.o: \
+ /home/misterjunio/Documents/SETEC/nrf51822/Source/app_common/app_fifo.c \
+ /home/misterjunio/Documents/SETEC/nrf51822/Include/app_common/app_fifo.h \
+ /gcc-arm-none-eabi-4_9-2015q3/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/stdint.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/machine/_default_types.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/features.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/_intsup.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/_stdint.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/stdlib.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/machine/ieeefp.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/_ansi.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/newlib.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/config.h \
+ /gcc-arm-none-eabi-4_9-2015q3/lib/gcc/arm-none-eabi/4.9.3/include/stddef.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/reent.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/_ansi.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/_types.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/machine/_types.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/lock.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/cdefs.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/machine/stdlib.h \
+ /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/alloca.h \
+ /home/misterjunio/Documents/SETEC/S110/s110_nrf51822_7.3.0_API/include/nrf_error.h \
+ /home/misterjunio/Documents/SETEC/nrf51822/Include/app_common/app_util.h \
+ /gcc-arm-none-eabi-4_9-2015q3/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h \
+ /home/misterjunio/Documents/SETEC/nrf51822/Include/compiler_abstraction.h

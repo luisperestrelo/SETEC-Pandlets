@@ -116,7 +116,6 @@ ble_ambient_t                           m_amb;										    // Ambient Service s
  */
 void gpio_init(void);
 
-int log2sd(char* message, char *filename);
 
 /**@brief Function for the LEDs initialization.
  *

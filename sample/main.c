@@ -5,10 +5,72 @@
  */
 
 #include "init.h"
+#include <stdint.h>
+#include <string.h>
+#include "nordic_common.h"
+#include "nrf.h"
+#include "nrf51_bitfields.h"
+#include "ble_hci.h"
+#include "ble_advdata.h"
+#include "ble_conn_params.h"
+#include "softdevice_handler.h"
+#include "app_timer.h"
+#include "app_button.h"
+#include "ble_nus.h"
+#include "app_uart.h"
+#include "uart_conf.h"
+#include "boards.h"
+#include "ble_error_log.h"
+#include "ble_debug_assert_handler.h"
+#include "app_util_platform.h"
 
-#define DEAD_BEEF                       0xDEADBEEF                                  // Value used as error code on stack dump, can be used to identify stack location on stack unwind.
+#define IS_SRVC_CHANGED_CHARACT_PRESENT 0                                           /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
 
-static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    // Handle of the current connection.
+#define WAKEUP_BUTTON_PIN               BUTTON_0                                    /**< Button used to wake up the application. */
+
+#define ADVERTISING_LED_PIN_NO          LED_0                                       /**< LED to indicate advertising state. */
+#define CONNECTED_LED_PIN_NO            LED_1                                       /**< LED to indicate connected state. */
+
+//#define DEVICE_NAME                     "Nordic_UART"                               /**< Name of device. Will be included in the advertising data. */
+
+//#define APP_ADV_INTERVAL                64                                          /**< The advertising interval (in units of 0.625 ms. This value corresponds to 40 ms). */
+//#define APP_ADV_TIMEOUT_IN_SECONDS      180                                         /**< The advertising timeout (in units of seconds). */
+
+//#define APP_TIMER_PRESCALER             0                                           /**< Value of the RTC1 PRESCALER register. */
+//#define APP_TIMER_MAX_TIMERS            2                                           /**< Maximum number of simultaneously created timers. */
+//#define APP_TIMER_OP_QUEUE_SIZE         4                                           /**< Size of timer operation queues. */
+
+//#define MIN_CONN_INTERVAL               7.5                                          /**< Minimum acceptable connection interval (20 ms), Connection interval uses 1.25 ms units. */
+//#define MAX_CONN_INTERVAL               60                                          /**< Maximum acceptable connection interval (75 ms), Connection interval uses 1.25 ms units. */
+//#define SLAVE_LATENCY                   0                                           /**< slave latency. */
+//#define CONN_SUP_TIMEOUT                400                                         /**< Connection supervisory timeout (4 seconds), Supervision Timeout uses 10 ms units. */
+#define FIRST_CONN_PARAMS_UPDATE_DELAY  APP_TIMER_TICKS(5000, APP_TIMER_PRESCALER)  /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (5 seconds). */
+#define NEXT_CONN_PARAMS_UPDATE_DELAY   APP_TIMER_TICKS(30000, APP_TIMER_PRESCALER) /**< Time between each call to sd_ble_gap_conn_param_update after the first call (30 seconds). */
+//#define MAX_CONN_PARAMS_UPDATE_COUNT    3                                           /**< Number of attempts before giving up the connection parameter negotiation. */
+
+#define BUTTON_DETECTION_DELAY          APP_TIMER_TICKS(50, APP_TIMER_PRESCALER)    /**< Delay from a GPIOTE event until a button is reported as pushed (in number of timer ticks). */
+
+#define SEC_PARAM_TIMEOUT               30                                          /**< Timeout for Pairing Request or Security Request (in seconds). */
+#define SEC_PARAM_BOND                  1                                           /**< Perform bonding. */
+#define SEC_PARAM_MITM                  0                                           /**< Man In The Middle protection not required. */
+#define SEC_PARAM_IO_CAPABILITIES       BLE_GAP_IO_CAPS_NONE                        /**< No I/O capabilities. */
+#define SEC_PARAM_OOB                   0                                           /**< Out Of Band data not available. */
+#define SEC_PARAM_MIN_KEY_SIZE          7                                           /**< Minimum encryption key size. */
+#define SEC_PARAM_MAX_KEY_SIZE          16                                          /**< Maximum encryption key size. */
+
+#define START_STRING                    "Start...\n"                                /**< The string that will be sent over the UART when the application starts. */
+
+#define DEAD_BEEF                       0xDEADBEEF                                  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
+
+//#define APP_GPIOTE_MAX_USERS            1
+
+static ble_gap_sec_params_t             m_sec_params;                               /**< Security requirements for this application. */
+static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    /**< Handle of the current connection. */
+static ble_nus_t                        m_nus;                                      /**< Structure to identify the Nordic UART Service. */
+
+static bool ble_buffer_available = true;
+static bool tx_complete = false;
+
 
 /**@brief Function for error handling, which is called when an error has occurred. 
  *
@@ -362,6 +424,151 @@ static void power_manage(void){
     APP_ERROR_CHECK(err_code);
 }
 
+/**@brief    Function for handling the data from the Nordic UART Service.
+ *
+ * @details  This function will process the data received from the Nordic UART BLE Service and send
+ *           it to the UART module.
+ */
+/**@snippet [Handling the data received over BLE] */
+void nus_data_handler(ble_nus_t * p_nus, uint8_t * p_data, uint16_t length)
+{
+    for (int i = 0; i < length; i++)
+    {
+        app_uart_put(p_data[i]);
+    }
+    app_uart_put('\n');
+}
+/**@brief Function for initializing services that will be used by the application.
+ */
+static void service_uart_init(void)
+{
+    uint32_t         err_code;
+    ble_nus_init_t   nus_init;
+    
+    memset(&nus_init, 0, sizeof(nus_init));
+
+    nus_init.data_handler = nus_data_handler;
+    
+    err_code = ble_nus_init(&m_nus, &nus_init);
+    APP_ERROR_CHECK(err_code);
+}
+
+/**@brief Function for initializing security parameters.
+ */
+static void sec_params_init(void)
+{
+    m_sec_params.timeout      = SEC_PARAM_TIMEOUT;
+    m_sec_params.bond         = SEC_PARAM_BOND;
+    m_sec_params.mitm         = SEC_PARAM_MITM;
+    m_sec_params.io_caps      = SEC_PARAM_IO_CAPABILITIES;
+    m_sec_params.oob          = SEC_PARAM_OOB;  
+    m_sec_params.min_key_size = SEC_PARAM_MIN_KEY_SIZE;
+    m_sec_params.max_key_size = SEC_PARAM_MAX_KEY_SIZE;
+}
+
+
+/**@brief  Function for configuring the buttons.
+ */
+static void buttons_init(void)
+{
+    nrf_gpio_cfg_sense_input(WAKEUP_BUTTON_PIN,
+                             BUTTON_PULL, 
+                             NRF_GPIO_PIN_SENSE_LOW);    
+}
+
+void uart_putstring(const uint8_t * str)
+{
+    uint32_t err_code;
+    
+    uint8_t len = strlen((char *) str);
+    for (uint8_t i = 0; i < len; i++)
+    {
+        err_code = app_uart_put(str[i]);
+        APP_ERROR_CHECK(err_code);
+    }   
+}
+/**@brief   Function for handling UART interrupts.
+ *
+ * @details This function will receive a single character from the UART and append it to a string.
+ *          The string will be be sent over BLE when the last character received was a 'new line'
+ *          i.e '\n' (hex 0x0D) or if the string has reached a length of @ref NUS_MAX_DATA_LENGTH.
+ */
+
+void uart_evt_callback(app_uart_evt_t * uart_evt)
+{
+    //uint32_t err_code;
+    
+    printf("Callback CONAAAAAAAÇAAAAA\n");
+	
+    switch (uart_evt->evt_type)
+    {
+        case APP_UART_DATA:	
+						//Data is ready on the UART
+						
+                printf("Recebi CONAAAAAAA\n");
+            break;
+						
+		case APP_UART_DATA_READY:
+            //Data is ready on the UART FIFO
+            
+                printf("Recebi CONAAAAAAA OUTRA VEEEEEZ\n");
+            break;
+						
+        case APP_UART_TX_EMPTY:
+			//Data has been successfully transmitted on the UART
+			
+                printf("Recebi CONAAAAAAAÇAAAAAA VELHAAAAAA\n");
+            break;
+						
+        default:
+            break;
+    }
+}
+/**@brief  Function for initializing the UART module.
+ */
+static void uart_init(void)
+{
+    uint32_t err_code;
+    
+    const app_uart_comm_params_t comm_params =
+	{
+	  RX_PIN_NUMBER,
+	  TX_PIN_NUMBER,
+	  RTS_PIN_NUMBER,
+	  CTS_PIN_NUMBER,
+	  APP_UART_FLOW_CONTROL_ENABLED,
+	  false,
+	  UART_BAUDRATE_BAUDRATE_Baud38400
+	};
+    
+    APP_UART_FIFO_INIT(&comm_params,
+                        RX_BUF_SIZE,
+                        TX_BUF_SIZE,
+                        uart_evt_callback,
+                        UART_IRQ_PRIORITY,
+                        err_code);
+    
+    APP_ERROR_CHECK(err_code);
+}
+bool ble_attempt_to_send(uint8_t * data, uint8_t length)
+{
+    uint32_t err_code;
+    
+    err_code = ble_nus_send_string(&m_nus, data,length);
+    
+    if(err_code == BLE_ERROR_NO_TX_BUFFERS)
+    {
+        /* ble tx buffer full*/
+        return false;
+    }                   
+    else if (err_code != NRF_ERROR_INVALID_STATE)
+	{
+        APP_ERROR_CHECK(err_code);   
+    }
+    
+    return true;   
+}
+
 
 /**@brief Function for initialization.
  */
@@ -408,6 +615,18 @@ static void setup(void){
 
 	sensors_init();
 	printf("sensors_init ok!\r\n");
+    
+    //buttons_init();
+	printf("buttons_init ok!\r\n");
+    
+    uart_init();
+	printf("uart_init ok!\r\n");
+    
+    service_uart_init();
+	printf("service_uart_init ok!\r\n");
+    
+    sec_params_init();
+	printf("sec_params_init ok!\r\n");
 
 	nrf_gpio_pin_clear(LED_RED);
 	nrf_gpio_pin_clear(LED_GREEN);
@@ -415,46 +634,52 @@ static void setup(void){
 	gauge_timer_handler(NULL); //Read battery right away!
 }
 
-int log2sd(char* message, char *filename){ // returns -1 if SD_LOG is disabled
- 
-#if SD_LOG == 1
-        char buffer[128];
-        sprintf(buffer, message);
- 
-        if(sd_card.fs_type == 0) { //SD card not mounted
-                //Mount the SD card
-                if(f_mount(&sd_card, "", 1) == 0){
-                printf("CHUPAINDE-ME!\n");
-                        log_to_sd(filename, buffer, strlen(buffer));
-                        f_mount(NULL, "", 1);
-                }
-        }
-        else { //SD card already mounted, someone is logging to it!
-                log_to_sd(filename, buffer, strlen(buffer));
-        }
-       
-        return 0;
-#endif /* SD_LOG */
- 
-        return -1;
-}
 
 /**@brief Function for application main entry.
  */
 int main(void){
+	
+	static uint8_t data_array[BLE_NUS_MAX_DATA_LEN];
+    static uint8_t index = 0;
+    uint8_t newbyte;
+	
     // Initialize
-    //printf("Chupa-ma gaita\n");
     setup();
+    
+    uart_putstring((const uint8_t *)START_STRING);
 
     // Start execution
     advertising_start();
 
-    log2sd("sua puta do caralho sua vaca de merda lava-me essa boca\n", "juju.txt");
-	
-
     // Enter main loop
     for (;;){
 		app_sched_execute();
+		
+		/*Stop reading new data if there are no ble buffers available */
+        if(ble_buffer_available)
+        {
+            if(app_uart_get(&newbyte) == NRF_SUCCESS)
+            {
+                data_array[index++] =  newbyte;
+                printf("Recebi cona CARAAAAALHO\n");
+               
+                if (index >= (BLE_NUS_MAX_DATA_LEN))
+				{
+                    ble_buffer_available=ble_attempt_to_send(&data_array[0],index);
+                 	if(ble_buffer_available) index=0;
+				}
+            }
+        }
+        /* Re-transmission if ble_buffer_available was set to false*/
+        if(tx_complete)
+        {
+            tx_complete=false;
+            printf("Recebi outra cona CARAAAAALHO\n");
+            
+            ble_buffer_available=ble_attempt_to_send(&data_array[0],index);
+            if(ble_buffer_available) index =0;
+        }
+        
         power_manage(); //go to sleep
     }
 }

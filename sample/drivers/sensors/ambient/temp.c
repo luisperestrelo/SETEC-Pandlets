@@ -53,7 +53,6 @@ uint32_t temp_configs_update(){
 uint32_t temp_values_handler() {
 	uint32_t  err_code = NRF_SUCCESS;
 	int32_t temp_buffer;
-	//char buffer[128];
 
 	err_code = bme280_read_temperature(&temp_buffer);
 
@@ -61,8 +60,7 @@ uint32_t temp_values_handler() {
 		temp_printf("temp: bme280_read_temperature() failed.\r\n");
 		return err_code;
 	}
-//	log2sd(sprintf(buffer, "%d", temp_buffer), "mdjunio.txt");
-	
+
 	temp_printf("Temperature: %d\n", (int)temp_buffer);
 	err_code = ble_ambient_sensor_update(m_temp.m_amb, (uint8_t *) &temp_buffer,
 	AMB_TEMP_MAX_PACKET_VALUE, BLE_AMBIENT_TEMP);

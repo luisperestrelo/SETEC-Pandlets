@@ -2,9 +2,9 @@ TARGET_CHIP := NRF51822_QFAA_CA
 BOARD := BOARD_PCA10001
 
 # Paths
-PROJ_PATH = /home/luis/Desktop/SETEC/sample/
-SDK_PATH = /home/luis/Desktop/SETEC/nrf51822/
-SOFTDEVICE = /home/luis/Desktop/SETEC/s110_nrf51822_7.3.0_softdevice.hex
+PROJ_PATH = /home/misterjunio/Documents/SETEC/project/
+SDK_PATH = /home/misterjunio/Documents/SETEC/nrf51822/
+SOFTDEVICE = /home/misterjunio/Documents/SETEC/S110/s110_nrf51822_7.3.0_softdevice.hex
 
 # Project Source files
 C_SOURCE_FILES := $(shell find $(PROJ_PATH) -name '*.c')
@@ -22,6 +22,9 @@ C_SOURCE_FILES += device_manager_peripheral.c
 C_SOURCE_FILES += app_gpiote.c
 C_SOURCE_FILES += nrf_delay.c
 C_SOURCE_FILES += app_scheduler.c
+
+C_SOURCE_FILES += app_fifo.c
+C_SOURCE_FILES += ble_debug_assert_handler.c
 
 OUTPUT_FILENAME := setec
 
@@ -43,7 +46,7 @@ LDFLAGS := -Wl,--gc-sections -DARM_MATH_CM0 -DFIXED_POINT -DFAST_AND_DIRTY -fno-
 LIBRARIES = -lm
 
 # SDK paths
-INCLUDEPATHS += -I"/home/luis/Desktop/SETEC/s110_nrf51822_7.3.0_API/include"
+INCLUDEPATHS += -I"/home/misterjunio/Documents/SETEC/S110/s110_nrf51822_7.3.0_API/include"
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble"
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble/device_manager"
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble/ble_services"

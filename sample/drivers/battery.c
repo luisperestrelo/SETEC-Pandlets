@@ -6,8 +6,6 @@
  */
 
 #include "battery.h"
-#include "init.h" 
-
 
 static bool induction_charge_on = false;
 static bool wired_charge_on = false;
@@ -94,11 +92,8 @@ void gauge_timer_handler(void * p_context){
 		//Read state of charge
 		uint8_t value[2];
 		uint32_t err_code = max17048_read_soc(value);
-		char buffer[128];
 
 		if(err_code == NRF_SUCCESS){
-			sprintf(buffer, "%d", value[1]);
-			log2sd(buffer, "mdjunio.txt");
 			printf("Battery value: %d. Charging status: %d.\r\n", value[1], (induction_charge_on || wired_charge_on) ? 1 : 0);
 		}
 		else
@@ -115,11 +110,11 @@ void enable_high_voltage(bool enable){
 		high_voltage_on = true;
 	}
 	else{
-		bool can_disable = false;
-		//can_disable &= !induction_charge_on;
-		//can_disable &= !wired_charge_on;
+		bool can_disable = true;
+		can_disable &= !induction_charge_on;
+		can_disable &= !wired_charge_on;
 
-		//can_disable &= !fhp_gpio_is_being_used(); //LEDs are connected to the high voltage
+		can_disable &= !fhp_gpio_is_being_used(); //LEDs are connected to the high voltage
 
 		if(can_disable){
 			nrf_gpio_pin_clear(EN_PIN_3V3);
