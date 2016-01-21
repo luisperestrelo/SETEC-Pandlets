@@ -8,7 +8,94 @@
 
 #define DEAD_BEEF                       0xDEADBEEF                                  // Value used as error code on stack dump, can be used to identify stack location on stack unwind.
 
+#define MAX_TEST_DATA_BYTES      (15U) /*!< max number of test bytes to be used for tx and rx */
+
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    // Handle of the current connection.
+
+static uint32_t timeStamp = 0;
+
+#define GPIO_TOGGLE_TICK_EVENT    (LED_RED)                                 /**< Pin number to toggle when there is a tick event in RTC. */
+#define GPIO_TOGGLE_COMPARE_EVENT (LED_GREEN)                                 /**< Pin number to toggle when there is compare event in RTC. */
+
+#define LFCLK_FREQUENCY           (32768UL)                               /**< LFCLK frequency in Hertz, constant. */
+#define RTC_FREQUENCY             (1UL)                                   /**< Required RTC working clock RTC_FREQUENCY Hertz. Changable. */
+#define COMPARE_COUNTERTIME       (3UL)                                   /**< Get Compare event COMPARE_TIME seconds after the counter starts from 0. */
+#define COUNTER_PRESCALER         ((LFCLK_FREQUENCY / RTC_FREQUENCY) - 1)   /* f = LFCLK/(prescaler + 1) */
+
+
+/** @brief Function starting the internal LFCLK XTAL oscillator.
+ */
+static void lfclk_config(void)
+{
+    NRF_CLOCK->LFCLKSRC            = (CLOCK_LFCLKSRC_SRC_Xtal << CLOCK_LFCLKSRC_SRC_Pos);
+    NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
+    NRF_CLOCK->TASKS_LFCLKSTART    = 1;
+    while (NRF_CLOCK->EVENTS_LFCLKSTARTED == 0)
+    {
+        //Do nothing.
+    }
+    NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
+}
+
+
+/** @brief Function for configuring the RTC with TICK to 100Hz and COMPARE0 to 10 sec.
+ */
+static void rtc_config(void)
+{
+    NVIC_EnableIRQ(RTC0_IRQn);                                  // Enable Interrupt for the RTC in the core.
+    NRF_RTC0->PRESCALER = COUNTER_PRESCALER;                    // Set prescaler to a TICK of RTC_FREQUENCY.
+    NRF_RTC0->CC[0]     = COMPARE_COUNTERTIME * RTC_FREQUENCY;  // Compare0 after approx COMPARE_COUNTERTIME seconds.
+
+    // Enable TICK event and TICK interrupt:
+    NRF_RTC0->EVTENSET = RTC_EVTENSET_TICK_Msk;
+    NRF_RTC0->INTENSET = RTC_INTENSET_TICK_Msk;
+
+    // Enable COMPARE0 event and COMPARE0 interrupt:
+    NRF_RTC0->EVTENSET = RTC_EVTENSET_COMPARE0_Msk;
+    NRF_RTC0->INTENSET = RTC_INTENSET_COMPARE0_Msk;
+}
+
+
+/** @brief Function for Configuring PIN8 and PIN9 as outputs.
+ */
+static void gpio_config(void)
+{
+    nrf_gpio_cfg_output(GPIO_TOGGLE_TICK_EVENT);
+    nrf_gpio_cfg_output(GPIO_TOGGLE_COMPARE_EVENT);
+
+    nrf_gpio_pin_write(GPIO_TOGGLE_TICK_EVENT, 0);
+    nrf_gpio_pin_write(GPIO_TOGGLE_COMPARE_EVENT, 0);
+}
+
+
+/** @brief: Function for handling the RTC0 interrupts.
+ * Triggered on TICK and COMPARE0 match.
+ */
+void RTC0_IRQHandler()
+{	
+	static int x=0;
+	
+    if ((NRF_RTC0->EVENTS_TICK != 0) &&
+        ((NRF_RTC0->INTENSET & RTC_INTENSET_TICK_Msk) != 0))
+    {
+		if(x>7){
+			printf("timestamp: %u\n",(unsigned int)timeStamp);
+			x=0;
+			timeStamp++;
+		}
+		x++;
+        NRF_RTC0->EVENTS_TICK = 0;
+        nrf_gpio_pin_toggle(GPIO_TOGGLE_TICK_EVENT);
+    }
+    
+    if ((NRF_RTC0->EVENTS_COMPARE[0] != 0) &&
+        ((NRF_RTC0->INTENSET & RTC_INTENSET_COMPARE0_Msk) != 0))
+    {
+        NRF_RTC0->EVENTS_COMPARE[0] = 0;
+        nrf_gpio_pin_write(GPIO_TOGGLE_COMPARE_EVENT, 1);
+    }
+}
+
 
 /**@brief Function for error handling, which is called when an error has occurred. 
  *
@@ -161,6 +248,14 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
             APP_ERROR_CHECK(pr_reset_configs());
 			#endif
 
+			#if LUM_ENABLED
+            APP_ERROR_CHECK(lum_reset_configs());
+			#endif
+
+			#if HUMSOLO_ENABLED
+            APP_ERROR_CHECK(humsolo_reset_configs());
+			#endif
+						
 			#if HUM_ENABLED
 			APP_ERROR_CHECK(hum_reset_configs());
 			#endif
@@ -204,6 +299,14 @@ void on_low_bat_evt(){
     APP_ERROR_CHECK(pr_reset_configs());
 	#endif
 
+	#if LUM_ENABLED
+    APP_ERROR_CHECK(lum_reset_configs());
+	#endif
+	
+	#if HUMSOLO_ENABLED
+    APP_ERROR_CHECK(humsolo_reset_configs());
+	#endif
+	
 	#if HUM_ENABLED
 	APP_ERROR_CHECK(hum_reset_configs());
 	#endif
@@ -294,6 +397,20 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 			APP_ERROR_CHECK(pr_configs_update()); //Update Pr configurations.
             break;
 		#endif
+		
+		#if LUM_ENABLED == 1
+        case BLE_AMBIENT_EVT_LUM_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_LUM_CONFIG_CHANGED: 0x%x\n", m_amb.lum_configuration);
+			APP_ERROR_CHECK(lum_configs_update()); //Update Pr configurations.
+            break;
+		#endif
+
+		#if HUMSOLO_ENABLED == 1
+        case BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED: 0x%x\n", m_amb.humsolo_configuration);
+			APP_ERROR_CHECK(humsolo_configs_update()); //Update Pr configurations.
+            break;
+		#endif
 
 		#if HUM_ENABLED == 1
 		case BLE_AMBIENT_EVT_HUM_CONFIG_CHANGED:
@@ -335,10 +452,20 @@ void base_timer_handler(void * p_context){
 	#if PR_ENABLED == 1
 	APP_ERROR_CHECK(pr_timer_handler()); //Call handler for Pr sensor
 	#endif
+	
+	/*********** LUM *************/
+	#if LUM_ENABLED == 1
+	APP_ERROR_CHECK(lum_timer_handler()); //Call handler for Pr sensor
+	#endif
 
 	/*********** HUM *************/
 	#if HUM_ENABLED == 1
 	APP_ERROR_CHECK(hum_timer_handler()); //Call handler for Hum sensor
+	#endif
+
+	/*********** HUMSOLO *************/
+	#if HUMSOLO_ENABLED == 1
+	APP_ERROR_CHECK(humsolo_timer_handler()); //Call handler for Hum sensor
 	#endif
 
 #endif
@@ -362,6 +489,13 @@ static void power_manage(void){
     APP_ERROR_CHECK(err_code);
 }
 
+static void show_error(void)
+{
+	printf("ERROR UART!\n");
+  while(true)
+  {
+  }
+}
 
 /**@brief Function for initialization.
  */
@@ -415,46 +549,34 @@ static void setup(void){
 	gauge_timer_handler(NULL); //Read battery right away!
 }
 
-int log2sd(char* message, char *filename){ // returns -1 if SD_LOG is disabled
- 
-#if SD_LOG == 1
-        char buffer[128];
-        sprintf(buffer, message);
- 
-        if(sd_card.fs_type == 0) { //SD card not mounted
-                //Mount the SD card
-                if(f_mount(&sd_card, "", 1) == 0){
-                printf("CHUPAINDE-ME!\n");
-                        log_to_sd(filename, buffer, strlen(buffer));
-                        f_mount(NULL, "", 1);
-                }
-        }
-        else { //SD card already mounted, someone is logging to it!
-                log_to_sd(filename, buffer, strlen(buffer));
-        }
-       
-        return 0;
-#endif /* SD_LOG */
- 
-        return -1;
-}
 
 /**@brief Function for application main entry.
  */
 int main(void){
     // Initialize
-    //printf("Chupa-ma gaita\n");
+    
+    //uint32_t lux;
     setup();
+
+	gpio_config();
+	printf("gpio_config ok!\r\n");
+	
+    lfclk_config();
+	printf("lfclk_config ok!\r\n");
+	
+    /*rtc_config();
+	printf("rtc_config ok!\r\n");*/
 
     // Start execution
     advertising_start();
-
-    log2sd("sua puta do caralho sua vaca de merda lava-me essa boca\n", "juju.txt");
-	
+    
+    app_sched_event_put(NULL, 0, application_work_start); //Start base timer.
+    
+    //NRF_RTC0->TASKS_START = 1;
 
     // Enter main loop
     for (;;){
 		app_sched_execute();
-        power_manage(); //go to sleep
+		power_manage(); //go to sleep
     }
 }
