@@ -225,6 +225,12 @@ void services_init(void){
 	#if HUMSOLO_ENABLED
     amb_init.humsolo_init_configuration = HUMSOLO_INITIAL_CONFIG;
 	#endif
+	
+	#if SD_ENABLED
+    amb_init.sd_init_configuration = SD_INITIAL_CONFIG;
+    
+    amb_init.sd_flag_init_configuration = SD_FLAG_INITIAL_CONFIG;
+	#endif
 
     err_code = ble_ambient_init(&m_amb, &amb_init); //perform service initiation
     APP_ERROR_CHECK(err_code);
@@ -358,6 +364,16 @@ void sensors_init(void){
 	APP_ERROR_CHECK(lum_init(&m_amb));
 	APP_ERROR_CHECK(lum_configs_update());
 	#endif /* LUM_ENABLED */
+
+	#if SD_ENABLED
+	APP_ERROR_CHECK(sd2app_init(&m_amb));
+	APP_ERROR_CHECK(sd2app_configs_update());
+	#endif /* SD_ENABLED */
+
+	/*#if SD2APP_FLAG_ENABLED
+	APP_ERROR_CHECK(lum_init(&m_amb));
+	APP_ERROR_CHECK(lum_configs_update());
+	#endif*/ /* LUM_ENABLED */
 	
 #endif
 
