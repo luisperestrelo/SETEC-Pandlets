@@ -15,6 +15,45 @@ static int16_t gyro_x_off = 0;
 static int16_t gyro_y_off = 0;
 static int16_t gyro_z_off = 0;
 
+void mpu9x50_initMoveSensor(uint8_t mpu_address){
+  //save the device address
+	device_address = mpu_address;
+  //reset everything before
+  mpu9x50_reset();
+  nrf_delay_ms(20);
+//  printf("MPU Reset\n");
+  //Make sure accelis is running
+  //PWR_MGMT_1 - CYCLE = 0; SLEEP = 0; STANDBY = 0;
+  mpu9x50_sleep(false);
+  mpu9x50_cycleMode(false);
+  mpu9x50_gyroStandby(false);
+//  printf("MPU PWR1 Configured\n");
+  //PWR_MGMT_2 - DIS_XA, DIS_YA, DIS_ZA = 0; DIS_XG, DIS_YG, DIS_ZG = 1
+  mpu9x50_setStandbyAccX(false);
+  mpu9x50_setStandbyAccY(false);
+  mpu9x50_setStandbyAccZ(false);
+  mpu9x50_setStandbyGyroX(true);
+  mpu9x50_setStandbyGyroY(true);
+  mpu9x50_setStandbyGyroZ(true);
+//  printf("MPU PWR2 Configured\n");
+  //Set Accel to 184Hz - in ACCEL_CONFIG2 set ACCEL_FCOICE_B = 1; A_DLPFCFG[2:]=1(b001)
+  mpu9x50_setAccelerometerDigitalLowPassFilterOn(true);
+  mpu9x50_setAccelerometerDigitalLowPassFilter(MPU6500_DLPF_BW_188);
+//  printf("DLPF Configured\n");
+  //Enable motion interrupt - in INT_ENABLE(0x38) to 0x40 (only motion interrupt)
+ mpu9x50_setMotionInterrupt();
+//  printf("Motion interrupt enabled\n");
+  //Set motion threshold in WOM_THR(0x1F) to WOM_Threshold[7:0] 1-255 (0-1020mg)
+ mpu9x50_setMotionThreshold(); //the threshold value is set in mpu9x50_registers.h
+//  printf("Motion threshold set\n");
+  //Set frequency of Wake-up in LP_ACCEL_ODR(0xE1) to Lposc_clksel[3:0] = 0.24Hz - 500Hz
+	mpu9x50_setCycleWakeFrequency(3);
+//  printf("Wake-up frequency set\n");
+  //Enable cycle mode (low power) - PWR_MGMT_1(0x6B) make CYCLE = 1
+  mpu9x50_cycleMode(true);
+//  printf("MPU in low power cycle mode\n");
+}
+
 bool read_mult(char reg_addr, char* data, int length){
 	//Write
     if(!twi_master_transfer((device_address << 1), (uint8_t *)&reg_addr, 1, TWI_ISSUE_STOP)){
@@ -551,6 +590,9 @@ void mpu9x50_reset(){
     writeBit(MPU6500_RA_PWR_MGMT_1, MPU6500_PWR1_DEVICE_RESET_BIT, true);
 }
 
+void mpu9x50_gyroStandby(bool state){
+  writeBit(MPU6500_RA_PWR_MGMT_1, MPU6500_PWR1_GYRO_STANDBY, state);
+}
 
 //Can't talk to mpu after putting it to sleep :(
 void mpu9x50_sleep(bool state){
@@ -590,8 +632,12 @@ void mpu9x50_clockSelect(uint8_t clk){
 
 //PWR_MGMT_2 Control Register
 //*****************************/
+//might not be correct
+//void mpu9x50_setCycleWakeFrequency(uint8_t freq){
+//    writeBits(MPU6500_RA_LP_ACCEL_ODR, MPU6500_PWR2_LP_WAKE_CTRL_BIT, MPU6500_PWR2_LP_WAKE_CTRL_LENGTH, freq);
+//}
 void mpu9x50_setCycleWakeFrequency(uint8_t freq){
-    writeBits(MPU6500_RA_LP_ACCEL_ODR, MPU6500_PWR2_LP_WAKE_CTRL_BIT, MPU6500_PWR2_LP_WAKE_CTRL_LENGTH, freq);
+    writeBits(MPU6500_RA_LP_ACCEL_ODR, 0, MPU6500_PWR2_LP_WAKE_CTRL_LENGTH, freq);
 }
 void mpu9x50_setStandbyAccX(bool value){
     writeBit(MPU6500_RA_PWR_MGMT_2, MPU6500_PWR2_STBY_XA_BIT, value);
@@ -632,6 +678,10 @@ void mpu9x50_setGyroscopeDigitalLowPassFilter(uint8_t value){
 
 void mpu9x50_setAccelerometerDigitalLowPassFilter(uint8_t value){
     writeBits(MPU6500_RA_ACCEL_CONFIG_2, MPU6500_CFG_DLPF_CFG_BIT, MPU6500_CFG_DLPF_CFG_LENGTH, value);
+}
+
+void mpu9x50_setAccelerometerDigitalLowPassFilterOn(bool state){
+  writeBit(MPU6500_RA_ACCEL_CONFIG_2, MPU6500_CFG_DLPF_FCHOICE_BIT, state);
 }
 
 //GYRO_CONFIG
@@ -915,6 +965,13 @@ void mpu9x50_setInterruptDataReadyEnable(bool value){
     writeBit(MPU6500_RA_INT_ENABLE, MPU6500_INTERRUPT_DATA_RDY_BIT, value);
 }
 
+void mpu9x50_setMotionInterrupt() {
+	  write(MPU6500_RA_INT_ENABLE, MPU6500_INTERRUPT_ONLY_WOM);
+}
+void mpu9x50_setMotionThreshold() {
+  write(MPU6500_RA_WOM_THR, MPU6500_RA_WOM_THR_VALUE);
+}
+
 //INT_STATUS
 bool mpu9x50_getInterruptFifoOverflow(){
     return getBit(MPU6500_RA_INT_STATUS, MPU6500_INTERRUPT_FIFO_OFLOW_BIT);
@@ -1175,5 +1232,3 @@ uint8_t mpu9x50_getDMPConfig2() {
 void mpu9x50_setDMPConfig2(uint8_t config) {
     write(MPU6500_RA_DMP_CFG_2, config);
 }
-
-

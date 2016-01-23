@@ -42,6 +42,7 @@
 #define MPU6500_RA_ACCEL_CONFIG_2   0x1D
 #define MPU6500_RA_LP_ACCEL_ODR     0x1E
 #define MPU6500_RA_WOM_THR          0x1F
+#define MPU6500_RA_WOM_THR_VALUE    0x0F     //value of the threshold for WOM, check documentation
 #define MPU6500_RA_MOT_DUR          0x20
 #define MPU6500_RA_ZRMOT_THR        0x21
 #define MPU6500_RA_ZRMOT_DUR        0x22
@@ -144,6 +145,7 @@
 
 #define MPU6500_CFG_EXT_SYNC_SET_BIT    5
 #define MPU6500_CFG_EXT_SYNC_SET_LENGTH 3
+#define MPU6500_CFG_DLPF_FCHOICE_BIT 3
 #define MPU6500_CFG_DLPF_CFG_BIT    2
 #define MPU6500_CFG_DLPF_CFG_LENGTH 3
 
@@ -282,6 +284,7 @@
 #define MPU6500_INTERRUPT_PLL_RDY_INT_BIT   2
 #define MPU6500_INTERRUPT_DMP_INT_BIT       1
 #define MPU6500_INTERRUPT_DATA_RDY_BIT      0
+#define MPU6500_INTERRUPT_ONLY_WOM       0x40
 
 // TODO: figure out what these actually do
 // UMPL source code is not very obivous
@@ -335,6 +338,7 @@
 #define MPU6500_PWR1_DEVICE_RESET_BIT   7
 #define MPU6500_PWR1_SLEEP_BIT          6
 #define MPU6500_PWR1_CYCLE_BIT          5
+#define MPU6500_PWR1_GYRO_STANDBY       4
 #define MPU6500_PWR1_TEMP_DIS_BIT       3
 #define MPU6500_PWR1_CLKSEL_BIT         2
 #define MPU6500_PWR1_CLKSEL_LENGTH      3

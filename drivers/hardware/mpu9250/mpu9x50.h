@@ -57,6 +57,8 @@ typedef struct
 
 } mpu_cal_t;
 
+//new functions
+void mpu9x50_initMoveSensor(uint8_t mpu_address);
 
 //User functions
 uint8_t mpu9x50_getDeviceID();
@@ -77,6 +79,7 @@ bool mpu9x50_calibrate(mpu_cal_t *m_cal, uint8_t *sample);
 
 //PWR_MGMT_1 Control Register
 void mpu9x50_reset();
+void mpu9x50_gyroStandby(bool state);
 void mpu9x50_sleep(bool state);
 void mpu9x50_cycleMode(bool state);
 void mpu9x50_disableTemperatureSensor(bool state);
@@ -99,6 +102,7 @@ void mpu9x50_getSampleRateDivider(uint8_t *buff);
 void mpu9x50_setExternalFrameSync(uint8_t value);
 void mpu9x50_setGyroscopeDigitalLowPassFilter(uint8_t value);
 void mpu9x50_setAccelerometerDigitalLowPassFilter(uint8_t value);
+void mpu9x50_setAccelerometerDigitalLowPassFilterOn(bool state);
 
 //GYRO_CONFIG
 void mpu9x50_setGyroSelfTest(bool value);
@@ -191,6 +195,8 @@ void mpu9x50_setI2cAuxBypassEnable(bool value);
 void mpu9x50_setInterruptFifoOverflowEnable(bool value);
 void mpu9x50_setInterruptMasterEnable(bool value);
 void mpu9x50_setInterruptDataReadyEnable(bool value);
+void mpu9x50_setMotionInterrupt();
+void mpu9x50_setMotionThreshold();
 
 //INT_STATUS
 bool mpu9x50_getInterruptFifoOverflow();
