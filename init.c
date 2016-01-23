@@ -30,7 +30,7 @@ void gpio_init(void){
 
 	//Configure GPIO'S
 	nrf_gpio_cfg_input(GPIO_1, GPIO_PIN_CNF_PULL_Pullup);
-	
+
 	nrf_gpio_cfg_input(GPIO_2,GPIO_PIN_CNF_PULL_Pullup);
 
 	nrf_gpio_cfg_output(GPIO_3);
@@ -45,7 +45,7 @@ void gpio_init(void){
 void leds_init(void){
     nrf_gpio_cfg_output(LED_RED);
     nrf_gpio_cfg_output(LED_GREEN);
-    
+
     nrf_gpio_pin_set(LED_RED);
 	nrf_gpio_pin_set(LED_GREEN);
 }
@@ -89,7 +89,7 @@ void gpiote_init(void){
  */
 void ble_stack_init(void){
 	uint32_t err_code;
-    
+
 	uint32_t opt_id = BLE_COMMON_OPT_RADIO_CPU_MUTEX;
 	ble_opt_t cpu_blocking_enabled;
 	cpu_blocking_enabled.common_opt.radio_cpu_mutex.enable = 0;
@@ -103,11 +103,11 @@ void ble_stack_init(void){
 
     err_code = sd_ble_enable(&ble_enable_params);
     APP_ERROR_CHECK(err_code);
-    
+
     // Register with the SoftDevice handler module for BLE events.
     err_code = softdevice_ble_evt_handler_set(ble_evt_dispatch);
     APP_ERROR_CHECK(err_code);
-    
+
     err_code = softdevice_sys_evt_handler_set(sys_evt_dispatch);
     APP_ERROR_CHECK(err_code);
 
@@ -132,19 +132,19 @@ void device_manager_init(void){
 	uint32_t                err_code;
 	dm_init_param_t         init_data;
     dm_application_param_t  register_param;
-    
-    // Initialize persistent storage module. 
+
+    // Initialize persistent storage module.
     err_code = pstorage_init();
     APP_ERROR_CHECK(err_code);
 
     // Clear all bonded centrals if the Bonds Delete button is pushed.
     init_data.clear_persistent_data = (nrf_gpio_pin_read(BOND_DELETE_ALL_BUTTON_ID) == 0);
-    
+
     err_code = dm_init(&init_data);
     APP_ERROR_CHECK(err_code);
-    
+
 	memset(&register_param.sec_param, 0, sizeof(ble_gap_sec_params_t));
-    
+
     register_param.sec_param.timeout      = SEC_PARAM_TIMEOUT;
     register_param.sec_param.bond         = SEC_PARAM_BOND;
     register_param.sec_param.mitm         = SEC_PARAM_MITM;
@@ -220,7 +220,7 @@ void services_init(void){
 
 	#if HUM_ENABLED
     amb_init.hum_init_configuration = HUM_INITIAL_CONFIG;
-	#endif 
+	#endif
 
 	#if HUMSOLO_ENABLED
     amb_init.humsolo_init_configuration = HUMSOLO_INITIAL_CONFIG;
@@ -316,12 +316,15 @@ void drivers_init(void){
 
 	//BME280 is used for temperature, pressure and humidity sensors.
 	APP_ERROR_CHECK(bme280_init_nrf51(BME_ADDRESS));
-	
+
 	//APP_ERROR_CHECK(SparkFunTSL2561_init());
 
 	//Even if not used, it is present in the Pandlet board
 	//Init it to put it to sleep.
-	mpu9x50_init(MPU_ADDRESS);
+  //mpu9x50_init(MPU_ADDRESS);
+
+	//init the MPU as Movement Alert
+	mpu9x50_initMoveSensor(MPU_ADDRESS);
 }
 
 
@@ -358,7 +361,7 @@ void sensors_init(void){
 	APP_ERROR_CHECK(lum_init(&m_amb));
 	APP_ERROR_CHECK(lum_configs_update());
 	#endif /* LUM_ENABLED */
-	
+
 #endif
 
 	twi_busy = false;
@@ -403,7 +406,7 @@ void application_work_start(void *data, uint16_t size){
 
 	#if HUM_ENABLED == 1
 	flag |= (m_hum.IS_HUM_ENABLED);
-	#endif  
+	#endif
 
 	#if HUMSOLO_ENABLED == 1
 	flag |= (m_humsolo.IS_HUMSOLO_ENABLED);
@@ -412,7 +415,7 @@ void application_work_start(void *data, uint16_t size){
 	#if LUM_ENABLED == 1
 	flag |= (m_lum.IS_LUM_ENABLED);
 	#endif
-	
+
 	if(flag){
 		APP_ERROR_CHECK(app_timer_start(m_base_timer_id,
 			APP_TIMER_TICKS(BASE_TIMER_FREQ, APP_TIMER_PRESCALER), NULL));
@@ -502,7 +505,3 @@ void gap_params_update(){
 
 	printf("Setted interval connection to min: %hd max: %hd (in units of 0.1 ms)\n", (uint16_t)(min_conn * 10), (uint16_t)(max_conn * 10));
 }
-
-
-
-
