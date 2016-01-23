@@ -43,15 +43,16 @@ typedef struct
 
 sd2app_t m_sd2app;
 
-uint32_t sd2app_init(ble_ambient_t *m_amb_init);
+uint32_t sd_init(ble_ambient_t *m_amb_init);
 
 uint32_t sd2app_configs_update();
 
 uint32_t sd2app_timer_handler();
 
-uint32_t sd2app_values_handler();
+//uint32_t sd2app_values_handler();
 
 uint32_t sd2app_reset_configs();
+//int lerCartao2();
 
 #endif /* SD_ENABLED */
 

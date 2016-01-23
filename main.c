@@ -177,14 +177,6 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 			#if HUM_ENABLED
 			APP_ERROR_CHECK(hum_reset_configs());
 			#endif
-	
-			#if SD_ENABLED
-			APP_ERROR_CHECK(sd2app_reset_configs());
-			#endif
-			
-			/*#if SD2APP_FLAG_ENABLED
-			APP_ERROR_CHECK(sd2app_flag_reset_configs());
-			#endif*/
             #endif /*AMBIENT_SERVICE_ENABLED*/
 
 
@@ -236,14 +228,6 @@ void on_low_bat_evt(){
 	#if HUM_ENABLED
 	APP_ERROR_CHECK(hum_reset_configs());
 	#endif
-	
-	#if SD_ENABLED
-    APP_ERROR_CHECK(sd2app_reset_configs());
-	#endif
-	
-	/*#if SD2APP_FLAG_ENABLED
-	APP_ERROR_CHECK(sd2app_flag_reset_configs());
-	#endif*/
     #endif /*AMBIENT_SERVICE_ENABLED*/
 
     printf("Configurations reseted. \r\n");
@@ -354,19 +338,12 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 		#endif
 
 		#if SD_ENABLED == 1
-        case BLE_AMBIENT_EVT_SD_CONFIG_CHANGED:
-        	printf("BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED: 0x%x\n", m_amb.sd_configuration);
-			APP_ERROR_CHECK(sd2app_configs_update()); //Update SD to app configurations.
-            break;
-		#endif
-
-		/*#if SD2APP_FLAG_ENABLED == 1
-		case BLE_AMBIENT_EVT_SD_FLAG_CONFIG_CHANGED:
-        	printf("BLE_AMBIENT_EVT_HUM_CONFIG_CHANGED: 0x%x\n", m_amb.sd_flag_configuration);
-        	APP_ERROR_CHECK(sd2app_flag_configs_update()); //Update SD to app flag configurations.
+		case BLE_AMBIENT_EVT_SD_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_SD_CONFIG_CHANGED: 0x%x\n", m_amb.sd_configuration);
+        	//APP_ERROR_CHECK(sd_configs_update()); //Update sd configurations.
 			break;
-		#endif*/
-
+		#endif
+		
         default:
             // No implementation needed.
             break;
@@ -415,16 +392,6 @@ void base_timer_handler(void * p_context){
 	#if HUMSOLO_ENABLED == 1
 	APP_ERROR_CHECK(humsolo_timer_handler()); //Call handler for Hum sensor
 	#endif
-
-	/*********** SD2APP *************/
-	#if SD_ENABLED == 1
-	APP_ERROR_CHECK(sd2app_timer_handler()); //Call handler for SD to app sensor
-	#endif
-
-	/*********** SD2APP_FLAG *************/
-	/*#if HUMSOLO_ENABLED == 1
-	APP_ERROR_CHECK(humsolo_timer_handler()); //Call handler for Hum sensor
-	#endif*/
 
 #endif
 

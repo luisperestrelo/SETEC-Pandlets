@@ -65,13 +65,12 @@
 
 #if AMBIENT_SERVICE_ENABLED
 
-#define TEMP_ENABLED                        1      							      //Enables External Temperature sensor
-#define PR_ENABLED                          1      							      //Enables Pressure sensor
-#define HUM_ENABLED							1      							      //Enables Humidity sensor
-#define HUMSOLO_ENABLED						1      							      //Enables Humidity solo sensor
-#define LUM_ENABLED							1      							      //Enables Luminosity sensor
-#define SD_ENABLED							1      							      //Enables SD to app sensor
-#define SD2APP_FLAG_ENABLED					1      							      //Enables SD to app flag sensor
+#define TEMP_ENABLED                        0      							      //Enables External Temperature sensor
+#define PR_ENABLED                          0      							      //Enables Pressure sensor
+#define HUM_ENABLED							0      							      //Enables Humidity sensor 
+#define HUMSOLO_ENABLED						0      							      //Enables Humidity sensor 
+#define LUM_ENABLED							0      							      //Enables Luminosity sensor 
+#define SD_ENABLED							1      							      //Enables Luminosity sensor 
 
 #endif /* AMBIENT_SERVICE_ENABLED */
 

@@ -3,9 +3,9 @@
 #if SD_ENABLED
 
 
-uint32_t sd2app_init(ble_ambient_t *m_amb_init){
+uint32_t sd_init(ble_ambient_t *m_amb_init){
 	sd2app_printf("sd2app_init() \r\n");
-
+	//flag_lido=0;
 	m_sd2app.timer_count           = 0;
 	m_sd2app.m_amb                 = m_amb_init;
 	m_sd2app.IS_SD_ENABLED         = true;
@@ -49,32 +49,94 @@ uint32_t sd2app_configs_update(){
 }
 
 
-
+/*
 uint32_t sd2app_values_handler() {
 	uint32_t  err_code = NRF_SUCCESS;
-	int32_t sd2app_buffer;
+	//int32_t sd2app_buffer;
 
-	err_code = bme280_read_temperature(&sd2app_buffer);
+	//err_code = bme280_read_temperature(&sd2app_buffer);
 
-	if (err_code != NRF_SUCCESS) {
-		sd2app_printf("sd2app: bme280_read_temperature() failed.\r\n");
-		return err_code;
-	}
+	//if (err_code != NRF_SUCCESS) {
+		//sd2app_printf("sd2app: bme280_read_temperature() failed.\r\n");
+		//return err_code;
+	//}
 	
-	char buf[12];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_SD_ID,(int)sd2app_buffer,000);
-    log2sd(buf, "TEMP.txt");
+	//char buf[12];
+    //sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_SD_ID,(int)sd2app_buffer,000);
+    //log2sd(buf, "TEMP.txt");
     
     lerCartao();
+	sd2app_printf("Leu cartao\n");
     
-	sd2app_printf("Temperature: %d\n", (int)sd2app_buffer);
-	err_code = ble_ambient_sensor_update(m_sd2app.m_amb, (uint8_t *) &sd2app_buffer,
-	AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
-	check_ble_service_err_code(err_code);
+	//err_code = ble_ambient_sensor_update(m_sd2app.m_amb, (uint8_t *) &sd2app_buffer, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
+	//check_ble_service_err_code(err_code);
 
 	return NRF_SUCCESS;
 }
+int lerCartao2(){
+	FIL file;       // File object
+    char buf[4];
+	unsigned int bytesread;
+    if(sd_card.fs_type == 0) { //SD card not mounted
+		//Mount the SD card
+		if(f_mount(&sd_card, "", 1) == 0){
+			printf("Mounted SD card!\n");
+			if(f_open(&file, "TEMP.TXT", FA_READ) != FR_OK){ //Could be that the file already exists
+				printf("ERROR Opening!\n");
+				return 0;
+			}
+			//ble_ambient_config_update(m_amb, (uint8_t) 0, BLE_AMBIENT_FLAG);
+			while(1){
+				f_read(&file,buf,4,&bytesread);
+				if(bytesread==0) break;
+				//int y=0;
+				flag_lido=0;	
+				//while(1){
+					//printf("%c",buf[y]);
+					//y++;
+					//if(y>bytesread) break;
+				//}
+				printf("HEY1");
+				ble_ambient_sensor_update(&m_amb, (uint8_t *) buf, 4, BLE_AMBIENT_SD);
+				while(flag_lido==0){
+					//printf("HEY2");
+				}
+			}
+			//ble_ambient_config_update(m_amb, (uint8_t) 1, BLE_AMBIENT_FLAG);
+			f_close(&file);
+			f_mount(NULL, "", 1);
+			printf("Acabei de fazer tudo!\n");
+		}
+    }
+    else { //SD card already mounted, someone is logging to it!
+		printf("Fui parar aqui\n");
+		//log_to_sd(filename, buffer, strlen(buffer));
+    }
+}
 
+uint32_t sd2app_values_handler() {
+	uint32_t  err_code = NRF_SUCCESS;
+	//int32_t sd2app_buffer;
+
+	//err_code = bme280_read_temperature(&sd2app_buffer);
+
+	//if (err_code != NRF_SUCCESS) {
+		//sd2app_printf("sd2app: bme280_read_temperature() failed.\r\n");
+		//return err_code;
+	//}
+	
+	//char buf[12];
+    //sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_SD_ID,(int)sd2app_buffer,000);
+    //log2sd(buf, "TEMP.txt");
+    flag_lido=0;
+    lerCartao2();
+	sd2app_printf("Leu cartao\n");
+    
+	//err_code = ble_ambient_sensor_update(m_sd2app.m_amb, (uint8_t *) &sd2app_buffer, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
+	//check_ble_service_err_code(err_code);
+
+	return err_code;
+}*/
 
 uint32_t sd2app_timer_handler() {
 	uint32_t err_code = NRF_SUCCESS;
@@ -92,7 +154,7 @@ uint32_t sd2app_timer_handler() {
 		if ((m_sd2app.timer_count == 1) && !twi_busy) {
 
 			//Get values, parse values and send them through BLE
-			err_code = sd2app_values_handler();
+			//err_code = sd2app_values_handler();
 
 			if (err_code != NRF_SUCCESS) {
 				sd2app_printf("sd2app_values_handler() failed.\r\n");
