@@ -1,5 +1,7 @@
 #include "ble_ambient.h"
 
+//static int flag_lido;
+
 #if AMBIENT_SERVICE_ENABLED
 
 
@@ -720,7 +722,7 @@ int lerCartao2(ble_ambient_t * m_amb){
 	uint32_t  err_code = NRF_SUCCESS;
     //flag_lido=0;
 	FIL file;       // File object
-    char buf[4];
+    char buf[AMB_SD_MAX_PACKET_VALUE];
 	unsigned int bytesread;
     if(sd_card.fs_type == 0) { //SD card not mounted
 		//Mount the SD card
@@ -732,7 +734,7 @@ int lerCartao2(ble_ambient_t * m_amb){
 			}
 			//ble_ambient_config_update(m_amb, (uint8_t) 0, BLE_AMBIENT_FLAG);
 			//while(1){
-				f_read(&file,buf,4,&bytesread);
+				f_read(&file,buf,AMB_SD_MAX_PACKET_VALUE,&bytesread);
 			//	if(bytesread==0) break;
 				//int y=0;
 			//	flag_lido=0;	
@@ -741,8 +743,8 @@ int lerCartao2(ble_ambient_t * m_amb){
 					//y++;
 					//if(y>bytesread) break;
 				//}
-				printf("HEY1");
-				ble_ambient_sensor_update(m_amb, (uint8_t *) buf, 4, BLE_AMBIENT_SD);
+				//printf("HEY1");
+				ble_ambient_sensor_update(m_amb, (uint8_t *) buf, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
 			//	while(flag_lido==0){
 			//		}
 			printf("%x",buf[0]);
