@@ -10,6 +10,7 @@
 
 #include "ambient_service_config.h"
 #include "board_config.h"
+#include "nosso.h"
 
 #if PR_ENABLED == 1
 

@@ -52,7 +52,6 @@ uint32_t sd2app_timer_handler();
 //uint32_t sd2app_values_handler();
 
 uint32_t sd2app_reset_configs();
-//int lerCartao2();
 
 #endif /* SD_ENABLED */
 

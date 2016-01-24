@@ -8,7 +8,7 @@ uint32_t sd_init(ble_ambient_t *m_amb_init){
 	//flag_lido=0;
 	m_sd2app.timer_count           = 0;
 	m_sd2app.m_amb                 = m_amb_init;
-	m_sd2app.IS_SD_ENABLED         = true;
+	m_sd2app.IS_SD_ENABLED         = false;
 
 	return NRF_SUCCESS;
 }
@@ -65,7 +65,6 @@ uint32_t sd2app_values_handler() {
     //sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_SD_ID,(int)sd2app_buffer,000);
     //log2sd(buf, "TEMP.txt");
     
-    lerCartao();
 	sd2app_printf("Leu cartao\n");
     
 	//err_code = ble_ambient_sensor_update(m_sd2app.m_amb, (uint8_t *) &sd2app_buffer, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
@@ -128,8 +127,7 @@ uint32_t sd2app_values_handler() {
 	//char buf[12];
     //sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_SD_ID,(int)sd2app_buffer,000);
     //log2sd(buf, "TEMP.txt");
-    flag_lido=0;
-    lerCartao2();
+  
 	sd2app_printf("Leu cartao\n");
     
 	//err_code = ble_ambient_sensor_update(m_sd2app.m_amb, (uint8_t *) &sd2app_buffer, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);

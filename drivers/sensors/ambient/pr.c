@@ -55,7 +55,7 @@ uint32_t pr_configs_update(){
 		case 0b111:
 		default: //If not recognized set max rate
 //			m_pr.ticks = msec_to_ticks(200);      //5 Hz
-			m_pr.ticks = msec_to_ticks(1000);      //1 Hz
+			m_pr.ticks = msec_to_ticks(120000);      //1 Hz
 			break;
 	}
 
@@ -76,8 +76,8 @@ uint32_t pr_values_handler() {
 		return err_code;
 	}
 	
-    char buf[12];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_PR_ID,(int)pr_buffer,000);
+    char buf[20];
+    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_PR_ID,(int)pr_buffer,(int)getTimeStamp());
 	log2sd(buf, "TEMP.txt");
 
 	pr_printf("Pressure: %d\r\n", (int)pr_buffer);
