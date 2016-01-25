@@ -147,7 +147,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
         case BLE_GAP_EVT_DISCONNECTED:
         	//Upon disconnection, reset all sensors (for energy saving)
 
-        	application_work_stop(); //Stop base timer.
+        	//application_work_stop(); //Stop base timer.
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
 
             // set LED greeen
@@ -158,26 +158,26 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 			#if AMBIENT_SERVICE_ENABLED
             m_amb.conn_handle = m_conn_handle;
 
-           	#if TEMP_ENABLED
-            APP_ERROR_CHECK(temp_reset_configs());
-			#endif
+           	//#if TEMP_ENABLED
+            //APP_ERROR_CHECK(temp_reset_configs());
+			//#endif
 
-			#if PR_ENABLED
-            APP_ERROR_CHECK(pr_reset_configs());
-			#endif
+			//#if PR_ENABLED
+            //APP_ERROR_CHECK(pr_reset_configs());
+			//#endif
 
-			#if LUM_ENABLED
-            APP_ERROR_CHECK(lum_reset_configs());
-			#endif
+			//#if LUM_ENABLED
+            //APP_ERROR_CHECK(lum_reset_configs());
+			//#endif
 
-			#if HUMSOLO_ENABLED
-            APP_ERROR_CHECK(humsolo_reset_configs());
-			#endif
+			//#if HUMSOLO_ENABLED
+            //APP_ERROR_CHECK(humsolo_reset_configs());
+			//#endif
 						
-			#if HUM_ENABLED
-			APP_ERROR_CHECK(hum_reset_configs());
-			#endif
-            #endif /*AMBIENT_SERVICE_ENABLED*/
+			//#if HUM_ENABLED
+			//APP_ERROR_CHECK(hum_reset_configs());
+			//#endif
+            //#endif /*AMBIENT_SERVICE_ENABLED*/
 
 
             enable_high_voltage(false);
