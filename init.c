@@ -226,6 +226,10 @@ void services_init(void){
     amb_init.humsolo_init_configuration = HUMSOLO_INITIAL_CONFIG;
 	#endif
 
+	#if SD_ENABLED
+    amb_init.sd_init_configuration = SD_INITIAL_CONFIG;
+	#endif
+
     err_code = ble_ambient_init(&m_amb, &amb_init); //perform service initiation
     APP_ERROR_CHECK(err_code);
 #endif
@@ -361,7 +365,12 @@ void sensors_init(void){
 	APP_ERROR_CHECK(lum_init(&m_amb));
 	APP_ERROR_CHECK(lum_configs_update());
 	#endif /* LUM_ENABLED */
-
+	
+	#if SD_ENABLED
+	APP_ERROR_CHECK(sd_init(&m_amb));
+//	APP_ERROR_CHECK(sd_configs_update());
+	#endif /* LUM_ENABLED */
+	
 #endif
 
 	twi_busy = false;
@@ -415,7 +424,11 @@ void application_work_start(void *data, uint16_t size){
 	#if LUM_ENABLED == 1
 	flag |= (m_lum.IS_LUM_ENABLED);
 	#endif
-
+	
+	#if SD_ENABLED == 1
+	flag |= (m_sd2app.IS_SD_ENABLED);
+	#endif
+	
 	if(flag){
 		APP_ERROR_CHECK(app_timer_start(m_base_timer_id,
 			APP_TIMER_TICKS(BASE_TIMER_FREQ, APP_TIMER_PRESCALER), NULL));

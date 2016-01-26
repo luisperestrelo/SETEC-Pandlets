@@ -115,6 +115,12 @@ ble_ambient_t                           m_amb;										    // Ambient Service s
 #include "humsolo.h"      																	//device driver for Humidity sensor
 #endif
 
+//***************** SD ***********************/
+#if SD_ENABLED == 1
+#include "sd2app.h"      																	//device driver for Humidity sensor
+#endif
+
+
 #endif /**AMBIENT_SERVICE_ENABLED*/
 
 

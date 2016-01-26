@@ -1,11 +1,3 @@
-/*
- * hum.c
- *
- *  Created on: Apr 17, 2015
- *      Author: João Oliveira
- */
-
-
 #include "hum.h"
 
 #if HUM_ENABLED == 1
@@ -48,7 +40,7 @@ uint32_t hum_configs_update(){
 			break;
 		case 0b111:
 		default: //If not recognized set max rate
-			m_hum.ticks = msec_to_ticks(2000);     //0.5 Hz
+			m_hum.ticks = msec_to_ticks(120000);     //0.5 Hz
 			break;
 	}
 
@@ -68,8 +60,8 @@ uint32_t hum_values_handler() {
 		return err_code;
 	}
 
-    char buf[12];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_HUM_ID,(int)hum_buffer,000);
+    char buf[20];
+    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_HUM_ID,(int)hum_buffer,(int)getTimeStamp());
 	log2sd(buf, "TEMP.txt");
 
 	hum_printf("Humidity: %d\r\n", (int)hum_buffer);

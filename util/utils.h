@@ -32,6 +32,7 @@ do { \
 #if SD_LOG
 #include "ff.h"                                                                         //SD card functions and includes
 
+
 FATFS sd_card;    
 int log2sd(char* message, char *filename);
 int lerCartao();

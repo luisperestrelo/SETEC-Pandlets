@@ -9,7 +9,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-
+#include "nosso.h"
 /* Utilities includes */
 #include "utils.h"
 

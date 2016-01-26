@@ -5,14 +5,14 @@
  */
 
 #include "init.h"
-
+#include "nosso.h"
 #define DEAD_BEEF                       0xDEADBEEF                                  // Value used as error code on stack dump, can be used to identify stack location on stack unwind.
 
 #define MAX_TEST_DATA_BYTES      (15U) /*!< max number of test bytes to be used for tx and rx */
 
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    // Handle of the current connection.
 
-static uint32_t timeStamp = 0;
+//static uint32_t timeStamp = 0;
 
 
 /**@brief Function for error handling, which is called when an error has occurred. 
@@ -147,7 +147,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
         case BLE_GAP_EVT_DISCONNECTED:
         	//Upon disconnection, reset all sensors (for energy saving)
 
-        	application_work_stop(); //Stop base timer.
+        	//application_work_stop(); //Stop base timer.
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
 
             // set LED greeen
@@ -158,26 +158,26 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 			#if AMBIENT_SERVICE_ENABLED
             m_amb.conn_handle = m_conn_handle;
 
-           	#if TEMP_ENABLED
-            APP_ERROR_CHECK(temp_reset_configs());
-			#endif
+           	//#if TEMP_ENABLED
+            //APP_ERROR_CHECK(temp_reset_configs());
+			//#endif
 
-			#if PR_ENABLED
-            APP_ERROR_CHECK(pr_reset_configs());
-			#endif
+			//#if PR_ENABLED
+            //APP_ERROR_CHECK(pr_reset_configs());
+			//#endif
 
-			#if LUM_ENABLED
-            APP_ERROR_CHECK(lum_reset_configs());
-			#endif
+			//#if LUM_ENABLED
+            //APP_ERROR_CHECK(lum_reset_configs());
+			//#endif
 
-			#if HUMSOLO_ENABLED
-            APP_ERROR_CHECK(humsolo_reset_configs());
-			#endif
+			//#if HUMSOLO_ENABLED
+            //APP_ERROR_CHECK(humsolo_reset_configs());
+			//#endif
 						
-			#if HUM_ENABLED
-			APP_ERROR_CHECK(hum_reset_configs());
-			#endif
-            #endif /*AMBIENT_SERVICE_ENABLED*/
+			//#if HUM_ENABLED
+			//APP_ERROR_CHECK(hum_reset_configs());
+			//#endif
+            //#endif /*AMBIENT_SERVICE_ENABLED*/
 
 
             enable_high_voltage(false);
@@ -337,6 +337,13 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 			break;
 		#endif
 
+		#if SD_ENABLED == 1
+		case BLE_AMBIENT_EVT_SD_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_SD_CONFIG_CHANGED: 0x%x\n", m_amb.sd_configuration);
+        	//APP_ERROR_CHECK(sd_configs_update()); //Update sd configurations.
+			break;
+		#endif
+		
         default:
             // No implementation needed.
             break;
@@ -402,8 +409,9 @@ void watchdog_timer_handler(void * p_context){
 /**@brief Handles the RTC reload.
  */
 void rtc_timer_handler(void * p_context){
-	timeStamp++; //Increment timestamp
-	printf("TIMESTAMPA NA CONA: %d\n", (int)timeStamp);
+	increTimeStamp();
+	//timeStamp2++; //Increment timestamp
+	//printf("TIMESTAMPA NA CONA: %d\n", (int)timeStamp2);
 }
 
 
