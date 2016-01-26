@@ -177,7 +177,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 			//#if HUM_ENABLED
 			//APP_ERROR_CHECK(hum_reset_configs());
 			//#endif
-            //#endif /*AMBIENT_SERVICE_ENABLED*/
+            #endif /*AMBIENT_SERVICE_ENABLED*/
 
 
             enable_high_voltage(false);
