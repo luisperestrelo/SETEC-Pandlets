@@ -1,23 +1,23 @@
 _build/spi_fhp_master.o: \
- /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/hardware/spi/spi_fhp_master.c \
- /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/hardware/spi/spi_fhp_master.h \
- /gcc-arm-none-eabi-4_9-2015q3/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h \
- /gcc-arm-none-eabi-4_9-2015q3/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
- /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/stdint.h \
- /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/machine/_default_types.h \
- /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/features.h \
- /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/_intsup.h \
- /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/_stdint.h \
- /home/misterjunio/Documents/SETEC/SETEC-Pandlets/config/spi_master_config.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf_delay.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf51.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/gcc/core_cm0.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/gcc/core_cmInstr.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/gcc/core_cmFunc.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/system_nrf51.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf51_bitfields.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf51_deprecated.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/compiler_abstraction.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf_gpio.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/common.h
+ /home/ricardo/Documentos/allahuakbar/drivers/hardware/spi/spi_fhp_master.c \
+ /home/ricardo/Documentos/allahuakbar/drivers/hardware/spi/spi_fhp_master.h \
+ /home/ricardo/Documentos/nrf51/tools/gcc-arm-none-eabi-4_9-2015q3/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h \
+ /home/ricardo/Documentos/nrf51/tools/gcc-arm-none-eabi-4_9-2015q3/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
+ /home/ricardo/Documentos/nrf51/tools/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/stdint.h \
+ /home/ricardo/Documentos/nrf51/tools/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/machine/_default_types.h \
+ /home/ricardo/Documentos/nrf51/tools/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/features.h \
+ /home/ricardo/Documentos/nrf51/tools/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/_intsup.h \
+ /home/ricardo/Documentos/nrf51/tools/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/_stdint.h \
+ /home/ricardo/Documentos/allahuakbar/config/spi_master_config.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/nrf_delay.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/nrf.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/nrf51.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/gcc/core_cm0.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/gcc/core_cmInstr.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/gcc/core_cmFunc.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/system_nrf51.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/nrf51_bitfields.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/nrf51_deprecated.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/compiler_abstraction.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/nrf_gpio.h \
+ /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/common.h

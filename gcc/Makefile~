@@ -43,7 +43,7 @@ LDFLAGS := -Wl,--gc-sections -DARM_MATH_CM0 -DFIXED_POINT -DFAST_AND_DIRTY -fno-
 LIBRARIES = -lm
 
 # SDK paths
-INCLUDEPATHS += -I"/home/ricardo/Documentos/nrf51/tools/s110_nrf51822_7.3.0/s110_nrf51822_7.3.0_API/include"
+INCLUDEPATHS += -I"home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/s110"
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble"
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble/device_manager"
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble/ble_services"

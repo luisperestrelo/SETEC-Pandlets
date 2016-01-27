@@ -225,6 +225,10 @@ void services_init(void){
 	#if HUMSOLO_ENABLED
     amb_init.humsolo_init_configuration = HUMSOLO_INITIAL_CONFIG;
 	#endif
+	
+	#if RAIN_ENABLED
+    amb_init.rain_init_configuration = RAIN_INITIAL_CONFIG;
+	#endif
 
 	#if SD_ENABLED
     amb_init.sd_init_configuration = SD_INITIAL_CONFIG;
@@ -366,6 +370,11 @@ void sensors_init(void){
 	APP_ERROR_CHECK(lum_configs_update());
 	#endif /* LUM_ENABLED */
 	
+	#if RAIN_ENABLED
+	APP_ERROR_CHECK(rain_init(&m_amb));
+	APP_ERROR_CHECK(rain_configs_update());
+	#endif /* RAIN_ENABLED */
+	
 	#if SD_ENABLED
 	APP_ERROR_CHECK(sd_init(&m_amb));
 //	APP_ERROR_CHECK(sd_configs_update());
@@ -423,6 +432,10 @@ void application_work_start(void *data, uint16_t size){
 
 	#if LUM_ENABLED == 1
 	flag |= (m_lum.IS_LUM_ENABLED);
+	#endif
+	
+	#if RAIN_ENABLED == 1
+	flag |= (m_rain.IS_RAIN_ENABLED);
 	#endif
 	
 	#if SD_ENABLED == 1

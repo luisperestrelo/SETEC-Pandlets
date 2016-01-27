@@ -29,9 +29,13 @@
 #define LUM_INITIAL_CONFIG          0b11110000										  //Initial configuration of the LUM sensor. Disabled, 0.5Hz.
 #define LUM_DEBUG                   1												  //Enables LUM RTT debug
 
-/***************** LUM *********************/
+/***************** RAIN *********************/
+#define RAIN_INITIAL_CONFIG          0b11110000										  //Initial configuration of the RAIN sensor. Disabled, 0.5Hz.
+#define RAIN_DEBUG                   1												  //Enables RAIN RTT debug
+
+/***************** SD *********************/
 #define SD_INITIAL_CONFIG          0b11110000										  //Initial configuration of the LUM sensor. Disabled, 0.5Hz.
-#define SD_DEBUG                   1												  //Enables LUM RTT debug
+#define SD_DEBUG                   1												  //Enables SD RTT debug
 
 
 #endif /*AMBIENT_SERVICE_ENABLED*/

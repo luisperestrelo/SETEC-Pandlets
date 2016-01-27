@@ -70,7 +70,8 @@
 #define HUM_ENABLED							1      							      //Enables Humidity sensor 
 #define HUMSOLO_ENABLED						0      							      //Enables Humidity sensor 
 #define LUM_ENABLED							0      							      //Enables Luminosity sensor 
-#define SD_ENABLED							1      							      //Enables Luminosity sensor 
+#define RAIN_ENABLED						0      							      //Enables Rain sensor 
+#define SD_ENABLED							1      							      //Enables SD Card 
 
 #endif /* AMBIENT_SERVICE_ENABLED */
 

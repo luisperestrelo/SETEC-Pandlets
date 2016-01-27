@@ -1,6 +1,6 @@
-_build/humsolo.o: \
- /home/ricardo/Documentos/allahuakbar/drivers/sensors/ambient/humsolo.c \
- /home/ricardo/Documentos/allahuakbar/drivers/sensors/ambient/humsolo.h \
+_build/rain.o: \
+ /home/ricardo/Documentos/allahuakbar/drivers/sensors/ambient/rain.c \
+ /home/ricardo/Documentos/allahuakbar/drivers/sensors/ambient/rain.h \
  /home/ricardo/Documentos/allahuakbar/config/ble_services_config/ambient_service_config.h \
  /home/ricardo/Documentos/allahuakbar/config/board_config.h \
  /home/ricardo/Documentos/allahuakbar/config/board_config/sensingplus/boron_config.h \
