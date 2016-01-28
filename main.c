@@ -344,6 +344,13 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 			APP_ERROR_CHECK(rain_configs_update()); //Update Rain configurations.
             break;
 		#endif
+		
+		#if UV_ENABLED == 1
+        case BLE_AMBIENT_EVT_UV_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_UV_CONFIG_CHANGED: 0x%x\n", m_amb.uv_configuration);
+			APP_ERROR_CHECK(uv_configs_update()); //Update Rain configurations.
+            break;
+		#endif
 
 		#if HUM_ENABLED == 1
 		case BLE_AMBIENT_EVT_HUM_CONFIG_CHANGED:
@@ -411,6 +418,11 @@ void base_timer_handler(void * p_context){
 	/*********** RAIN *************/
 	#if RAIN_ENABLED == 1
 	APP_ERROR_CHECK(rain_timer_handler()); //Call handler for Rain sensor
+	#endif
+	
+	/*********** UV *************/
+	#if UV_ENABLED == 1
+	APP_ERROR_CHECK(uv_timer_handler()); //Call handler for Rain sensor
 	#endif
 
 #endif

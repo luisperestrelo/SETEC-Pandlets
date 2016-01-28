@@ -44,14 +44,17 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMBIENT_UUID_LUM_CHAR                   0x1139  //Luminosity Values
 #define AMBIENT_UUID_LUM_CONFIG_CHAR            0x1140  //LUM Configuration
 
-#define AMBIENT_UUID_HUMSOLO_CHAR                   0x1141  //Humidity solo Values
-#define AMBIENT_UUID_HUMSOLO_CONFIG_CHAR            0x1142  //HUMSOLO Configuration
+#define AMBIENT_UUID_HUMSOLO_CHAR               0x1141  //Humidity solo Values
+#define AMBIENT_UUID_HUMSOLO_CONFIG_CHAR        0x1142  //HUMSOLO Configuration
 
-#define AMBIENT_UUID_SD_CHAR                   0x1143  //Humidity solo Values
-#define AMBIENT_UUID_SD_CONFIG_CHAR            0x1144  //HUMSOLO Configuration
+#define AMBIENT_UUID_SD_CHAR                    0x1143  //Humidity solo Values
+#define AMBIENT_UUID_SD_CONFIG_CHAR             0x1144  //HUMSOLO Configuration
 
-#define AMBIENT_UUID_RAIN_CHAR                   0x1150  //Rain Values
-#define AMBIENT_UUID_RAIN_CONFIG_CHAR            0x1151  //Rain Configuration
+#define AMBIENT_UUID_RAIN_CHAR                  0x1150  //Rain Values
+#define AMBIENT_UUID_RAIN_CONFIG_CHAR           0x1151  //Rain Configuration
+
+#define AMBIENT_UUID_UV_CHAR                    0x1152  //UV Values
+#define AMBIENT_UUID_UV_CONFIG_CHAR             0x1153  //UV Configuration
 
 #define AMB_TEMP_MAX_PACKET_VALUE               0x04   //4 byte per packet
 #define AMB_PR_MAX_PACKET_VALUE                 0x04   //4 byte per packet
@@ -67,7 +70,7 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMB_RATE_BITS                 0b11100000
 #define AMB_SLEEP_BIT                 0b00010000
 
-#define AMB_NUMBER_OF_SENSORS         7
+#define AMB_NUMBER_OF_SENSORS         8
 
 
 /**@brief Ambient sensor type. */
@@ -79,7 +82,8 @@ typedef enum
     BLE_AMBIENT_LUM,
     BLE_AMBIENT_HUMSOLO,
     BLE_AMBIENT_SD,
-    BLE_AMBIENT_RAIN
+    BLE_AMBIENT_RAIN,
+    BLE_AMBIENT_UV
     
 } ble_ambient_sensor_type;
 
@@ -92,7 +96,8 @@ typedef enum
     BLE_AMBIENT_EVT_LUM_CONFIG_CHANGED,
     BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED,
     BLE_AMBIENT_EVT_SD_CONFIG_CHANGED,
-    BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED
+    BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED,
+    BLE_AMBIENT_EVT_UV_CONFIG_CHANGED
 } ble_ambient_evt_type_t;
 
 /**@brief Maps all update types. Really useful for a compact update function.*/
@@ -150,6 +155,10 @@ typedef struct
 	
 	#if RAIN_ENABLED
     uint8_t                       rain_init_configuration;                      // Sensor configuration value to init the struct.
+	#endif
+	
+	#if UV_ENABLED
+    uint8_t                       uv_init_configuration;                      // Sensor configuration value to init the struct.
 	#endif
 
 	#if SD_ENABLED
@@ -219,6 +228,14 @@ typedef struct ble_ambient_s
 	uint8_t                       rain_configuration;      					   // Rain sensor configuration value placeholder.
 	#endif
 
+	#if UV_ENABLED == 1
+	ble_gatts_char_handles_t      uv_handles;                                 // Handles related to the UV value characteristic.
+	ble_gatts_char_handles_t      uv_configuration_handles;                   // Handles related to the UV sensor configuration characteristic.
+
+	uint8_t                       uv_value[AMB_LUM_MAX_PACKET_VALUE];         // UV value placeholder.
+	uint8_t                       uv_configuration;      					   // UV sensor configuration value placeholder.
+	#endif
+	
 	#if SD_ENABLED == 1
 	ble_gatts_char_handles_t      sd_handles;                                 // Handles related to the Humidity value characteristic.
 	ble_gatts_char_handles_t      sd_configuration_handles;                   // Handles related to the Humidity sensor configuration characteristic.

@@ -5,19 +5,19 @@
  *      Author: João Oliveira
  */
 
-#ifndef RAIN_H_
-#define RAIN_H_
+#ifndef UV_H_
+#define UV_H_
 
 #include "ambient_service_config.h"
 #include "board_config.h"
 
-#if RAIN_ENABLED
+#if UV_ENABLED
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
-#define SENSOR_RAIN_ID 6
+#define SENSOR_UV_ID 7
 
 /* Utilities includes */
 #include "utils.h"
@@ -32,10 +32,10 @@
 /* Service includes */
 #include "ble_ambient.h"
 
-#if RAIN_DEBUG
-#define rain_printf RTT_PRINTF
+#if UV_DEBUG
+#define uv_printf RTT_PRINTF
 #else
-#define rain_printf RTT_NOP
+#define uv_printf RTT_NOP
 #endif
 
 typedef struct
@@ -45,23 +45,23 @@ typedef struct
 	uint64_t ticks; //Ticks of base timer
 	uint64_t timer_count;
 
-	bool    IS_RAIN_ENABLED;
-} rain_t;
+	bool    IS_UV_ENABLED;
+} uv_t;
 
 
-rain_t m_rain;
+uv_t m_uv;
 
 
-uint32_t rain_init(ble_ambient_t *m_amb_init);
+uint32_t uv_init(ble_ambient_t *m_amb_init);
 
-uint32_t rain_configs_update();
+uint32_t uv_configs_update();
 
-uint32_t rain_timer_handler();
+uint32_t uv_timer_handler();
 
-uint32_t rain_values_handler();
+uint32_t uv_values_handler();
 
-uint32_t rain_reset_configs();
+uint32_t uv_reset_configs();
 
-#endif /* RAIN_ENABLED */
+#endif /* UV_ENABLED */
 
-#endif /* RAIN_H_ */
+#endif /* UV_H_ */

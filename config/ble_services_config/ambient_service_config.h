@@ -33,6 +33,10 @@
 #define RAIN_INITIAL_CONFIG          0b11110000										  //Initial configuration of the RAIN sensor. Disabled, 0.5Hz.
 #define RAIN_DEBUG                   1												  //Enables RAIN RTT debug
 
+/***************** UV *********************/
+#define UV_INITIAL_CONFIG          0b11110000										  //Initial configuration of the RAIN sensor. Disabled, 0.5Hz.
+#define UV_DEBUG                   1												  //Enables RAIN RTT debug
+
 /***************** SD *********************/
 #define SD_INITIAL_CONFIG          0b11110000										  //Initial configuration of the LUM sensor. Disabled, 0.5Hz.
 #define SD_DEBUG                   1												  //Enables SD RTT debug

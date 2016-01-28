@@ -1,5 +1,5 @@
 /*
- * humsolo.c
+ * rain.c
  *
  *  Created on: Apr 17, 2015
  *      Author: João Oliveira
@@ -10,7 +10,7 @@
 
 #if RAIN_ENABLED == 1
 
-uint32_t humsolo_init(ble_ambient_t *m_amb_init){
+uint32_t rain_init(ble_ambient_t *m_amb_init){
 	rain_printf("rain_init() \r\n");
 
 	m_rain.timer_count           = 0;
@@ -60,7 +60,7 @@ uint32_t rain_configs_update(){
 
 uint32_t rain_values_handler() {
 	uint32_t  err_code = NRF_SUCCESS;
-	uint16_t humsolo_buffer;
+	uint16_t rain_buffer;
 	//return NRF_SUCCESS;
 	//SparkFunTSL2561_init();
 	
@@ -133,7 +133,7 @@ uint32_t rain_reset_configs(){
 	err_code = rain_configs_update();
 
 	if(err_code != NRF_SUCCESS){
-		humsolo_printf("rain_configs_update() failed.\r\n");
+		rain_printf("rain_configs_update() failed.\r\n");
 		return err_code;
 	}
 

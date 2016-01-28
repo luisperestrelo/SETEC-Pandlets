@@ -120,6 +120,10 @@ ble_ambient_t                           m_amb;										    // Ambient Service s
 #include "rain.h"      																	//device driver for Rain sensor
 #endif
 
+//***************** UV***********************/
+#if UV_ENABLED == 1
+#include "uv.h"      																	//device driver for UV sensor
+#endif
 
 //***************** SD ***********************/
 #if SD_ENABLED == 1
