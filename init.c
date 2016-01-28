@@ -229,6 +229,14 @@ void services_init(void){
 	#if SD_ENABLED
     amb_init.sd_init_configuration = SD_INITIAL_CONFIG;
 	#endif
+	
+	#if INST_ENABLED
+    amb_init.inst_init_configuration = INST_INITIAL_CONFIG;
+	#endif
+	
+	#if ALERT_ENABLED
+    amb_init.alert_init_configuration = ALERT_INITIAL_CONFIG;
+	#endif
 
     err_code = ble_ambient_init(&m_amb, &amb_init); //perform service initiation
     APP_ERROR_CHECK(err_code);
@@ -307,7 +315,7 @@ void drivers_init(void){
 
 	//Startup the TWI
 	if(!twi_master_init())
-		APP_ERROR_CHECK(TWI_INIT_ERROR);
+	APP_ERROR_CHECK(TWI_INIT_ERROR);
 
 	//Max17048 is used for battery monitoring
 	APP_ERROR_CHECK(max17048_init(GAUGE_ADDRESS));
@@ -325,7 +333,7 @@ void drivers_init(void){
 
 	//Even if not used, it is present in the Pandlet board
 	//Init it to put it to sleep.
-  //mpu9x50_init(MPU_ADDRESS);
+	//mpu9x50_init(MPU_ADDRESS);
 
 	//init the MPU as Movement Alert
 	mpu9x50_initMoveSensor(MPU_ADDRESS);
@@ -369,7 +377,15 @@ void sensors_init(void){
 	#if SD_ENABLED
 	APP_ERROR_CHECK(sd_init(&m_amb));
 //	APP_ERROR_CHECK(sd_configs_update());
-	#endif /* LUM_ENABLED */
+	#endif /* SD_ENABLED */
+	
+	#if INST_ENABLED
+	APP_ERROR_CHECK(inst_init(&m_amb));
+	#endif /* INST_ENABLED */
+	
+	#if ALERT_ENABLED
+	APP_ERROR_CHECK(alert_init(&m_amb));
+	#endif /* ALERT_ENABLED */
 	
 #endif
 
@@ -427,6 +443,14 @@ void application_work_start(void *data, uint16_t size){
 	
 	#if SD_ENABLED == 1
 	flag |= (m_sd2app.IS_SD_ENABLED);
+	#endif
+	
+	#if INST_ENABLED == 1
+	flag |= (m_inst.IS_INST_ENABLED);
+	#endif
+	
+	#if ALERT_ENABLED == 1
+	flag |= (m_alert.IS_ALERT_ENABLED);
 	#endif
 	
 	if(flag){

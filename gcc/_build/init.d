@@ -116,5 +116,9 @@ _build/init.o: ../init.c ../init.h \
  /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/temp.h \
  ../nosso.h \
  /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/pr.h \
+ /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/lum.h \
+ /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/SparkFunMS1.h \
  /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/hum.h \
- /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/sd2app.h
+ /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/sd2app.h \
+ /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/install.h \
+ /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/alert.h

@@ -1,6 +1,6 @@
-_build/lum.o: \
- /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/lum.c \
- /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/lum.h \
+_build/alert.o: \
+ /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/alert.c \
+ /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/alert.h \
  /home/misterjunio/Documents/SETEC/SETEC-Pandlets/config/ble_services_config/ambient_service_config.h \
  /home/misterjunio/Documents/SETEC/SETEC-Pandlets/config/board_config.h \
  /home/misterjunio/Documents/SETEC/SETEC-Pandlets/config/board_config/sensingplus/boron_config.h \
@@ -66,8 +66,6 @@ _build/lum.o: \
  /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf51_deprecated.h \
  /home/misterjunio/Documents/SETEC/nrf51822/Include/compiler_abstraction.h \
  /home/misterjunio/Documents/SETEC/SETEC-Pandlets/util/general_error_codes.h \
- /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/SparkFunMS1.h \
- /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/sensors/ambient/SparkFunTSL2561.h \
  /home/misterjunio/Documents/SETEC/SETEC-Pandlets/ble_services/ble_ambient.h \
  /home/misterjunio/Documents/SETEC/nrf51822/Include/ble/ble_services/ble_srv_common.h \
  /home/misterjunio/Documents/SETEC/S110/s110_nrf51822_7.3.0_API/include/ble_types.h \

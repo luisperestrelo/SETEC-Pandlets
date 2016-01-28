@@ -6,9 +6,8 @@
 
 #include "init.h"
 #include "nosso.h"
-#define DEAD_BEEF                       0xDEADBEEF                                  // Value used as error code on stack dump, can be used to identify stack location on stack unwind.
 
-#define MAX_TEST_DATA_BYTES      (15U) /*!< max number of test bytes to be used for tx and rx */
+#define DEAD_BEEF                       0xDEADBEEF                                  // Value used as error code on stack dump, can be used to identify stack location on stack unwind.
 
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    // Handle of the current connection.
 
@@ -148,15 +147,15 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
         	//Upon disconnection, reset all sensors (for energy saving)
 
         	//application_work_stop(); //Stop base timer.
-            m_conn_handle = BLE_CONN_HANDLE_INVALID;
+            //m_conn_handle = BLE_CONN_HANDLE_INVALID;
 
             // set LED greeen
         	printf("BLE_GAP_EVT_DISCONNECTED \r\n");
 			fhp_gpio_clear(LED_GREEN);
  
             /********* AMBIENT SERVICE ********/
-			#if AMBIENT_SERVICE_ENABLED
-            m_amb.conn_handle = m_conn_handle;
+			//#if AMBIENT_SERVICE_ENABLED
+            //m_amb.conn_handle = m_conn_handle;
 
            	//#if TEMP_ENABLED
             //APP_ERROR_CHECK(temp_reset_configs());
@@ -177,7 +176,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 			//#if HUM_ENABLED
 			//APP_ERROR_CHECK(hum_reset_configs());
 			//#endif
-            #endif /*AMBIENT_SERVICE_ENABLED*/
+            //#endif /*AMBIENT_SERVICE_ENABLED*/
 
 
             enable_high_voltage(false);
@@ -289,6 +288,7 @@ void sys_evt_dispatch(uint32_t sys_evt){
     on_sys_evt(sys_evt);
 }
 
+
 #if AMBIENT_SERVICE_ENABLED
 /**@brief Function to handle the ble_amb service events.
  * 
@@ -319,14 +319,14 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 		#if LUM_ENABLED == 1
         case BLE_AMBIENT_EVT_LUM_CONFIG_CHANGED:
         	printf("BLE_AMBIENT_EVT_LUM_CONFIG_CHANGED: 0x%x\n", m_amb.lum_configuration);
-			APP_ERROR_CHECK(lum_configs_update()); //Update Pr configurations.
+			APP_ERROR_CHECK(lum_configs_update()); //Update Lum configurations.
             break;
 		#endif
 
 		#if HUMSOLO_ENABLED == 1
         case BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED:
         	printf("BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED: 0x%x\n", m_amb.humsolo_configuration);
-			APP_ERROR_CHECK(humsolo_configs_update()); //Update Pr configurations.
+			APP_ERROR_CHECK(humsolo_configs_update()); //Update Humsolo configurations.
             break;
 		#endif
 
@@ -340,7 +340,21 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 		#if SD_ENABLED == 1
 		case BLE_AMBIENT_EVT_SD_CONFIG_CHANGED:
         	printf("BLE_AMBIENT_EVT_SD_CONFIG_CHANGED: 0x%x\n", m_amb.sd_configuration);
-        	//APP_ERROR_CHECK(sd_configs_update()); //Update sd configurations.
+        	//APP_ERROR_CHECK(sd_configs_update()); //Update SD configurations.
+			break;
+		#endif
+
+		#if INST_ENABLED == 1
+		case BLE_AMBIENT_EVT_INST_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_INST_CONFIG_CHANGED: 0x%x\n", m_amb.inst_configuration);
+        	//APP_ERROR_CHECK(inst_configs_update()); //Update Inst configurations.
+			break;
+		#endif
+
+		#if ALERT_ENABLED == 1
+		case BLE_AMBIENT_EVT_ALERT_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_ALERT_CONFIG_CHANGED: 0x%x\n", m_amb.alert_configuration);
+        	//APP_ERROR_CHECK(alert_configs_update()); //Update Alert configurations.
 			break;
 		#endif
 		
@@ -380,7 +394,7 @@ void base_timer_handler(void * p_context){
 	
 	/*********** LUM *************/
 	#if LUM_ENABLED == 1
-	APP_ERROR_CHECK(lum_timer_handler()); //Call handler for Pr sensor
+	APP_ERROR_CHECK(lum_timer_handler()); //Call handler for Lum sensor
 	#endif
 
 	/*********** HUM *************/
@@ -390,7 +404,7 @@ void base_timer_handler(void * p_context){
 
 	/*********** HUMSOLO *************/
 	#if HUMSOLO_ENABLED == 1
-	APP_ERROR_CHECK(humsolo_timer_handler()); //Call handler for Hum sensor
+	APP_ERROR_CHECK(humsolo_timer_handler()); //Call handler for Hum solo sensor
 	#endif
 
 #endif
@@ -496,10 +510,14 @@ int main(void){
     app_sched_event_put(NULL, 0, application_work_start); //Start base timer.
     
     app_timer_start(m_rtc_timer_id, APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER), NULL);
+    
+	//uint32_t lum_buffer = 0;
 
     // Enter main loop
     for (;;){
 		app_sched_execute();
+		/*SparkFunTSL2561_bring_the_light(&lum_buffer);
+		lum_printf("Luminosity: %d\r\n", (int)lum_buffer);*/
 		power_manage(); //go to sleep
     }
 }
