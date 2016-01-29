@@ -856,7 +856,6 @@ uint32_t ble_ambient_sensor_update(ble_ambient_t * p_amb, uint8_t * values, uint
 			if (err_code != NRF_SUCCESS)
 				return err_code;
 
-			printf("p_amb->conn_handle: %d; BLE_CONN_HANDLE_INVALID: %d; p_amb->is_notification_supported: %d\n", (int)p_amb->conn_handle, (int)BLE_CONN_HANDLE_INVALID, (int)p_amb->is_notification_supported);
 			// Send value if connected and notifying
 			if ((p_amb->conn_handle != BLE_CONN_HANDLE_INVALID) && p_amb->is_notification_supported){
 				ble_gatts_hvx_params_t hvx_params;
