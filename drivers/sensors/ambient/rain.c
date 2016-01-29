@@ -1,11 +1,3 @@
-/*
- * rain.c
- *
- *  Created on: Apr 17, 2015
- *      Author: João Oliveira
- */
-
-
 #include "rain.h"
 
 #if RAIN_ENABLED == 1
@@ -15,7 +7,7 @@ uint32_t rain_init(ble_ambient_t *m_amb_init){
 
 	m_rain.timer_count           = 0;
 	m_rain.m_amb                 = m_amb_init;
-	m_rain.IS_RAIN_ENABLED    = false;
+	m_rain.IS_RAIN_ENABLED    = true;
 
 	return NRF_SUCCESS;
 }
@@ -48,7 +40,7 @@ uint32_t rain_configs_update(){
 			break;
 		case 0b111:
 		default: //If not recognized set max rate
-			m_rain.ticks = msec_to_ticks(2000);     //0.5 Hz
+			m_rain.ticks = msec_to_ticks(120000);     //0.5 Hz
 			break;
 	}
 
@@ -60,21 +52,21 @@ uint32_t rain_configs_update(){
 
 uint32_t rain_values_handler() {
 	uint32_t  err_code = NRF_SUCCESS;
-	uint16_t rain_buffer;
+	uint8_t rain_buffer;
 	//return NRF_SUCCESS;
 	//SparkFunTSL2561_init();
 	
 	//err_code = SparkFunTSL2561_bring_the_light(&lum_buffer);
-	err_code = SparkFunMS1_read(&rain_buffer);
+	err_code = SparkFunMS1_read1(&rain_buffer);
 	
 	
-	if (err_code != NRF_SUCCESS) {
-		rain_printf("rain: Rain_read failed.\r\n");
-		return err_code;
-	}
+	//if (err_code != NRF_SUCCESS) {
+		//rain_printf("rain: Rain_read failed.\r\n");
+		//return err_code;
+	//}
 	
-    char buf[12];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_RAIN_ID,(int)rain_buffer,000);
+	char buf[20];
+    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_RAIN_ID,(int)err_code,(int)getTimeStamp());
 	log2sd(buf, "TEMP.txt");
 
 	rain_printf("Rain: %d\r\n", (int)rain_buffer);

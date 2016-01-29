@@ -60,7 +60,9 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMB_PR_MAX_PACKET_VALUE                 0x04   //4 byte per packet
 #define AMB_HUM_MAX_PACKET_VALUE                0x04   //4 byte per packet   
 #define AMB_HUMSOLO_MAX_PACKET_VALUE            0x04   //4 byte per packet
-#define AMB_LUM_MAX_PACKET_VALUE                0x04   //4 byte per packet
+#define AMB_LUM_MAX_PACKET_VALUE                0x04   //4 byte per packet  
+#define AMB_RAIN_MAX_PACKET_VALUE            0x04   //4 byte per packet
+#define AMB_UV_MAX_PACKET_VALUE                0x04   //4 byte per packet
 #define AMB_SD_MAX_PACKET_VALUE                 0x14   //20 byte per packet
 
 #define INVALID_SENSOR_VALUE                    0xFF   //Default value for the sensor values
@@ -224,7 +226,7 @@ typedef struct ble_ambient_s
 	ble_gatts_char_handles_t      rain_handles;                                 // Handles related to the Rain value characteristic.
 	ble_gatts_char_handles_t      rain_configuration_handles;                   // Handles related to the Rain sensor configuration characteristic.
 
-	uint8_t                       rain_value[AMB_LUM_MAX_PACKET_VALUE];         // Rain value placeholder.
+	uint8_t                       rain_value[AMB_RAIN_MAX_PACKET_VALUE];         // Rain value placeholder.
 	uint8_t                       rain_configuration;      					   // Rain sensor configuration value placeholder.
 	#endif
 
@@ -232,7 +234,7 @@ typedef struct ble_ambient_s
 	ble_gatts_char_handles_t      uv_handles;                                 // Handles related to the UV value characteristic.
 	ble_gatts_char_handles_t      uv_configuration_handles;                   // Handles related to the UV sensor configuration characteristic.
 
-	uint8_t                       uv_value[AMB_LUM_MAX_PACKET_VALUE];         // UV value placeholder.
+	uint8_t                       uv_value[AMB_UV_MAX_PACKET_VALUE];         // UV value placeholder.
 	uint8_t                       uv_configuration;      					   // UV sensor configuration value placeholder.
 	#endif
 	

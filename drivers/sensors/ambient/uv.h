@@ -1,23 +1,16 @@
-/*
- *  Humidity soil sensor.
- *
- *  Created on: Abr 17, 2015
- *      Author: João Oliveira
- */
-
 #ifndef UV_H_
 #define UV_H_
 
 #include "ambient_service_config.h"
 #include "board_config.h"
 
-#if UV_ENABLED
+#if UV_ENABLED == 1
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "nosso.h"
 
-#define SENSOR_UV_ID 7
 
 /* Utilities includes */
 #include "utils.h"
@@ -37,6 +30,8 @@
 #else
 #define uv_printf RTT_NOP
 #endif
+
+#define SENSOR_UV_ID 7
 
 typedef struct
 {

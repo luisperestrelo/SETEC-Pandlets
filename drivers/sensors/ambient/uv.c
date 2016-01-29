@@ -1,11 +1,3 @@
-/*
- * uv.c
- *
- *  Created on: Apr 17, 2015
- *      Author: João Oliveira
- */
-
-
 #include "uv.h"
 
 #if UV_ENABLED == 1
@@ -15,7 +7,7 @@ uint32_t uv_init(ble_ambient_t *m_amb_init){
 
 	m_uv.timer_count           = 0;
 	m_uv.m_amb                 = m_amb_init;
-	m_uv.IS_UV_ENABLED    = false;
+	m_uv.IS_UV_ENABLED    	   = true;
 
 	return NRF_SUCCESS;
 }
@@ -60,21 +52,18 @@ uint32_t uv_configs_update(){
 
 uint32_t uv_values_handler() {
 	uint32_t  err_code = NRF_SUCCESS;
-	uint16_t uv_buffer;
-	//return NRF_SUCCESS;
-	//SparkFunTSL2561_init();
-	
-	//err_code = SparkFunTSL2561_bring_the_light(&lum_buffer);
-	err_code = SparkFunMS1_read(&uv_buffer);
+	uint8_t uv_buffer;
+
+	err_code = SparkFunMS1_read2(&uv_buffer);
 	
 	
-	if (err_code != NRF_SUCCESS) {
-		uv_printf("uv: UV_read failed.\r\n");
-		return err_code;
-	}
+	//if (err_code != NRF_SUCCESS) {
+		//uv_printf("uv: UV_read failed.\r\n");
+		//return err_code;
+	//}
 	
-    char buf[12];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_UV_ID,(int)uv_buffer,000);
+	char buf[20];
+    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_UV_ID,(int)uv_buffer,(int)getTimeStamp());
 	log2sd(buf, "TEMP.txt");
 
 	uv_printf("UV: %d\r\n", (int)uv_buffer);

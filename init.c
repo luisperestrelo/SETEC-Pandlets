@@ -229,7 +229,11 @@ void services_init(void){
 	#if RAIN_ENABLED
     amb_init.rain_init_configuration = RAIN_INITIAL_CONFIG;
 	#endif
-
+	
+	#if UV_ENABLED
+    amb_init.uv_init_configuration = UV_INITIAL_CONFIG;
+	#endif
+	
 	#if SD_ENABLED
     amb_init.sd_init_configuration = SD_INITIAL_CONFIG;
 	#endif

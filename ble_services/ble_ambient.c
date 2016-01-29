@@ -710,6 +710,23 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 	type_to_handle[5].config_handle = &(p_amb->sd_configuration_handles);
 	type_to_handle[5].value = (p_amb->sd_value);
 	#endif	
+	
+	
+	type_to_handle[6].type = BLE_AMBIENT_RAIN;
+	#if RAIN_ENABLED
+	type_to_handle[6].handle = &(p_amb->rain_handles);
+	type_to_handle[6].config_handle = &(p_amb->rain_configuration_handles);
+	type_to_handle[6].value = (p_amb->rain_value);
+	#endif	
+	
+	
+	type_to_handle[7].type = BLE_AMBIENT_UV;
+	#if UV_ENABLED
+	type_to_handle[7].handle = &(p_amb->uv_handles);
+	type_to_handle[7].config_handle = &(p_amb->uv_configuration_handles);
+	type_to_handle[7].value = (p_amb->uv_value);
+	#endif	
+	
 	return err_code;											
 }
 
@@ -758,7 +775,7 @@ uint32_t ble_ambient_init(ble_ambient_t * p_amb, const ble_ambient_init_t * p_am
 	#endif	
 	
 	#if RAIN_ENABLED
-	for(uint8_t i = 0; i < AMB_RAIN_MAX_PACKET_VALUE; i++) p_amb->rain_value[i]            = INVALID_SENSOR_VALUE;
+	for(uint8_t i = 0; i < AMB_RAIN_MAX_PACKET_VALUE; i++) p_amb->rain_value[i]          = INVALID_SENSOR_VALUE;
 	p_amb->rain_configuration           = p_amb_init->rain_init_configuration;
 	#endif	
 	

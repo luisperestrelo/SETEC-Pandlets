@@ -2,6 +2,8 @@
 #define SparkFunMS1_h
 #include <stdbool.h>
 #include <stdint.h>
-bool SparkFunMS1_read(uint16_t *molhadinho);
+int SparkFunMS1_read1(uint8_t *molhadinho);
+bool SparkFunMS1_read2(uint8_t *molhadinho);
+bool SparkFunMS1_read3(uint16_t *molhadinho);
 
 #endif

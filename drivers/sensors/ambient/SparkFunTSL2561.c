@@ -102,6 +102,8 @@ uint32_t SparkFunTSL2561_init(){
 
 uint32_t SparkFunTSL2561_bring_the_light(uint32_t *lux){
 
+	SparkFunTSL2561_init();
+	
 	data0=data1=0;
 	printf("SparkFunTSL2561_bring_the_light\n");
 	if (!SFE_TSL2561_getData(&data0,&data1))
@@ -253,20 +255,24 @@ bool SFE_TSL2561_manualStop(void)
 }
 
 
-bool SFE_TSL2561_getData(uint8_t *data0, uint8_t *data1)
 	// Retrieve raw integration results
 	// data0 and data1 will be set to integration results
 	// Returns true (1) if successful, false (0) if there was an I2C error
 	// (Also see getError() below)
+bool SFE_TSL2561_getData(uint8_t *data0, uint8_t *data1)
 {
 	// Get data0 and data1 out of result registers
 
-	if (SFE_TSL2561_readUInt(TSL2561_REG_DATA_0,(data0)) && SFE_TSL2561_readUInt(TSL2561_REG_DATA_1,(data1))) {
+	if (!SFE_TSL2561_readUInt(TSL2561_REG_DATA_0,(data0))) {
+		return false;
+		}
+	
+	if (!SFE_TSL2561_readUInt(TSL2561_REG_DATA_1,(data1))) {
 		
-		return(true);
+		return false;
 	}
 	
-	return(false);
+	return true;
 }
 
 
@@ -311,32 +317,33 @@ bool SFE_TSL2561_getLux(unsigned char gain, uint32_t ms, unsigned int CH0, unsig
 	if (ratio < 0.5)
 	{
 		(*lux) = (uint32_t)(0.0304 * d0 - 0.062 * d0 * pow(ratio,1.4));
-		printf("ratio<0.5\n");
+		//printf("d0: %d, d1:%d",(int)d0,(int)d1);
+	//	printf("ratio<0.5\n");
 		return(true);
 	}
 
 	if (ratio < 0.61)
 	{
 		(*lux) = (uint32_t)(0.0224 * d0 - 0.031 * d1);
-		printf("ratio<0.61\n");
+		//printf("ratio<0.61\n");
 		return(true);
 	}
 
 	if (ratio < 0.80)
 	{
 		(*lux) =(uint32_t)(0.0128 * d0 - 0.0153 * d1);
-		printf("ratio<0.8\n");		
+	//	printf("ratio<0.8\n");		
 		return(true);
 	}
 
 	if (ratio < 1.30)
 	{
 		(*lux) = (uint32_t)(0.00146 * d0 - 0.00112 * d1);
-		printf("ratio<1.3\n");
+	//	printf("ratio<1.3\n");
 		return(true);
 	}
 	
-	printf("ratio>1.3\n");
+//	printf("ratio>1.3\n");
 	(*lux) = 0.0;
 	return(true);
 }

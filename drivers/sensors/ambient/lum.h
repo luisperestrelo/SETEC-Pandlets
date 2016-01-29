@@ -21,6 +21,7 @@
 
 /* Utilities includes */
 #include "utils.h"
+#include "nosso.h"
 
 #include "bme280.h"              //BME280 device driver
 #include <SparkFunMS1.h>
