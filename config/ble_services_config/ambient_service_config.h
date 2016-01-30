@@ -29,9 +29,20 @@
 #define LUM_INITIAL_CONFIG          0b11110000										  //Initial configuration of the LUM sensor. Disabled, 0.5Hz.
 #define LUM_DEBUG                   1												  //Enables LUM RTT debug
 
-/***************** LUM *********************/
-#define SD_INITIAL_CONFIG          0b11110000										  //Initial configuration of the LUM sensor. Disabled, 0.5Hz.
-#define SD_DEBUG                   1												  //Enables LUM RTT debug
+
+/***************** SD *********************/
+#define SD_INITIAL_CONFIG          0b11110000										  //Initial configuration of the SD. Disabled, 0.5Hz.
+#define SD_DEBUG                   1												  //Enables SD RTT debug
+
+
+/***************** INST *********************/
+#define INST_INITIAL_CONFIG          0b11110000										  //Initial configuration of the Install. Disabled, 0.5Hz.
+#define INST_DEBUG                   1												  //Enables INST RTT debug
+
+
+/***************** ALERT *********************/
+#define ALERT_INITIAL_CONFIG          0b11110000										  //Initial configuration of the Alert. Disabled, 0.5Hz.
+#define ALERT_DEBUG                   1												  //Enables ALERT RTT debug
 
 
 #endif /*AMBIENT_SERVICE_ENABLED*/

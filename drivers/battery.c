@@ -64,6 +64,7 @@ void battery_charge_handler(uint32_t event_pins_low_to_high, uint32_t event_pins
 
 	if (event_pins_high_to_low & USB_CH_STAT_BITMASK){  //Wired charging on
 		wired_charging(true);
+		
 	}
 
 	//TODO update the gauge logic
@@ -94,7 +95,10 @@ void gauge_timer_handler(void * p_context){
 		uint32_t err_code = max17048_read_soc(value);
 
 		if(err_code == NRF_SUCCESS){
-			printf("Battery value: %d. Charging status: %d.\r\n", value[1], (induction_charge_on || wired_charge_on) ? 1 : 0);
+			setflagBAT(value[0]);
+			//if(value[0]>10) setflagBAT(0);
+			//if(value[0]<10) setflagBAT(0XF);
+			printf("Battery value: %d. Charging status: %d.\r\n", value[0], (induction_charge_on || wired_charge_on) ? 1 : 0);
 		}
 		else
 			APP_ERROR_CHECK(err_code);

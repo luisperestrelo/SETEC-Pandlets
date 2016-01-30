@@ -1,6 +1,6 @@
-_build/temp.o: \
- /home/josepintor/Documentos/SETEC/novo/master/drivers/sensors/ambient/temp.c \
- /home/josepintor/Documentos/SETEC/novo/master/drivers/sensors/ambient/temp.h \
+_build/alert.o: \
+ /home/josepintor/Documentos/SETEC/novo/master/drivers/sensors/ambient/alert.c \
+ /home/josepintor/Documentos/SETEC/novo/master/drivers/sensors/ambient/alert.h \
  /home/josepintor/Documentos/SETEC/novo/master/config/ble_services_config/ambient_service_config.h \
  /home/josepintor/Documentos/SETEC/novo/master/config/board_config.h \
  /home/josepintor/Documentos/SETEC/novo/master/config/board_config/sensingplus/boron_config.h \
@@ -25,7 +25,7 @@ _build/temp.o: \
  /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/cdefs.h \
  /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/machine/stdlib.h \
  /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/alloca.h \
- ../nosso.h /home/josepintor/Documentos/SETEC/novo/master/util/utils.h \
+ /home/josepintor/Documentos/SETEC/novo/master/util/utils.h \
  /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/string.h \
  /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/string.h \
  /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/stdio.h \
@@ -73,4 +73,5 @@ _build/temp.o: \
  /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/compiler_abstraction.h \
  /home/josepintor/Documentos/nordic/s110_nrf51822_7.3.0/s110_nrf51822_7.3.0_API/include/ble_gap.h \
  /home/josepintor/Documentos/nordic/s110_nrf51822_7.3.0/s110_nrf51822_7.3.0_API/include/ble_gatt.h \
- /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/nordic_common.h
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/nordic_common.h \
+ ../nosso.h

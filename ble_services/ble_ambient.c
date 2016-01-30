@@ -35,7 +35,7 @@ static void on_disconnect(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
 static void on_write(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
-#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || SD_ENABLED
+#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || SD_ENABLED || INST_ENABLED || ALERT_ENABLED
 	ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
 #endif
 	
@@ -164,6 +164,49 @@ static void on_write(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
 		}
 	}
 	#endif
+		
+    //***************** INST ***********************/
+	#if INST_ENABLED
+	//Sensor configuration written and with right size
+	
+	if((p_evt_write->handle == p_amb->inst_configuration_handles.value_handle) &&
+			(p_evt_write->len == 10)) {
+
+		if (p_amb->evt_handler != NULL){
+			ble_ambient_evt_t amb_evt;
+
+			amb_evt.evt_type = BLE_AMBIENT_EVT_INST_CONFIG_CHANGED;
+			amb_evt.p_ble_evt = p_ble_evt;
+
+			//Save new configuration value
+			ble_install_config_update(p_amb, p_evt_write->data, BLE_AMBIENT_INST);
+
+			//Signal the app that the configuration has changed
+			p_amb->evt_handler(p_amb, &amb_evt);
+		}
+	}
+	#endif
+		
+    //***************** ALERT ***********************/
+	#if ALERT_ENABLED
+	//Sensor configuration written and with right size
+	if((p_evt_write->handle == p_amb->alert_configuration_handles.value_handle) &&
+			(p_evt_write->len == 1)) {
+
+		if (p_amb->evt_handler != NULL){
+			ble_ambient_evt_t amb_evt;
+
+			amb_evt.evt_type = BLE_AMBIENT_EVT_ALERT_CONFIG_CHANGED;
+			amb_evt.p_ble_evt = p_ble_evt;
+
+			//Save new configuration value
+			ble_ambient_config_update(p_amb, p_evt_write->data[0], BLE_AMBIENT_ALERT);
+
+			//Signal the app that the configuration has changed
+			p_amb->evt_handler(p_amb, &amb_evt);
+		}
+	}
+	#endif
 }
 
 
@@ -213,7 +256,7 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
     ble_gatts_attr_md_t attr_md_no_write;
     ble_gatts_attr_md_t attr_md_read_write;
 
-#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || HUMSOLO_ENABLED || SD_ENABLED
+#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || HUMSOLO_ENABLED || SD_ENABLED || INST_ENABLED || ALERT_ENABLED
     ble_uuid_t          ble_char_uuid;
 #endif
 
@@ -508,7 +551,7 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 	char_md.char_props.write  = 0;
 	char_md.char_props.write_wo_resp = 0;
 
-	//Add luminosity characteristic
+	//Add sd characteristic
 	err_code = sd_ble_gatts_characteristic_add(p_amb->service_handle, &char_md,
 									&attr_char, &p_amb->sd_handles);
 
@@ -529,13 +572,105 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 	char_md.char_props.write  = 1;
 	char_md.char_props.write_wo_resp = 1;
 
-	//Add temp configuration characteristic
+	//Add sd configuration characteristic
 	err_code = sd_ble_gatts_characteristic_add(p_amb->service_handle, &char_md,
 									&attr_char, &p_amb->sd_configuration_handles);
 
 	if(err_code != NRF_SUCCESS)
 		return err_code;
 	#endif
+
+	///***************** INST ***********************/
+	#if INST_ENABLED
+	//Set atributes struct
+	ble_char_uuid.type = p_amb->uuid_type;
+	ble_char_uuid.uuid = AMBIENT_UUID_INST_CHAR;
+
+	attr_char.p_uuid    = &ble_char_uuid;
+	attr_char.p_attr_md = &attr_md_no_write;
+	attr_char.init_len  = AMB_INST_MAX_PACKET_VALUE;
+	attr_char.init_offs = 0;
+	attr_char.max_len   = AMB_INST_MAX_PACKET_VALUE;
+	attr_char.p_value   = p_amb->inst_value;
+
+	char_md.char_props.write  = 0;
+	char_md.char_props.write_wo_resp = 0;
+
+	//Add install characteristic
+	err_code = sd_ble_gatts_characteristic_add(p_amb->service_handle, &char_md,
+									&attr_char, &p_amb->inst_handles);
+
+	if(err_code != NRF_SUCCESS)
+		return err_code;
+
+	//Set atributes struct
+	ble_char_uuid.type = p_amb->uuid_type;
+	ble_char_uuid.uuid = AMBIENT_UUID_INST_CONFIG_CHAR;
+
+	attr_char.p_uuid    = &ble_char_uuid;
+	attr_char.p_attr_md = &attr_md_read_write;
+	attr_char.init_len  = 10*sizeof(uint8_t);
+	attr_char.init_offs = 0;
+	attr_char.max_len   = 10*sizeof(uint8_t);
+	attr_char.p_value   = &(p_amb->inst_configuration);
+
+	char_md.char_props.write  = 1;
+	char_md.char_props.write_wo_resp = 1;
+
+	//Add sd configuration characteristic
+	err_code = sd_ble_gatts_characteristic_add(p_amb->service_handle, &char_md,
+									&attr_char, &p_amb->inst_configuration_handles);
+
+	if(err_code != NRF_SUCCESS)
+		return err_code;
+	#endif
+
+	///***************** ALERT ***********************/
+	#if ALERT_ENABLED
+	//Set atributes struct
+	ble_char_uuid.type = p_amb->uuid_type;
+	ble_char_uuid.uuid = AMBIENT_UUID_ALERT_CHAR;
+
+	attr_char.p_uuid    = &ble_char_uuid;
+	attr_char.p_attr_md = &attr_md_no_write;
+	attr_char.init_len  = AMB_ALERT_MAX_PACKET_VALUE;
+	attr_char.init_offs = 0;
+	attr_char.max_len   = AMB_ALERT_MAX_PACKET_VALUE;
+	attr_char.p_value   = p_amb->alert_value;
+
+	char_md.char_props.write  = 0;
+	char_md.char_props.write_wo_resp = 0;
+
+	//Add alert characteristic
+	err_code = sd_ble_gatts_characteristic_add(p_amb->service_handle, &char_md,
+									&attr_char, &p_amb->alert_handles);
+
+	if(err_code != NRF_SUCCESS)
+		return err_code;
+
+	//Set atributes struct
+	ble_char_uuid.type = p_amb->uuid_type;
+	ble_char_uuid.uuid = AMBIENT_UUID_ALERT_CONFIG_CHAR;
+
+	attr_char.p_uuid    = &ble_char_uuid;
+	attr_char.p_attr_md = &attr_md_read_write;
+	attr_char.init_len  = sizeof(uint8_t);
+	attr_char.init_offs = 0;
+	attr_char.max_len   = sizeof(uint8_t);
+	attr_char.p_value   = &(p_amb->alert_configuration);
+
+	char_md.char_props.write  = 1;
+	char_md.char_props.write_wo_resp = 1;
+
+	//Add sd configuration characteristic
+	err_code = sd_ble_gatts_characteristic_add(p_amb->service_handle, &char_md,
+									&attr_char, &p_amb->alert_configuration_handles);
+
+	if(err_code != NRF_SUCCESS)
+		return err_code;
+	#endif
+	
+	
 	//A map for handles, maybe a bit rudimentary...	
 	type_to_handle[0].type = BLE_AMBIENT_TEMP;
 	#if TEMP_ENABLED
@@ -570,15 +705,29 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 	type_to_handle[4].handle = &(p_amb->humsolo_handles);
 	type_to_handle[4].config_handle = &(p_amb->humsolo_configuration_handles);
 	type_to_handle[4].value = (p_amb->humsolo_value);
-	#endif	
+	#endif
 
 	type_to_handle[5].type = BLE_AMBIENT_SD;
 	#if SD_ENABLED
 	type_to_handle[5].handle = &(p_amb->sd_handles);
 	type_to_handle[5].config_handle = &(p_amb->sd_configuration_handles);
 	type_to_handle[5].value = (p_amb->sd_value);
+	#endif
+
+	type_to_handle[6].type = BLE_AMBIENT_INST;
+	#if INST_ENABLED
+	type_to_handle[6].handle = &(p_amb->inst_handles);
+	type_to_handle[6].config_handle = &(p_amb->inst_configuration_handles);
+	type_to_handle[6].value = (p_amb->inst_value);
+	#endif
+
+	type_to_handle[7].type = BLE_AMBIENT_ALERT;
+	#if ALERT_ENABLED
+	type_to_handle[7].handle = &(p_amb->alert_handles);
+	type_to_handle[7].config_handle = &(p_amb->alert_configuration_handles);
+	type_to_handle[7].value = (p_amb->alert_value);
 	#endif	
-	return err_code;											
+	return err_code;
 }
 
 
@@ -623,12 +772,22 @@ uint32_t ble_ambient_init(ble_ambient_t * p_amb, const ble_ambient_init_t * p_am
 	#if LUM_ENABLED
 	for(uint8_t i = 0; i < AMB_LUM_MAX_PACKET_VALUE; i++) p_amb->lum_value[i]            = INVALID_SENSOR_VALUE;
 	p_amb->lum_configuration           = p_amb_init->lum_init_configuration;
-	#endif	
+	#endif
 
 	#if SD_ENABLED
 	for(uint8_t i = 0; i < AMB_SD_MAX_PACKET_VALUE; i++) p_amb->sd_value[i]            = INVALID_SENSOR_VALUE;
 	p_amb->sd_configuration           = p_amb_init->sd_init_configuration;
-	#endif		
+	#endif
+
+	#if INST_ENABLED
+	for(uint8_t i = 0; i < AMB_INST_MAX_PACKET_VALUE; i++) p_amb->inst_value[i]            = INVALID_SENSOR_VALUE;
+	p_amb->sd_configuration           = p_amb_init->inst_init_configuration;
+	#endif
+
+	#if ALERT_ENABLED
+	for(uint8_t i = 0; i < AMB_ALERT_MAX_PACKET_VALUE; i++) p_amb->alert_value[i]            = INVALID_SENSOR_VALUE;
+	p_amb->sd_configuration           = p_amb_init->alert_init_configuration;
+	#endif
 	
 	
     // Add base UUID to softdevice's internal list. 
@@ -676,9 +835,14 @@ uint32_t ble_ambient_sensor_update(ble_ambient_t * p_amb, uint8_t * values, uint
     
 	int i, t;
 	
+	//int j=0;
+	//while (j<10) {
+		//printf("Valor %d: %d\n", j+1, values[j]);
+		//j++;
+	//}
+	
 	for(i = 0; i < AMB_NUMBER_OF_SENSORS; i++){
 		if(type_to_handle[i].type == type){
-
 			uint16_t len = (uint16_t)number_of_bytes;
 
 			// Save new axis value
@@ -709,7 +873,7 @@ uint32_t ble_ambient_sensor_update(ble_ambient_t * p_amb, uint8_t * values, uint
 			else
 				err_code = NRF_ERROR_INVALID_STATE; //no-one is connected!
 
-			return err_code;			
+			return err_code;
 		}	
 	}
 	
@@ -800,7 +964,7 @@ int lerCartao2(ble_ambient_t * m_amb){
  */
 uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configuration, ble_ambient_sensor_type type){
 	//new data!
-#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || HUMSOLO_ENABLED  || SD_ENABLED
+#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || HUMSOLO_ENABLED || SD_ENABLED || INST_ENABLED || ALERT_ENABLED
 	uint16_t len = 1;
 #endif
 	uint32_t err_code = NRF_SUCCESS;
@@ -886,7 +1050,61 @@ uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configu
 		
 		lerCartao2(p_amb);
 		break;
-		#endif	
+		#endif
+		
+		#if ALERT_ENABLED
+		case BLE_AMBIENT_ALERT:
+		// Save new configuration value
+		p_amb->alert_configuration = sensor_configuration;
+
+		// Update database
+		err_code = sd_ble_gatts_value_set(p_amb->alert_configuration_handles.value_handle,
+										  0,
+										  &len,
+										  &sensor_configuration);
+		uint8_t buf=0;
+		//buf=(uint8_t) ((((uint8_t) getflagACC()) << 4) && ((uint8_t) getflagBAT()));
+		buf=((uint8_t) getflagBAT());
+	//	printf("buf antes: %d\n",buf);
+		if((uint8_t) getflagACC()!=0) buf=buf+128;
+	//	printf("buf: %d, bat: %d, acc: %d\n",buf,(int)getflagBAT(),(int)getflagACC());
+		ble_ambient_sensor_update(p_amb, &buf, AMB_ALERT_MAX_PACKET_VALUE, BLE_AMBIENT_ALERT);
+		setflagACC(0);
+		break;
+		#endif
+		
+		
+		default:
+		break;
+	}
+	
+	return err_code;
+}
+
+
+uint32_t ble_install_config_update(ble_ambient_t * p_amb, uint8_t * sensor_configuration, ble_ambient_sensor_type type){
+	//new data!
+#if INST_ENABLED
+	uint16_t len = 10;
+#endif
+	uint32_t err_code = NRF_SUCCESS;
+	
+	switch(type){
+		#if INST_ENABLED
+		case BLE_AMBIENT_INST:
+		// Save new configuration value
+		p_amb->inst_configuration = sensor_configuration[0];
+
+		// Update database
+		err_code = sd_ble_gatts_value_set(p_amb->inst_configuration_handles.value_handle,
+										  0,
+										  &len,
+										  sensor_configuration);
+		
+		ble_ambient_sensor_update(p_amb, sensor_configuration, AMB_INST_MAX_PACKET_VALUE, BLE_AMBIENT_INST);
+		
+		break;
+		#endif
 		
 		
 		default:

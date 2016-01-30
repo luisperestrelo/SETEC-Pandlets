@@ -24,6 +24,7 @@
 #include "nordic_common.h"
 #include "app_util.h"
 #include "utils.h"
+#include "nosso.h"
 
 static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0x22, 0xAD, 0x1A, 0x11, 0x21, 0x22, 0x22, 0x00, 0x00, 0x00, 0x00}};
 
@@ -44,11 +45,17 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMBIENT_UUID_LUM_CHAR                   0x1139  //Luminosity Values
 #define AMBIENT_UUID_LUM_CONFIG_CHAR            0x1140  //LUM Configuration
 
-#define AMBIENT_UUID_HUMSOLO_CHAR                   0x1141  //Humidity solo Values
-#define AMBIENT_UUID_HUMSOLO_CONFIG_CHAR            0x1142  //HUMSOLO Configuration
+#define AMBIENT_UUID_HUMSOLO_CHAR               0x1141  //Humidity solo Values
+#define AMBIENT_UUID_HUMSOLO_CONFIG_CHAR        0x1142  //HUMSOLO Configuration
 
-#define AMBIENT_UUID_SD_CHAR                   0x1143  //Humidity solo Values
-#define AMBIENT_UUID_SD_CONFIG_CHAR            0x1144  //HUMSOLO Configuration
+#define AMBIENT_UUID_SD_CHAR                   	0x1143  //SD Values
+#define AMBIENT_UUID_SD_CONFIG_CHAR            	0x1144  //SD Configuration
+
+#define AMBIENT_UUID_INST_CHAR                  0x1145  //Install Values
+#define AMBIENT_UUID_INST_CONFIG_CHAR           0x1146  //Install Configuration
+
+#define AMBIENT_UUID_ALERT_CHAR                 0x1147  //Alert Values
+#define AMBIENT_UUID_ALERT_CONFIG_CHAR          0x1148  //Alert Configuration
 
 #define AMB_TEMP_MAX_PACKET_VALUE               0x04   //4 byte per packet
 #define AMB_PR_MAX_PACKET_VALUE                 0x04   //4 byte per packet
@@ -56,6 +63,8 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMB_HUMSOLO_MAX_PACKET_VALUE            0x04   //4 byte per packet
 #define AMB_LUM_MAX_PACKET_VALUE                0x04   //4 byte per packet
 #define AMB_SD_MAX_PACKET_VALUE                 0x14   //20 byte per packet
+#define AMB_INST_MAX_PACKET_VALUE               0x0A   //1 byte per packet
+#define AMB_ALERT_MAX_PACKET_VALUE              0x01   //2 byte per packet
 
 #define INVALID_SENSOR_VALUE                    0xFF   //Default value for the sensor values
  
@@ -64,7 +73,7 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMB_RATE_BITS                 0b11100000
 #define AMB_SLEEP_BIT                 0b00010000
 
-#define AMB_NUMBER_OF_SENSORS         6
+#define AMB_NUMBER_OF_SENSORS         8
 
 
 /**@brief Ambient sensor type. */
@@ -75,7 +84,9 @@ typedef enum
     BLE_AMBIENT_HUM,
     BLE_AMBIENT_LUM,
     BLE_AMBIENT_HUMSOLO,
-    BLE_AMBIENT_SD
+    BLE_AMBIENT_SD,
+    BLE_AMBIENT_INST,
+    BLE_AMBIENT_ALERT
     
 } ble_ambient_sensor_type;
 
@@ -87,7 +98,9 @@ typedef enum
     BLE_AMBIENT_EVT_HUM_CONFIG_CHANGED,
     BLE_AMBIENT_EVT_LUM_CONFIG_CHANGED,
     BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED,
-    BLE_AMBIENT_EVT_SD_CONFIG_CHANGED
+    BLE_AMBIENT_EVT_SD_CONFIG_CHANGED,
+    BLE_AMBIENT_EVT_INST_CONFIG_CHANGED,
+    BLE_AMBIENT_EVT_ALERT_CONFIG_CHANGED
 } ble_ambient_evt_type_t;
 
 /**@brief Maps all update types. Really useful for a compact update function.*/
@@ -146,6 +159,14 @@ typedef struct
 	#if SD_ENABLED
     uint8_t                       sd_init_configuration;                      // Sensor configuration value to init the struct.
 	#endif
+
+	#if INST_ENABLED
+    uint8_t                       inst_init_configuration;                      // Sensor configuration value to init the struct.
+	#endif
+
+	#if ALERT_ENABLED
+    uint8_t                       alert_init_configuration;                      // Sensor configuration value to init the struct.
+	#endif
     
 } ble_ambient_init_t;
 
@@ -203,11 +224,27 @@ typedef struct ble_ambient_s
 	#endif
 
 	#if SD_ENABLED == 1
-	ble_gatts_char_handles_t      sd_handles;                                 // Handles related to the Humidity value characteristic.
-	ble_gatts_char_handles_t      sd_configuration_handles;                   // Handles related to the Humidity sensor configuration characteristic.
+	ble_gatts_char_handles_t      sd_handles;                                 // Handles related to the SD value characteristic.
+	ble_gatts_char_handles_t      sd_configuration_handles;                   // Handles related to the SD configuration characteristic.
 
-	uint8_t                       sd_value[AMB_SD_MAX_PACKET_VALUE];         // Humidity value placeholder.
-	uint8_t                       sd_configuration;      					   // Humidity sensor configuration value placeholder.
+	uint8_t                       sd_value[AMB_SD_MAX_PACKET_VALUE];         // SD value placeholder.
+	uint8_t                       sd_configuration;      					   // SD sensor configuration value placeholder.
+	#endif
+
+	#if INST_ENABLED == 1
+	ble_gatts_char_handles_t      inst_handles;                                 // Handles related to the Install value characteristic.
+	ble_gatts_char_handles_t      inst_configuration_handles;                   // Handles related to the Install configuration characteristic.
+
+	uint8_t                       inst_value[AMB_INST_MAX_PACKET_VALUE];         // Install value placeholder.
+	uint8_t                       inst_configuration;      					   // Install sensor configuration value placeholder.
+	#endif
+
+	#if ALERT_ENABLED == 1
+	ble_gatts_char_handles_t      alert_handles;                                 // Handles related to the Alert value characteristic.
+	ble_gatts_char_handles_t      alert_configuration_handles;                   // Handles related to the Alert configuration characteristic.
+
+	uint8_t                       alert_value[AMB_ALERT_MAX_PACKET_VALUE];         // Alert value placeholder.
+	uint8_t                       alert_configuration;      					   // Alert sensor configuration value placeholder.
 	#endif
     
 } ble_ambient_t;
@@ -258,6 +295,18 @@ uint32_t ble_ambient_sensor_update(ble_ambient_t * p_amb, uint8_t * values,
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
 uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configuration, 
+														 ble_ambient_sensor_type type);
+
+
+/**@brief Function for updating the Install config values.
+ * 
+ * @param[in]   p_amb                  Ambient Service structure.
+ * @param[in]   sensor_configuration   New configuration.
+ * @param[in]   type                   Type.
+ *
+ * @return      NRF_SUCCESS on success, otherwise an error code.
+ */
+uint32_t ble_install_config_update(ble_ambient_t * p_amb, uint8_t * sensor_configuration, 
 														 ble_ambient_sensor_type type);
 
 

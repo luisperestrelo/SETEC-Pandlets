@@ -1,23 +1,23 @@
 _build/spi_fhp_master.o: \
- /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/hardware/spi/spi_fhp_master.c \
- /home/misterjunio/Documents/SETEC/SETEC-Pandlets/drivers/hardware/spi/spi_fhp_master.h \
- /gcc-arm-none-eabi-4_9-2015q3/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h \
- /gcc-arm-none-eabi-4_9-2015q3/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
- /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/stdint.h \
- /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/machine/_default_types.h \
- /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/features.h \
- /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/_intsup.h \
- /gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/_stdint.h \
- /home/misterjunio/Documents/SETEC/SETEC-Pandlets/config/spi_master_config.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf_delay.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf51.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/gcc/core_cm0.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/gcc/core_cmInstr.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/gcc/core_cmFunc.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/system_nrf51.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf51_bitfields.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf51_deprecated.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/compiler_abstraction.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/nrf_gpio.h \
- /home/misterjunio/Documents/SETEC/nrf51822/Include/common.h
+ /home/josepintor/Documentos/SETEC/novo/master/drivers/hardware/spi/spi_fhp_master.c \
+ /home/josepintor/Documentos/SETEC/novo/master/drivers/hardware/spi/spi_fhp_master.h \
+ /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/lib/gcc/arm-none-eabi/4.9.3/include/stdbool.h \
+ /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
+ /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/stdint.h \
+ /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/machine/_default_types.h \
+ /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/features.h \
+ /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/_intsup.h \
+ /home/josepintor/Documentos/gcc-arm-none-eabi-4_9-2015q3/arm-none-eabi/include/sys/_stdint.h \
+ /home/josepintor/Documentos/SETEC/novo/master/config/spi_master_config.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/nrf_delay.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/nrf.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/nrf51.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/gcc/core_cm0.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/gcc/core_cmInstr.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/gcc/core_cmFunc.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/system_nrf51.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/nrf51_bitfields.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/nrf51_deprecated.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/compiler_abstraction.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/nrf_gpio.h \
+ /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/Include/common.h
