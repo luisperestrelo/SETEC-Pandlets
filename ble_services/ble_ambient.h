@@ -21,9 +21,13 @@
 #include "ble.h"
 #include "ble_srv_common.h"
 #include "ble_types.h"
+#include "nrf_delay.h"
 #include "nordic_common.h"
 #include "app_util.h"
+#include "app_timer.h"
 #include "utils.h"
+
+app_timer_id_t				            m_rtc_timer_id;		        		    		// RTC timer for counting time
 
 static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0x22, 0xAD, 0x1A, 0x11, 0x21, 0x22, 0x22, 0x00, 0x00, 0x00, 0x00}};
 
@@ -61,8 +65,9 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMB_HUM_MAX_PACKET_VALUE                0x04   //4 byte per packet   
 #define AMB_HUMSOLO_MAX_PACKET_VALUE            0x04   //4 byte per packet
 #define AMB_LUM_MAX_PACKET_VALUE                0x04   //4 byte per packet
-#define AMB_SD_MAX_PACKET_VALUE                 0x14   //20 byte per packet
-#define AMB_INST_MAX_PACKET_VALUE               0x0A   //1 byte per packet
+#define AMB_SD_MAX_PACKET_VALUE                 0x16   //20 byte per packet
+#define INST_RX_PACKET_VALUE               		0x0C   //12 byte per packet
+#define INST_TX_PACKET_VALUE               		0x08   //8 byte per packet
 #define AMB_ALERT_MAX_PACKET_VALUE              0x02   //2 byte per packet
 
 #define INVALID_SENSOR_VALUE                    0xFF   //Default value for the sensor values
@@ -234,7 +239,7 @@ typedef struct ble_ambient_s
 	ble_gatts_char_handles_t      inst_handles;                                 // Handles related to the Install value characteristic.
 	ble_gatts_char_handles_t      inst_configuration_handles;                   // Handles related to the Install configuration characteristic.
 
-	uint8_t                       inst_value[AMB_INST_MAX_PACKET_VALUE];         // Install value placeholder.
+	uint8_t                       inst_value[INST_RX_PACKET_VALUE];         	// Install value placeholder.
 	uint8_t                       inst_configuration;      					   // Install sensor configuration value placeholder.
 	#endif
 
@@ -295,6 +300,9 @@ uint32_t ble_ambient_sensor_update(ble_ambient_t * p_amb, uint8_t * values,
  */
 uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configuration, 
 														 ble_ambient_sensor_type type);
+
+
+void rtc_timer_handler(void * p_context);
 
 
 /**@brief Function for updating the Install config values.

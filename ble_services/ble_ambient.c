@@ -1,5 +1,5 @@
 #include "ble_ambient.h"
-//#include "nosso.h"
+#include "nosso.h"
 
 //static int flag_lido;
 
@@ -168,10 +168,15 @@ static void on_write(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
     //***************** INST ***********************/
 	#if INST_ENABLED
 	//Sensor configuration written and with right size
-	
+	/*printf("p_evt_write->len: %d\n", (int)p_evt_write->len);
+	printf("INST_RX_PACKET_VALUE: %d\n", (int)INST_RX_PACKET_VALUE);
+	int i=0;
+	while (i<p_evt_write->len) {
+		printf("Valor %d: %d\n", i+1, (int)p_evt_write->data[i]);
+		i++;
+	}*/
 	if((p_evt_write->handle == p_amb->inst_configuration_handles.value_handle) &&
-			(p_evt_write->len == 10)) {
-
+			(p_evt_write->len == INST_RX_PACKET_VALUE)) {
 		if (p_amb->evt_handler != NULL){
 			ble_ambient_evt_t amb_evt;
 
@@ -588,9 +593,9 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 
 	attr_char.p_uuid    = &ble_char_uuid;
 	attr_char.p_attr_md = &attr_md_no_write;
-	attr_char.init_len  = AMB_INST_MAX_PACKET_VALUE;
+	attr_char.init_len  = INST_TX_PACKET_VALUE;
 	attr_char.init_offs = 0;
-	attr_char.max_len   = AMB_INST_MAX_PACKET_VALUE;
+	attr_char.max_len   = INST_TX_PACKET_VALUE;
 	attr_char.p_value   = p_amb->inst_value;
 
 	char_md.char_props.write  = 0;
@@ -609,9 +614,9 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 
 	attr_char.p_uuid    = &ble_char_uuid;
 	attr_char.p_attr_md = &attr_md_read_write;
-	attr_char.init_len  = 10*sizeof(uint8_t);
+	attr_char.init_len  = INST_RX_PACKET_VALUE*sizeof(uint8_t);
 	attr_char.init_offs = 0;
-	attr_char.max_len   = 10*sizeof(uint8_t);
+	attr_char.max_len   = INST_RX_PACKET_VALUE*sizeof(uint8_t);
 	attr_char.p_value   = &(p_amb->inst_configuration);
 
 	char_md.char_props.write  = 1;
@@ -780,7 +785,7 @@ uint32_t ble_ambient_init(ble_ambient_t * p_amb, const ble_ambient_init_t * p_am
 	#endif
 
 	#if INST_ENABLED
-	for(uint8_t i = 0; i < AMB_INST_MAX_PACKET_VALUE; i++) p_amb->inst_value[i]            = INVALID_SENSOR_VALUE;
+	for(uint8_t i = 0; i < INST_RX_PACKET_VALUE; i++) p_amb->inst_value[i]            = INVALID_SENSOR_VALUE;
 	p_amb->sd_configuration           = p_amb_init->inst_init_configuration;
 	#endif
 
@@ -835,12 +840,6 @@ uint32_t ble_ambient_sensor_update(ble_ambient_t * p_amb, uint8_t * values, uint
     
 	int i, t;
 	
-	int j=0;
-	while (j<10) {
-		printf("Valor %d: %d\n", j+1, values[j]);
-		j++;
-	}
-	
 	for(i = 0; i < AMB_NUMBER_OF_SENSORS; i++){
 		if(type_to_handle[i].type == type){
 			uint16_t len = (uint16_t)number_of_bytes;
@@ -884,7 +883,7 @@ uint32_t ble_ambient_sensor_update(ble_ambient_t * p_amb, uint8_t * values, uint
 
 int lerCartao2(ble_ambient_t * m_amb){
 	
-	static DWORD pos=0;
+	//static DWORD pos=0;
 	uint32_t  err_code = NRF_SUCCESS;
 	FIL file;       // File object
     char buf[AMB_SD_MAX_PACKET_VALUE];
@@ -901,13 +900,14 @@ int lerCartao2(ble_ambient_t * m_amb){
 				printf("ERROR Opening!\n");
 				return 0;
 			}
-			//while(1){
-				printf("pos: %d\n",(int)pos);
-				f_lseek(&file, pos);
+			while(1){
+				//printf("pos: %d\n",(int)pos);
+				//f_lseek(&file, pos);
 				f_read(&file,buf,AMB_SD_MAX_PACKET_VALUE,&bytesread);
-				printf("bytesread: %d\n",bytesread);
+				//printf("bytesread: %d\n",bytesread);
+				printf("Li %u bytes\n", bytesread);
 				if(bytesread<AMB_SD_MAX_PACKET_VALUE){
-					pos=0;
+					//pos=0;
 					if(bytesread!=0){
 						ble_ambient_sensor_update(m_amb, (uint8_t *) buf, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
 						printf("Acabei de fazer tudo!\n");
@@ -916,16 +916,17 @@ int lerCartao2(ble_ambient_t * m_amb){
 						ble_ambient_sensor_update(m_amb, (uint8_t *) buf, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
 						printf("Acabei de fazer tudo!\n");
 					}
+					break;
 				}else{
-					int x=0;
-					printf("\n");
-					while(1){	
-						printf("%c",buf[x]);
-						x++;
-						if(x>bytesread) break;
-					}
-					printf("\n");
-					pos=AMB_SD_MAX_PACKET_VALUE+pos;
+					//int x=0;
+					//printf("\n");
+					//while(1){	
+						//printf("%c",buf[x]);
+						//x++;
+						//if(x>bytesread) break;
+					//}
+					//printf("\n");
+					//pos=AMB_SD_MAX_PACKET_VALUE+pos;
 					ble_ambient_sensor_update(m_amb, (uint8_t *) buf, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
 				}
 				//if(bytesread==0) break;
@@ -938,7 +939,8 @@ int lerCartao2(ble_ambient_t * m_amb){
 				//while((timeStamp2-inicio)<1){
 					//printf("%d\n",(int)timeStamp2);
 				//}
-			//}
+				nrf_delay_ms(1000);
+			}
 			
 			f_close(&file);
 			f_mount(NULL, "", 1);
@@ -1075,26 +1077,53 @@ uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configu
 }
 
 
+/**@brief Handles the RTC reload.
+ */
+void rtc_timer_handler(void * p_context){
+	increTimeStamp();
+	//timeStamp2++; //Increment timestamp
+	printf("TIMESTAMPA NA CONA: %d\n", (int)getTimeStamp());
+}
+
+
 uint32_t ble_install_config_update(ble_ambient_t * p_amb, uint8_t * sensor_configuration, ble_ambient_sensor_type type){
 	//new data!
 #if INST_ENABLED
-	uint16_t len = 10;
+	uint16_t len = INST_TX_PACKET_VALUE;
 #endif
 	uint32_t err_code = NRF_SUCCESS;
+	uint8_t gpsArray[8];
+	uint8_t timeArray[4];
+	unsigned long timestampArray;
+	int i=0;
 	
 	switch(type){
 		#if INST_ENABLED
 		case BLE_AMBIENT_INST:
 		// Save new configuration value
 		p_amb->inst_configuration = sensor_configuration[0];
+		
+		while (i<INST_TX_PACKET_VALUE) {
+			gpsArray[i] = sensor_configuration[i];
+			i++;
+		}
+		while (i<INST_RX_PACKET_VALUE) {
+			timeArray[i-INST_TX_PACKET_VALUE] = sensor_configuration[i];
+			i++;
+		}
 
 		// Update database
 		err_code = sd_ble_gatts_value_set(p_amb->inst_configuration_handles.value_handle,
 										  0,
 										  &len,
-										  sensor_configuration);
+										  gpsArray);
 		
-		ble_ambient_sensor_update(p_amb, sensor_configuration, AMB_INST_MAX_PACKET_VALUE, BLE_AMBIENT_INST);
+		timestampArray = (timeArray[0] << 24) + (timeArray[1] << 16) + (timeArray[2] << 8) + timeArray[3];
+		printf("TIMESTAMP RECEBIDO: %d\n", (int)timestampArray);
+		setTimeStamp(timestampArray);
+		app_timer_start(m_rtc_timer_id, APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER), NULL);
+		
+		ble_ambient_sensor_update(p_amb, sensor_configuration, INST_TX_PACKET_VALUE, BLE_AMBIENT_INST);
 		
 		break;
 		#endif
