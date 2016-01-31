@@ -51,11 +51,16 @@ uint32_t uv_configs_update(){
 
 
 uint32_t uv_values_handler() {
-	uint32_t  err_code = NRF_SUCCESS;
+	uint32_t  err_code ;
 	uint8_t uv_buffer;
 
-	err_code = SparkFunMS1_read2(&uv_buffer);
+	//err_code = SparkFunMS1_read2(&uv_buffer);
+	//err_code = 1;
+	//nrf_gpio_pin_read(GPIO_3);
+	//printf("result: %d\n",(int)err_code);
 	
+	
+	SparkFunMS1_read1(&uv_buffer);
 	
 	//if (err_code != NRF_SUCCESS) {
 		//uv_printf("uv: UV_read failed.\r\n");

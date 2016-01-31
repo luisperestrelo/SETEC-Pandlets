@@ -51,14 +51,19 @@ uint32_t rain_configs_update(){
 
 
 uint32_t rain_values_handler() {
-	uint32_t  err_code = NRF_SUCCESS;
+	uint32_t  err_code;
 	uint8_t rain_buffer;
 	//return NRF_SUCCESS;
 	//SparkFunTSL2561_init();
 	
 	//err_code = SparkFunTSL2561_bring_the_light(&lum_buffer);
-	err_code = SparkFunMS1_read1(&rain_buffer);
 	
+	err_code = SparkFunMS1_read1(&rain_buffer);
+	////err_code = nrf_gpio_pin_read(GPIO_3);
+	//nrf_gpio_pin_dir_set(GPIO_3,NRF_GPIO_PIN_DIR_INPUT);
+	//nrf_gpio_cfg_input(GPIO_3,GPIO_PIN_CNF_PULL_Disabled);
+	//err_code = nrf_gpio_pin_read(GPIO_3);
+	////printf("result: %d\n",(int)err_code);
 	
 	//if (err_code != NRF_SUCCESS) {
 		//rain_printf("rain: Rain_read failed.\r\n");
@@ -69,9 +74,9 @@ uint32_t rain_values_handler() {
     sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_RAIN_ID,(int)err_code,(int)getTimeStamp());
 	log2sd(buf, "TEMP.txt");
 
-	rain_printf("Rain: %d\r\n", (int)rain_buffer);
+	rain_printf("Rain: %d  value: %d \r\n", (int)err_code,(int)rain_buffer);
 
-	err_code = ble_ambient_sensor_update(m_rain.m_amb, (uint8_t *) &rain_buffer,
+	err_code = ble_ambient_sensor_update(m_rain.m_amb, (uint8_t *) &err_code,
 			AMB_RAIN_MAX_PACKET_VALUE, BLE_AMBIENT_RAIN);
 	check_ble_service_err_code(err_code);
 
