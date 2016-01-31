@@ -77,7 +77,7 @@ uint32_t pr_values_handler() {
 	}
 	
 	char val[20];
-	add_zeroes((int)pr_buffer, val);
+	add_zeroes((int)hum_buffer, val);
     	char buf[20];
 	sprintf(buf, ",%s", val);
 	log2sd(buf, "READINGS.txt");

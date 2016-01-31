@@ -67,7 +67,7 @@ uint32_t temp_values_handler() {
 	add_zeroes((int)temp_buffer, val);
 	add_zeroes((int)getTimeStamp(), time_val);
 	char buf[20];
-	sprintf(buf, "\r\n%d,%s,%s", DEVICE_ID,time_val,val);
+	sprintf(buf, "\r\n%d,%d,%s", DEVICE_ID,(int)getTimeStamp(),val);
     
 	log2sd(buf, "READINGS.txt");
         

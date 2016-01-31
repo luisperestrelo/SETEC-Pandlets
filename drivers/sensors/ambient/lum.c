@@ -48,7 +48,7 @@ uint32_t lum_configs_update(){
 			break;
 		case 0b111:
 		default: //If not recognized set max rate
-			m_lum.ticks = msec_to_ticks(120000);     //0.5 Hz
+			m_lum.ticks = msec_to_ticks(READ_FREQ);     //0.5 Hz
 			break;
 	}
 
@@ -73,9 +73,11 @@ uint32_t lum_values_handler() {
 		return err_code;
 	}
 	
+   	char val[20];
+	add_zeroes((int)lum_buffer, val);
     char buf[20];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_LUM_ID,(int)lum_buffer,(int)getTimeStamp());
-	log2sd(buf, "TEMP.txt");
+	sprintf(buf, ",%s", val);
+	log2sd(buf, "READINGS.txt");
 
 	lum_printf("Luminosity: %d\r\n", (int)lum_buffer);
 

@@ -1,8 +1,8 @@
 #include "utils.h"
 
 
-#define BYTES_PER_LINE 8 * (AMB_NUMBER_OF_SENSORS-5) + 1 + 2 + 9
-//#define BYTES_PER_LINE 53 //
+//#define BYTES_PERLINE 8 * NR_SENSORS + outras_merdas + 2 (\r \n).
+#define BYTES_PER_LINE 53 //
 //#define BYTES_START_OVERWRITE 2*7*24*BYTES_PER_LINE // 2 semanas, escritas de hora em hora, 55 bytes por linha.
 #define BYTES_START_OVERWRITE 12*BYTES_PER_LINE // For testing.
 uint64_t msec_to_ticks(uint32_t msec){
@@ -61,7 +61,6 @@ uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_siz
 	static int file_position = 0;
 	static int file_position_prev = 0;
 	printf("POS: %d\n", file_position);
-	printf("Bytes: %d\n", BYTES_START_OVERWRITE);
 	//printf("**************FILE SIZE : %d\n", (int)f_size(&file));
 	//printf("**************WRITING : %d BYTES\n", (int)buffer_size);
 

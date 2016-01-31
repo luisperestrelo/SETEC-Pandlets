@@ -2,9 +2,9 @@ TARGET_CHIP := NRF51822_QFAA_CA
 BOARD := BOARD_PCA10001
 
 # Paths
-PROJ_PATH = /home/ricardo/Documentos/allahuakbar/
-SDK_PATH = /home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/
-SOFTDEVICE = /home/ricardo/Documentos/nrf51/tools/s110_nrf51822_7.3.0/s110_nrf51822_7.3.0_softdevice.hex
+PROJ_PATH = /home/luis/Desktop/SETEC/sample/
+SDK_PATH = /home/luis/Desktop/SETEC/nrf51822/
+SOFTDEVICE = /home/luis/Desktop/SETEC/s110_nrf51822_7.3.0_softdevice.hex
 
 # Project Source files
 C_SOURCE_FILES := $(shell find $(PROJ_PATH) -name '*.c')
@@ -42,8 +42,11 @@ LDFLAGS := -Wl,--gc-sections -DARM_MATH_CM0 -DFIXED_POINT -DFAST_AND_DIRTY -fno-
 
 LIBRARIES = -lm
 
+
+INCLUDEPATHS += -I"/home/luis/Desktop/SETEC/s110_nrf51822_7.3.0_API/include"
+
 # SDK paths
-INCLUDEPATHS += -I"home/ricardo/Documentos/nrf51/nrf51_sdk_v6.1.0/nrf51822/Include/s110"
+
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble"
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble/device_manager"
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble/ble_services"

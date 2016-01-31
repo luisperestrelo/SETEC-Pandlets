@@ -1,3 +1,11 @@
+/*
+ * rain.c
+ *
+ *  Created on: Apr 17, 2015
+ *      Author: João Oliveira
+ */
+
+
 #include "rain.h"
 
 #if RAIN_ENABLED == 1
@@ -7,14 +15,14 @@ uint32_t rain_init(ble_ambient_t *m_amb_init){
 
 	m_rain.timer_count           = 0;
 	m_rain.m_amb                 = m_amb_init;
-	m_rain.IS_RAIN_ENABLED    = true;
+	m_rain.IS_RAIN_ENABLED    = false;
 
 	return NRF_SUCCESS;
 }
 
 
 uint32_t rain_configs_update(){
-	rain_printf("\r\nRain Configurations Update\r\n");
+	rain_printf("\r\nh Rain Configurations Update\r\n");
 
 	uint8_t configuration = (m_rain.m_amb)->rain_configuration;
 
@@ -53,32 +61,27 @@ uint32_t rain_configs_update(){
 
 
 uint32_t rain_values_handler() {
-	uint32_t  err_code;
-	uint8_t rain_buffer;
+	uint32_t  err_code = NRF_SUCCESS;
+	uint16_t rain_buffer;
 	//return NRF_SUCCESS;
 	//SparkFunTSL2561_init();
 	
 	//err_code = SparkFunTSL2561_bring_the_light(&lum_buffer);
+	err_code = SparkFunMS1_read(&rain_buffer);
 	
-	err_code = SparkFunMS1_read1(&rain_buffer);
-	////err_code = nrf_gpio_pin_read(GPIO_3);
-	//nrf_gpio_pin_dir_set(GPIO_3,NRF_GPIO_PIN_DIR_INPUT);
-	//nrf_gpio_cfg_input(GPIO_3,GPIO_PIN_CNF_PULL_Disabled);
-	//err_code = nrf_gpio_pin_read(GPIO_3);
-	////printf("result: %d\n",(int)err_code);
 	
-	//if (err_code != NRF_SUCCESS) {
-		//rain_printf("rain: Rain_read failed.\r\n");
-		//return err_code;
-	//}
+	if (err_code != NRF_SUCCESS) {
+		rain_printf("rain: Rain_read failed.\r\n");
+		return err_code;
+	}
 	
-    char buf[12];
-	sprintf(buf, ",%d", (int)err_code); //bool, has no zeroes.
+    	char buf[12];
+	sprintf(buf, ",%d", (int)rain_buffer); //bool, has no zeroes.
 	log2sd(buf, "READINGS.txt");
 
-	rain_printf("Rain: %d  value: %d \r\n", (int)err_code,(int)rain_buffer);
+	rain_printf("Rain: %d\r\n", (int)rain_buffer);
 
-	err_code = ble_ambient_sensor_update(m_rain.m_amb, (uint8_t *) &err_code,
+	err_code = ble_ambient_sensor_update(m_rain.m_amb, (uint8_t *) &rain_buffer,
 			AMB_RAIN_MAX_PACKET_VALUE, BLE_AMBIENT_RAIN);
 	check_ble_service_err_code(err_code);
 

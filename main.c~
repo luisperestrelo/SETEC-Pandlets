@@ -6,10 +6,13 @@
 
 #include "init.h"
 #include "nosso.h"
-
 #define DEAD_BEEF                       0xDEADBEEF                                  // Value used as error code on stack dump, can be used to identify stack location on stack unwind.
 
+#define MAX_TEST_DATA_BYTES      (15U) /*!< max number of test bytes to be used for tx and rx */
+
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    // Handle of the current connection.
+
+//static uint32_t timeStamp = 0;
 
 
 /**@brief Function for error handling, which is called when an error has occurred. 
@@ -145,15 +148,15 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
         	//Upon disconnection, reset all sensors (for energy saving)
 
         	//application_work_stop(); //Stop base timer.
-            //m_conn_handle = BLE_CONN_HANDLE_INVALID;
+            m_conn_handle = BLE_CONN_HANDLE_INVALID;
 
             // set LED greeen
         	printf("BLE_GAP_EVT_DISCONNECTED \r\n");
 			fhp_gpio_clear(LED_GREEN);
  
             /********* AMBIENT SERVICE ********/
-			//#if AMBIENT_SERVICE_ENABLED
-            //m_amb.conn_handle = m_conn_handle;
+			#if AMBIENT_SERVICE_ENABLED
+            m_amb.conn_handle = m_conn_handle;
 
            	//#if TEMP_ENABLED
             //APP_ERROR_CHECK(temp_reset_configs());
@@ -178,7 +181,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 			//#if HUM_ENABLED
 			//APP_ERROR_CHECK(hum_reset_configs());
 			//#endif
-            //#endif /*AMBIENT_SERVICE_ENABLED*/
+            #endif /*AMBIENT_SERVICE_ENABLED*/
 
 
             enable_high_voltage(false);
@@ -203,39 +206,40 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 
 
 void on_low_bat_evt(){
-	
-	//setflagBAT(0xF);
 	//Low battery detected. Disable all functionality!
 	printf("on_low_bat_evt() \r\nReseting all configurations...\r\n");
 
-//	application_work_stop(); //Stop base timer.
+	application_work_stop(); //Stop base timer.
 
-     ///********* AMBIENT SERVICE ********/
-	//#if AMBIENT_SERVICE_ENABLED
- 	//#if TEMP_ENABLED
-    //APP_ERROR_CHECK(temp_reset_configs());
-	//#endif
+     /********* AMBIENT SERVICE ********/
+	#if AMBIENT_SERVICE_ENABLED
+ 	#if TEMP_ENABLED
+    APP_ERROR_CHECK(temp_reset_configs());
+	#endif
 
-	//#if PR_ENABLED
-    //APP_ERROR_CHECK(pr_reset_configs());
-	//#endif
+	#if PR_ENABLED
+    APP_ERROR_CHECK(pr_reset_configs());
+	#endif
 
-	//#if LUM_ENABLED
-    //APP_ERROR_CHECK(lum_reset_configs());
-	//#endif
+	#if LUM_ENABLED
+    APP_ERROR_CHECK(lum_reset_configs());
+	#endif
 	
-	//#if HUMSOLO_ENABLED
-    //APP_ERROR_CHECK(humsolo_reset_configs());
-	//#endif
+	#if HUMSOLO_ENABLED
+    APP_ERROR_CHECK(humsolo_reset_configs());
+	#endif
 	
-	//#if RAIN_ENABLED
-    //APP_ERROR_CHECK(rain_reset_configs());
-	//#endif
+	#if RAIN_ENABLED
+    APP_ERROR_CHECK(rain_reset_configs());
+	#endif
 	
-	//#if HUM_ENABLED
-	//APP_ERROR_CHECK(hum_reset_configs());
-	//#endif
-    //#endif /*AMBIENT_SERVICE_ENABLED*/
+	#if HUM_ENABLED
+	APP_ERROR_CHECK(hum_reset_configs());
+	#endif
+    #endif /*AMBIENT_SERVICE_ENABLED*/
+
+    printf("Configurations reseted. \r\n");
+    printf("From now on, only reads are allowed until the battery is charged. \r\n");
 
 	enable_high_voltage(false);
 }
@@ -293,7 +297,6 @@ void sys_evt_dispatch(uint32_t sys_evt){
     on_sys_evt(sys_evt);
 }
 
-
 #if AMBIENT_SERVICE_ENABLED
 /**@brief Function to handle the ble_amb service events.
  * 
@@ -324,14 +327,14 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 		#if LUM_ENABLED == 1
         case BLE_AMBIENT_EVT_LUM_CONFIG_CHANGED:
         	printf("BLE_AMBIENT_EVT_LUM_CONFIG_CHANGED: 0x%x\n", m_amb.lum_configuration);
-			APP_ERROR_CHECK(lum_configs_update()); //Update Lum configurations.
+			APP_ERROR_CHECK(lum_configs_update()); //Update Pr configurations.
             break;
 		#endif
 
 		#if HUMSOLO_ENABLED == 1
         case BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED:
         	printf("BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED: 0x%x\n", m_amb.humsolo_configuration);
-			APP_ERROR_CHECK(humsolo_configs_update()); //Update Humsolo configurations.
+			APP_ERROR_CHECK(humsolo_configs_update()); //Update Pr configurations.
             break;
 		#endif
 		
@@ -359,21 +362,7 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 		#if SD_ENABLED == 1
 		case BLE_AMBIENT_EVT_SD_CONFIG_CHANGED:
         	printf("BLE_AMBIENT_EVT_SD_CONFIG_CHANGED: 0x%x\n", m_amb.sd_configuration);
-        	//APP_ERROR_CHECK(sd_configs_update()); //Update SD configurations.
-			break;
-		#endif
-
-		#if INST_ENABLED == 1
-		case BLE_AMBIENT_EVT_INST_CONFIG_CHANGED:
-        	printf("BLE_AMBIENT_EVT_INST_CONFIG_CHANGED: 0x%x\n", m_amb.inst_configuration);
-        	//APP_ERROR_CHECK(inst_configs_update()); //Update Inst configurations.
-			break;
-		#endif
-
-		#if ALERT_ENABLED == 1
-		case BLE_AMBIENT_EVT_ALERT_CONFIG_CHANGED:
-        	printf("BLE_AMBIENT_EVT_ALERT_CONFIG_CHANGED: 0x%x\n", m_amb.alert_configuration);
-        	//APP_ERROR_CHECK(alert_configs_update()); //Update Alert configurations.
+        	//APP_ERROR_CHECK(sd_configs_update()); //Update sd configurations.
 			break;
 		#endif
 		
@@ -413,7 +402,7 @@ void base_timer_handler(void * p_context){
 	
 	/*********** LUM *************/
 	#if LUM_ENABLED == 1
-	APP_ERROR_CHECK(lum_timer_handler()); //Call handler for Lum sensor
+	APP_ERROR_CHECK(lum_timer_handler()); //Call handler for Pr sensor
 	#endif
 
 	/*********** HUM *************/
@@ -423,7 +412,7 @@ void base_timer_handler(void * p_context){
 
 	/*********** HUMSOLO *************/
 	#if HUMSOLO_ENABLED == 1
-	APP_ERROR_CHECK(humsolo_timer_handler()); //Call handler for Hum solo sensor
+	APP_ERROR_CHECK(humsolo_timer_handler()); //Call handler for Hum sensor
 	#endif
 	
 	/*********** RAIN *************/
@@ -449,12 +438,29 @@ void watchdog_timer_handler(void * p_context){
 }
 
 
+/**@brief Handles the RTC reload.
+ */
+void rtc_timer_handler(void * p_context){
+	increTimeStamp();
+	//timeStamp2++; //Increment timestamp
+	//printf("TIMESTAMPA NA CONA: %d\n", (int)timeStamp2);
+}
+
+
 /**@brief Function for entering sleep. 
  */
 static void power_manage(void){
 	
     uint32_t err_code = sd_app_evt_wait(); //Go to sleep and wait for events.
     APP_ERROR_CHECK(err_code);
+}
+
+static void show_error(void)
+{
+	printf("ERROR UART!\n");
+  while(true)
+  {
+  }
 }
 
 /**@brief Function for initialization.
@@ -517,26 +523,19 @@ int main(void){
     setup();
     
 	if(f_mount(&sd_card, "", 1) == 0){
-		printf("Mounted SD card!\n");
-	}
-	f_mount(NULL, "", 1);
+                printf("Mounted SD card!\n");
+                }
                 
     // Start execution
     advertising_start();
     
     app_sched_event_put(NULL, 0, application_work_start); //Start base timer.
+    
+    app_timer_start(m_rtc_timer_id, APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER), NULL);
 
     // Enter main loop
     for (;;){
 		app_sched_execute();
 		power_manage(); //go to sleep
-		
-			int x=(int)mpu9x50_getInterruptStatus();
-			if (x>60) {
-					mpu9x50_reset();
-					mpu9x50_initMoveSensor(MPU_ADDRESS);
-					setflagACC(0xF);
-					printf("moved: %d\n",x);
-				}
     }
 }

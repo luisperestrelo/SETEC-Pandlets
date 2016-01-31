@@ -73,13 +73,12 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMB_HUM_MAX_PACKET_VALUE                0x04   //4 byte per packet   
 #define AMB_HUMSOLO_MAX_PACKET_VALUE            0x04   //4 byte per packet
 #define AMB_LUM_MAX_PACKET_VALUE                0x04   //4 byte per packet  
-#define AMB_RAIN_MAX_PACKET_VALUE            0x04   //4 byte per packet
-#define AMB_UV_MAX_PACKET_VALUE                0x04   //4 byte per packet
+#define AMB_RAIN_MAX_PACKET_VALUE            	0x04   //4 byte per packet
+#define AMB_UV_MAX_PACKET_VALUE                	0x04   //4 byte per packet
 #define AMB_SD_MAX_PACKET_VALUE                 0x14   //20 byte per packet
 #define AMB_ALERT_MAX_PACKET_VALUE              0x01   //1 byte per packet
 #define INST_RX_PACKET_VALUE               		0x0C   //12 byte per packet
 #define INST_TX_PACKET_VALUE               		0x08   //8 byte per packet
-
 #define INVALID_SENSOR_VALUE                    0xFF   //Default value for the sensor values
  
 //Bit masks for the configuration packet.

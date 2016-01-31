@@ -74,7 +74,6 @@
 #define SD_ENABLED							1      							      //Enables SD
 #define INST_ENABLED						1      							      //Enables Install
 #define ALERT_ENABLED						1      							      //Enables Alert
-#define UV_ENABLED						    0      							      //Enables UV sensor
 
 #endif /* AMBIENT_SERVICE_ENABLED */
 

@@ -30,7 +30,7 @@
 
 #ifdef BORON
 #define DEVICE_NAME                       "UVA-2"								// Name of device. Will be included in the advertising data.
-#define DEVICE_ID                         2										// ID of device. Will be included in the advertising data.
+#define DEVICE_ID                         1										// ID of device. Will be included in the advertising data.
 #endif
 
 #define READ_FREQ			  2000
@@ -67,7 +67,7 @@
 
 /* WATCHDOG */
 #define WATCHDOG_TIMER                   5000								      // ms
-#define WATCHDOG_TIMEOUT                 500 * 32768 							  //500 secs
+#define WATCHDOG_TIMEOUT                 10 * 32768 							  //10 secs
 
 /*************************************************
 * Board specific defines                         *
