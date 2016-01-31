@@ -57,11 +57,19 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMBIENT_UUID_ALERT_CHAR                 0x1147  //Alert Values
 #define AMBIENT_UUID_ALERT_CONFIG_CHAR          0x1148  //Alert Configuration
 
+#define AMBIENT_UUID_RAIN_CHAR                  0x1149  //Rain Values
+#define AMBIENT_UUID_RAIN_CONFIG_CHAR           0x1150  //Rain Configuration
+
+#define AMBIENT_UUID_UV_CHAR                    0x1151  //UV Values
+#define AMBIENT_UUID_UV_CONFIG_CHAR             0x1152  //UV Configuration
+
 #define AMB_TEMP_MAX_PACKET_VALUE               0x04   //4 byte per packet
 #define AMB_PR_MAX_PACKET_VALUE                 0x04   //4 byte per packet
 #define AMB_HUM_MAX_PACKET_VALUE                0x04   //4 byte per packet   
 #define AMB_HUMSOLO_MAX_PACKET_VALUE            0x04   //4 byte per packet
-#define AMB_LUM_MAX_PACKET_VALUE                0x04   //4 byte per packet
+#define AMB_LUM_MAX_PACKET_VALUE                0x04   //4 byte per packet  
+#define AMB_RAIN_MAX_PACKET_VALUE            0x04   //4 byte per packet
+#define AMB_UV_MAX_PACKET_VALUE                0x04   //4 byte per packet
 #define AMB_SD_MAX_PACKET_VALUE                 0x14   //20 byte per packet
 #define AMB_INST_MAX_PACKET_VALUE               0x0A   //1 byte per packet
 #define AMB_ALERT_MAX_PACKET_VALUE              0x01   //1 byte per packet
@@ -86,7 +94,9 @@ typedef enum
     BLE_AMBIENT_HUMSOLO,
     BLE_AMBIENT_SD,
     BLE_AMBIENT_INST,
-    BLE_AMBIENT_ALERT
+    BLE_AMBIENT_ALERT,
+    BLE_AMBIENT_RAIN,
+    BLE_AMBIENT_UV
     
 } ble_ambient_sensor_type;
 
@@ -100,7 +110,9 @@ typedef enum
     BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED,
     BLE_AMBIENT_EVT_SD_CONFIG_CHANGED,
     BLE_AMBIENT_EVT_INST_CONFIG_CHANGED,
-    BLE_AMBIENT_EVT_ALERT_CONFIG_CHANGED
+    BLE_AMBIENT_EVT_ALERT_CONFIG_CHANGED,
+    BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED,
+    BLE_AMBIENT_EVT_UV_CONFIG_CHANGED
 } ble_ambient_evt_type_t;
 
 /**@brief Maps all update types. Really useful for a compact update function.*/
@@ -154,6 +166,14 @@ typedef struct
 
 	#if HUMSOLO_ENABLED
     uint8_t                       humsolo_init_configuration;                      // Sensor configuration value to init the struct.
+	#endif
+	
+	#if RAIN_ENABLED
+    uint8_t                       rain_init_configuration;                      // Sensor configuration value to init the struct.
+	#endif
+	
+	#if UV_ENABLED
+    uint8_t                       uv_init_configuration;                      // Sensor configuration value to init the struct.
 	#endif
 
 	#if SD_ENABLED
@@ -222,7 +242,23 @@ typedef struct ble_ambient_s
 	uint8_t                       lum_value[AMB_LUM_MAX_PACKET_VALUE];         // Humidity value placeholder.
 	uint8_t                       lum_configuration;      					   // Humidity sensor configuration value placeholder.
 	#endif
+	
+	#if RAIN_ENABLED == 1
+	ble_gatts_char_handles_t      rain_handles;                                 // Handles related to the Rain value characteristic.
+	ble_gatts_char_handles_t      rain_configuration_handles;                   // Handles related to the Rain sensor configuration characteristic.
 
+	uint8_t                       rain_value[AMB_RAIN_MAX_PACKET_VALUE];         // Rain value placeholder.
+	uint8_t                       rain_configuration;      					   // Rain sensor configuration value placeholder.
+	#endif
+
+	#if UV_ENABLED == 1
+	ble_gatts_char_handles_t      uv_handles;                                 // Handles related to the UV value characteristic.
+	ble_gatts_char_handles_t      uv_configuration_handles;                   // Handles related to the UV sensor configuration characteristic.
+
+	uint8_t                       uv_value[AMB_UV_MAX_PACKET_VALUE];         // UV value placeholder.
+	uint8_t                       uv_configuration;      					   // UV sensor configuration value placeholder.
+	#endif
+	
 	#if SD_ENABLED == 1
 	ble_gatts_char_handles_t      sd_handles;                                 // Handles related to the SD value characteristic.
 	ble_gatts_char_handles_t      sd_configuration_handles;                   // Handles related to the SD configuration characteristic.

@@ -2,9 +2,9 @@ TARGET_CHIP := NRF51822_QFAA_CA
 BOARD := BOARD_PCA10001
 
 # Paths
-PROJ_PATH = /home/misterjunio/Documents/SETEC/SETEC-Pandlets/
-SDK_PATH = /home/misterjunio/Documents/SETEC/nrf51822/
-SOFTDEVICE = /home/misterjunio/Documents/SETEC/S110/s110_nrf51822_7.3.0_softdevice.hex
+PROJ_PATH = /home/josepintor/Documentos/SETEC/novo/SETEC-Pandlets-allahuakbar/
+SDK_PATH = /home/josepintor/Documentos/nordic/sdk/6_1_0/nrf51822/
+SOFTDEVICE = /home/josepintor/Documentos/nordic/s110_nrf51822_7.3.0/s110_nrf51822_7.3.0_softdevice.hex
 
 # Project Source files
 C_SOURCE_FILES := $(shell find $(PROJ_PATH) -name '*.c')
@@ -43,7 +43,7 @@ LDFLAGS := -Wl,--gc-sections -DARM_MATH_CM0 -DFIXED_POINT -DFAST_AND_DIRTY -fno-
 LIBRARIES = -lm
 
 # SDK paths
-INCLUDEPATHS += -I"/home/misterjunio/Documents/SETEC/S110/s110_nrf51822_7.3.0_API/include"
+INCLUDEPATHS += -I"/home/josepintor/Documentos/nordic/s110_nrf51822_7.3.0/s110_nrf51822_7.3.0_API/include"
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble"
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble/device_manager"
 INCLUDEPATHS += -I"$(SDK_PATH)Include/ble/ble_services"

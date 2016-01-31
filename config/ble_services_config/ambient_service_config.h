@@ -21,14 +21,13 @@
 
 
 /***************** HUMSOLO *********************/
-#define HUMSOLO_INITIAL_CONFIG          0b11110000										  //Initial configuration of the HUMSOLO sensor. Disabled, 0.5Hz.
+#define HUMSOLO_INITIAL_CONFIG          0b11110001										  //Initial configuration of the HUMSOLO sensor. Disabled, 0.5Hz.
 #define HUMSOLO_DEBUG                   1												  //Enables HUM RTT debug
 
 
 /***************** LUM *********************/
-#define LUM_INITIAL_CONFIG          0b11110000										  //Initial configuration of the LUM sensor. Disabled, 0.5Hz.
+#define LUM_INITIAL_CONFIG          0b11110001										  //Initial configuration of the LUM sensor. Disabled, 0.5Hz.
 #define LUM_DEBUG                   1												  //Enables LUM RTT debug
-
 
 /***************** SD *********************/
 #define SD_INITIAL_CONFIG          0b11110000										  //Initial configuration of the SD. Disabled, 0.5Hz.
@@ -41,8 +40,16 @@
 
 
 /***************** ALERT *********************/
-#define ALERT_INITIAL_CONFIG          0b11110000										  //Initial configuration of the Alert. Disabled, 0.5Hz.
+#define ALERT_INITIAL_CONFIG          0b11110000									  //Initial configuration of the Alert. Disabled, 0.5Hz.
 #define ALERT_DEBUG                   1												  //Enables ALERT RTT debug
+
+/***************** RAIN *********************/
+#define RAIN_INITIAL_CONFIG          0b11110001										  //Initial configuration of the RAIN sensor. Disabled, 0.5Hz.
+#define RAIN_DEBUG                   1												  //Enables RAIN RTT debug
+
+/***************** UV *********************/
+#define UV_INITIAL_CONFIG          0b11110000										  //Initial configuration of the RAIN sensor. Disabled, 0.5Hz.
+#define UV_DEBUG                   1												  //Enables RAIN RTT debug
 
 
 #endif /*AMBIENT_SERVICE_ENABLED*/

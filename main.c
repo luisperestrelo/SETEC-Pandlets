@@ -172,6 +172,10 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 			//#if HUMSOLO_ENABLED
             //APP_ERROR_CHECK(humsolo_reset_configs());
 			//#endif
+			
+			//#if RAIN_ENABLED
+            //APP_ERROR_CHECK(rain_reset_configs());
+			//#endif
 						
 			//#if HUM_ENABLED
 			//APP_ERROR_CHECK(hum_reset_configs());
@@ -224,6 +228,10 @@ void on_low_bat_evt(){
 	
 	//#if HUMSOLO_ENABLED
     //APP_ERROR_CHECK(humsolo_reset_configs());
+	//#endif
+	
+	//#if RAIN_ENABLED
+    //APP_ERROR_CHECK(rain_reset_configs());
 	//#endif
 	
 	//#if HUM_ENABLED
@@ -331,6 +339,20 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 			APP_ERROR_CHECK(humsolo_configs_update()); //Update Humsolo configurations.
             break;
 		#endif
+		
+		#if RAIN_ENABLED == 1
+        case BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED: 0x%x\n", m_amb.rain_configuration);
+			APP_ERROR_CHECK(rain_configs_update()); //Update Rain configurations.
+            break;
+		#endif
+		
+		#if UV_ENABLED == 1
+        case BLE_AMBIENT_EVT_UV_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_UV_CONFIG_CHANGED: 0x%x\n", m_amb.uv_configuration);
+			APP_ERROR_CHECK(uv_configs_update()); //Update Rain configurations.
+            break;
+		#endif
 
 		#if HUM_ENABLED == 1
 		case BLE_AMBIENT_EVT_HUM_CONFIG_CHANGED:
@@ -407,6 +429,16 @@ void base_timer_handler(void * p_context){
 	/*********** HUMSOLO *************/
 	#if HUMSOLO_ENABLED == 1
 	APP_ERROR_CHECK(humsolo_timer_handler()); //Call handler for Hum solo sensor
+	#endif
+	
+	/*********** RAIN *************/
+	#if RAIN_ENABLED == 1
+	APP_ERROR_CHECK(rain_timer_handler()); //Call handler for Rain sensor
+	#endif
+	
+	/*********** UV *************/
+	#if UV_ENABLED == 1
+	APP_ERROR_CHECK(uv_timer_handler()); //Call handler for Rain sensor
 	#endif
 
 #endif

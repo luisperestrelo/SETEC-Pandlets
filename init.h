@@ -17,7 +17,7 @@
 #include "nrf_delay.h"
 #include "nrf_gpio.h"
 #include "boards.h"
-#include "ble.h"
+//#include "ble.h"
 #include "ble_srv_common.h"
 #include "ble_advdata.h"
 #include "ble_conn_params.h"
@@ -113,6 +113,16 @@ ble_ambient_t                           m_amb;										    // Ambient Service s
 //***************** HUMSOLO ***********************/
 #if HUMSOLO_ENABLED == 1
 #include "humsolo.h"      																	//device driver for Humidity sensor
+#endif
+
+//***************** RAIN ***********************/
+#if RAIN_ENABLED == 1
+#include "rain.h"      																	//device driver for Rain sensor
+#endif
+
+//***************** UV***********************/
+#if UV_ENABLED == 1
+#include "uv.h"      																	//device driver for UV sensor
 #endif
 
 //***************** SD ***********************/
