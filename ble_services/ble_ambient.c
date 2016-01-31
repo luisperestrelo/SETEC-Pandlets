@@ -881,72 +881,45 @@ uint32_t ble_ambient_sensor_update(ble_ambient_t * p_amb, uint8_t * values, uint
 	return err_code;
 }
 
+FIL file_sens;       // File object
+ble_ambient_t * m_amb_sd;
+
+/**@brief Handles the SD reload.
+ */
+void sd_timer_handler(void * p_context){
+    
+    char buf[AMB_SD_MAX_PACKET_VALUE];
+	unsigned int bytesread;
+	
+	f_read(&file_sens, buf, AMB_SD_MAX_PACKET_VALUE, &bytesread);
+	printf("Li %u bytes\n", bytesread);
+	ble_ambient_sensor_update(m_amb_sd, (uint8_t *) buf, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
+	if (bytesread < AMB_SD_MAX_PACKET_VALUE){
+		app_timer_stop(m_sd_timer_id);
+		f_close(&file_sens);
+		f_mount(NULL, "", 1);
+	}
+}
+
+
 int lerCartao2(ble_ambient_t * m_amb){
 	
 	//static DWORD pos=0;
 	uint32_t  err_code = NRF_SUCCESS;
-	FIL file;       // File object
-    char buf[AMB_SD_MAX_PACKET_VALUE];
-	unsigned int bytesread;
-    //flag_lido=0;
-	//char fim[20];
-	//sprintf(fim,"11111111111111111111");
 	
     if(sd_card.fs_type == 0) { //SD card not mounted
 		//Mount the SD card
 		if(f_mount(&sd_card, "", 1) == 0){
 			printf("Mounted SD card!\n");
-			if(f_open(&file, "TEMP.TXT", FA_READ) != FR_OK){ //Could be that the file already exists
+			if(f_open(&file_sens, "TEMP.TXT", FA_READ) != FR_OK){ //Could be that the file already exists
 				printf("ERROR Opening!\n");
 				return 0;
 			}
-			while(1){
-				//printf("pos: %d\n",(int)pos);
-				//f_lseek(&file, pos);
-				f_read(&file,buf,AMB_SD_MAX_PACKET_VALUE,&bytesread);
-				//printf("bytesread: %d\n",bytesread);
-				printf("Li %u bytes\n", bytesread);
-				if(bytesread<AMB_SD_MAX_PACKET_VALUE){
-					//pos=0;
-					if(bytesread!=0){
-						ble_ambient_sensor_update(m_amb, (uint8_t *) buf, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
-						printf("Acabei de fazer tudo!\n");
-					}else{
-						sprintf(buf,"0000000000000000000");
-						ble_ambient_sensor_update(m_amb, (uint8_t *) buf, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
-						printf("Acabei de fazer tudo!\n");
-					}
-					break;
-				}else{
-					//int x=0;
-					//printf("\n");
-					//while(1){	
-						//printf("%c",buf[x]);
-						//x++;
-						//if(x>bytesread) break;
-					//}
-					//printf("\n");
-					//pos=AMB_SD_MAX_PACKET_VALUE+pos;
-					ble_ambient_sensor_update(m_amb, (uint8_t *) buf, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
-				}
-				//if(bytesread==0) break;
-				//int y=0;
-				//flag_lido=0;
-				//printf("\n");
-				//uint32_t inicio;
-				//inicio = timeStamp2;
-				//pos=inicio;
-				//while((timeStamp2-inicio)<1){
-					//printf("%d\n",(int)timeStamp2);
-				//}
-				nrf_delay_ms(1000);
-			}
-			
-			f_close(&file);
-			f_mount(NULL, "", 1);
-		}else{
-				printf("Fui parar aqui 2\n");
-			}
+			m_amb_sd = m_amb;
+			app_timer_start(m_sd_timer_id, APP_TIMER_TICKS(50, APP_TIMER_PRESCALER), NULL);
+		} else {
+			printf("Unable to mount\n");
+		}
     }
     else { //SD card already mounted, someone is logging to it!
 		printf("Fui parar aqui\n");
