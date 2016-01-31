@@ -201,33 +201,35 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 
 
 void on_low_bat_evt(){
+	
+	//setflagBAT(0xF);
 	//Low battery detected. Disable all functionality!
 	printf("on_low_bat_evt() \r\nReseting all configurations...\r\n");
 
-	application_work_stop(); //Stop base timer.
+//	application_work_stop(); //Stop base timer.
 
-     /********* AMBIENT SERVICE ********/
-	#if AMBIENT_SERVICE_ENABLED
- 	#if TEMP_ENABLED
-    APP_ERROR_CHECK(temp_reset_configs());
-	#endif
+     ///********* AMBIENT SERVICE ********/
+	//#if AMBIENT_SERVICE_ENABLED
+ 	//#if TEMP_ENABLED
+    //APP_ERROR_CHECK(temp_reset_configs());
+	//#endif
 
-	#if PR_ENABLED
-    APP_ERROR_CHECK(pr_reset_configs());
-	#endif
+	//#if PR_ENABLED
+    //APP_ERROR_CHECK(pr_reset_configs());
+	//#endif
 
-	#if LUM_ENABLED
-    APP_ERROR_CHECK(lum_reset_configs());
-	#endif
+	//#if LUM_ENABLED
+    //APP_ERROR_CHECK(lum_reset_configs());
+	//#endif
 	
-	#if HUMSOLO_ENABLED
-    APP_ERROR_CHECK(humsolo_reset_configs());
-	#endif
+	//#if HUMSOLO_ENABLED
+    //APP_ERROR_CHECK(humsolo_reset_configs());
+	//#endif
 	
-	#if HUM_ENABLED
-	APP_ERROR_CHECK(hum_reset_configs());
-	#endif
-    #endif /*AMBIENT_SERVICE_ENABLED*/
+	//#if HUM_ENABLED
+	//APP_ERROR_CHECK(hum_reset_configs());
+	//#endif
+    //#endif /*AMBIENT_SERVICE_ENABLED*/
 
     printf("Configurations reseted. \r\n");
     printf("From now on, only reads are allowed until the battery is charged. \r\n");
@@ -510,14 +512,17 @@ int main(void){
     app_sched_event_put(NULL, 0, application_work_start); //Start base timer.
     
     app_timer_start(m_rtc_timer_id, APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER), NULL);
-    
-	//uint32_t lum_buffer = 0;
 
     // Enter main loop
     for (;;){
 		app_sched_execute();
-		/*SparkFunTSL2561_bring_the_light(&lum_buffer);
-		lum_printf("Luminosity: %d\r\n", (int)lum_buffer);*/
 		power_manage(); //go to sleep
+		
+			int x=(int)mpu9x50_getInterruptStatus();
+			if (x>60) {
+					mpu9x50_reset();
+					mpu9x50_initMoveSensor(MPU_ADDRESS);
+					setflagACC(0xF);printf("moved: %d\n",x);
+				}
     }
 }

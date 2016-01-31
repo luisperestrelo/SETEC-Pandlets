@@ -835,12 +835,6 @@ uint32_t ble_ambient_sensor_update(ble_ambient_t * p_amb, uint8_t * values, uint
     
 	int i, t;
 	
-	int j=0;
-	while (j<10) {
-		printf("Valor %d: %d\n", j+1, values[j]);
-		j++;
-	}
-	
 	for(i = 0; i < AMB_NUMBER_OF_SENSORS; i++){
 		if(type_to_handle[i].type == type){
 			uint16_t len = (uint16_t)number_of_bytes;
@@ -1062,6 +1056,15 @@ uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configu
 										  0,
 										  &len,
 										  &sensor_configuration);
+		
+		uint8_t buf=0;
+		//buf=(uint8_t) ((((uint8_t) getflagACC()) << 4) && ((uint8_t) getflagBAT()));
+		buf=((uint8_t) getflagBAT());
+	//	printf("buf antes: %d\n",buf);
+		if((uint8_t) getflagACC()!=0) buf=buf+128;
+	//	printf("buf: %d, bat: %d, acc: %d\n",buf,(int)getflagBAT(),(int)getflagACC());
+		ble_ambient_sensor_update(p_amb, &buf, AMB_ALERT_MAX_PACKET_VALUE, BLE_AMBIENT_ALERT);
+		setflagACC(0);
 		
 		break;
 		#endif
