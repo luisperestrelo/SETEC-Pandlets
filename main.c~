@@ -15,7 +15,6 @@ static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;
 //static uint32_t timeStamp = 0;
 
 
-
 /**@brief Function for error handling, which is called when an error has occurred. 
  *
  * @param[in] error_code  Error code supplied to the handler.
@@ -32,16 +31,16 @@ void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p
 	char buffer[128];
 	sprintf(buffer, "Error occurred: %x at line %u in file %s\n", (unsigned int)error_code, (unsigned int)line_num, p_file_name);
 
-	if(sd_card.fs_type == 0) { //SD card not mounted
+	//if(sd_card.fs_type == 0) { //SD card not mounted
 		//Mount the SD card
-		if(f_mount(&sd_card, "", 1) == 0){
-			log_to_sd("pandlet.txt", buffer, strlen(buffer));
-			f_mount(NULL, "", 1);
-		}
-	}
-	else { //SD card already mounted, someone is logging to it!
-		log_to_sd("pandlet.txt", buffer, strlen(buffer));
-	}
+		//if(f_mount(&sd_card, "", 1) == 0){
+		//	log_to_sd("pandlet.txt", buffer, strlen(buffer));
+		//	f_mount(NULL, "", 1);
+		//}
+	//}
+	//else { //SD card already mounted, someone is logging to it!
+	//	log_to_sd("pandlet.txt", buffer, strlen(buffer));
+	//}
 	#endif /* SD_LOG */
 }
 
@@ -174,6 +173,10 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 			//#if HUMSOLO_ENABLED
             //APP_ERROR_CHECK(humsolo_reset_configs());
 			//#endif
+			
+			//#if RAIN_ENABLED
+            //APP_ERROR_CHECK(rain_reset_configs());
+			//#endif
 						
 			//#if HUM_ENABLED
 			//APP_ERROR_CHECK(hum_reset_configs());
@@ -224,6 +227,10 @@ void on_low_bat_evt(){
 	
 	#if HUMSOLO_ENABLED
     APP_ERROR_CHECK(humsolo_reset_configs());
+	#endif
+	
+	#if RAIN_ENABLED
+    APP_ERROR_CHECK(rain_reset_configs());
 	#endif
 	
 	#if HUM_ENABLED
@@ -297,19 +304,14 @@ void sys_evt_dispatch(uint32_t sys_evt){
  * @param[in]   p_evt   The ble_amb event.
  */
 void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
-	static int sensors_read = 0;
 	printf("ble_amb_evt() \r\n");
 
 	application_work_stop(); //Stop base timer.
 
-
     switch (p_evt->evt_type)
     {
-    	
-    	
 		#if TEMP_ENABLED == 1
         case BLE_AMBIENT_EVT_TEMP_CONFIG_CHANGED:
-       		sensors_read++;
         	printf("BLE_AMBIENT_EVT_TEMP_CONFIG_CHANGED: 0x%x\n", m_amb.temp_configuration);
 			APP_ERROR_CHECK(temp_configs_update()); //Update Temp configurations.
             break;
@@ -317,7 +319,6 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 
 		#if PR_ENABLED == 1
         case BLE_AMBIENT_EVT_PR_CONFIG_CHANGED:
-       		sensors_read++;
         	printf("BLE_AMBIENT_EVT_PR_CONFIG_CHANGED: 0x%x\n", m_amb.pr_configuration);
 			APP_ERROR_CHECK(pr_configs_update()); //Update Pr configurations.
             break;
@@ -325,23 +326,34 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 		
 		#if LUM_ENABLED == 1
         case BLE_AMBIENT_EVT_LUM_CONFIG_CHANGED:
-       		sensors_read++;
         	printf("BLE_AMBIENT_EVT_LUM_CONFIG_CHANGED: 0x%x\n", m_amb.lum_configuration);
 			APP_ERROR_CHECK(lum_configs_update()); //Update Pr configurations.
             break;
 		#endif
 
-		#if HUMSOLO_ENABLED == 1 //HANSOLO
+		#if HUMSOLO_ENABLED == 1
         case BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED:
-       		sensors_read++;
         	printf("BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED: 0x%x\n", m_amb.humsolo_configuration);
 			APP_ERROR_CHECK(humsolo_configs_update()); //Update Pr configurations.
+            break;
+		#endif
+		
+		#if RAIN_ENABLED == 1
+        case BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED: 0x%x\n", m_amb.rain_configuration);
+			APP_ERROR_CHECK(rain_configs_update()); //Update Rain configurations.
+            break;
+		#endif
+		
+		#if UV_ENABLED == 1
+        case BLE_AMBIENT_EVT_UV_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_UV_CONFIG_CHANGED: 0x%x\n", m_amb.uv_configuration);
+			APP_ERROR_CHECK(uv_configs_update()); //Update Rain configurations.
             break;
 		#endif
 
 		#if HUM_ENABLED == 1
 		case BLE_AMBIENT_EVT_HUM_CONFIG_CHANGED:
-		sensors_read++;
         	printf("BLE_AMBIENT_EVT_HUM_CONFIG_CHANGED: 0x%x\n", m_amb.hum_configuration);
         	APP_ERROR_CHECK(hum_configs_update()); //Update Hum configurations.
 			break;
@@ -353,15 +365,12 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
         	//APP_ERROR_CHECK(sd_configs_update()); //Update sd configurations.
 			break;
 		#endif
-
 		
         default:
             // No implementation needed.
             break;
     }
 
-
-	    	
 	enable_high_voltage(false);     //try to disable high voltage sensors
 
     //The scheduler doesn't have higher priority than BLE, so, in a event where multiple configs
@@ -380,24 +389,6 @@ void base_timer_handler(void * p_context){
 	UNUSED_PARAMETER(p_context);
 
 #if AMBIENT_SERVICE_ENABLED == 1
-
-	//static int newline = 1;
-	//static int sensors_read = 0;
-	//printf("ble_amb_evt() \r\n");
-
-	//application_work_stop(); //Stop base timer.
-	
-	printf("CONANANANANANA");
-    	/*char buf[20];
-    	if (newline)
-	{
-		printf("Starting line\n");
-		newline = 0;
-		sprintf(buf, "%d, %d, ", DEVICE_ID, (int)getTimeStamp());
-    		log2sd(buf, "READINGS.txt");
-   	}
-   	
-   	printf("fefefe %d %d\n", newline, sensors_read); */
 
 	/*********** TEMP *************/
 	#if TEMP_ENABLED == 1
@@ -423,18 +414,19 @@ void base_timer_handler(void * p_context){
 	#if HUMSOLO_ENABLED == 1
 	APP_ERROR_CHECK(humsolo_timer_handler()); //Call handler for Hum sensor
 	#endif
+	
+	/*********** RAIN *************/
+	#if RAIN_ENABLED == 1
+	APP_ERROR_CHECK(rain_timer_handler()); //Call handler for Rain sensor
+	#endif
+	
+	/*********** UV *************/
+	#if UV_ENABLED == 1
+	APP_ERROR_CHECK(uv_timer_handler()); //Call handler for Rain sensor
+	#endif
 
 #endif
 
-/*	if (sensors_read >= 4) // AMB_NUMBER_OF_SENSORS
-		{
-			printf("String done\n");
-	    		sprintf(buf, "\n");
-	    		log2sd(buf, "READINGS.txt");
-	    		newline = 1;
-	    		sensors_read = 0;
-	    	}
-	    	*/
 	enable_high_voltage(false); //try to disable 5V sensors (checks if they are on)
 }
 
@@ -528,20 +520,18 @@ static void setup(void){
  */
 int main(void){
 	
-	printf("CONAAA\n");
     setup();
-
-	
-
-
+    
+	if(f_mount(&sd_card, "", 1) == 0){
+                printf("Mounted SD card!\n");
+                }
+                
     // Start execution
     advertising_start();
     
     app_sched_event_put(NULL, 0, application_work_start); //Start base timer.
     
     app_timer_start(m_rtc_timer_id, APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER), NULL);
-    
-    f_mount(&sd_card, "", 1);
 
     // Enter main loop
     for (;;){
@@ -549,4 +539,3 @@ int main(void){
 		power_manage(); //go to sleep
     }
 }
-

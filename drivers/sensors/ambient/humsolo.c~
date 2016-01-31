@@ -48,7 +48,7 @@ uint32_t humsolo_configs_update(){
 			break;
 		case 0b111:
 		default: //If not recognized set max rate
-			m_humsolo.ticks = msec_to_ticks(READ_TIME);     //0.5 Hz
+			m_humsolo.ticks = msec_to_ticks(READ_FREQ);     //0.5 Hz
 			break;
 	}
 
@@ -73,10 +73,11 @@ uint32_t humsolo_values_handler() {
 		return err_code;
 	}
 	
-       	sprintf(buf, "%d \n", (int)humsolo_buffer);
+	char val[20];
+	add_zeroes((int)hum_buffer, val);
+    	char buf[20];
+	sprintf(buf, ",%s", val);
 	log2sd(buf, "READINGS.txt");
-	
-	
 
 	humsolo_printf("Humidity soil: %d\r\n", (int)humsolo_buffer);
 

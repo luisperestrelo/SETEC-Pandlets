@@ -31,16 +31,16 @@ void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p
 	char buffer[128];
 	sprintf(buffer, "Error occurred: %x at line %u in file %s\n", (unsigned int)error_code, (unsigned int)line_num, p_file_name);
 
-	if(sd_card.fs_type == 0) { //SD card not mounted
+	//if(sd_card.fs_type == 0) { //SD card not mounted
 		//Mount the SD card
-		if(f_mount(&sd_card, "", 1) == 0){
-			log_to_sd("pandlet.txt", buffer, strlen(buffer));
-			f_mount(NULL, "", 1);
-		}
-	}
-	else { //SD card already mounted, someone is logging to it!
-		log_to_sd("pandlet.txt", buffer, strlen(buffer));
-	}
+		//if(f_mount(&sd_card, "", 1) == 0){
+		//	log_to_sd("pandlet.txt", buffer, strlen(buffer));
+		//	f_mount(NULL, "", 1);
+		//}
+	//}
+	//else { //SD card already mounted, someone is logging to it!
+	//	log_to_sd("pandlet.txt", buffer, strlen(buffer));
+	//}
 	#endif /* SD_LOG */
 }
 
@@ -521,7 +521,12 @@ static void setup(void){
 int main(void){
 	
     setup();
-
+    
+	if(f_mount(&sd_card, "", 1) == 0){
+                printf("Mounted SD card!\n");
+                }
+        f_mount(NULL, "", 1);
+                
     // Start execution
     advertising_start();
     

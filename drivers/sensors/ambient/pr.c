@@ -55,7 +55,7 @@ uint32_t pr_configs_update(){
 		case 0b111:
 		default: //If not recognized set max rate
 //			m_pr.ticks = msec_to_ticks(200);      //5 Hz
-			m_pr.ticks = msec_to_ticks(120000);      //1 Hz
+			m_pr.ticks = msec_to_ticks(READ_FREQ);      //1 Hz
 			break;
 	}
 
@@ -76,9 +76,11 @@ uint32_t pr_values_handler() {
 		return err_code;
 	}
 	
-    char buf[20];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_PR_ID,(int)pr_buffer,(int)getTimeStamp());
-	log2sd(buf, "TEMP.txt");
+	char val[20];
+	add_zeroes((int)pr_buffer, val);
+    	char buf[20];
+	sprintf(buf, ",%s", val);
+	log2sd(buf, "READINGS.txt");
 
 	pr_printf("Pressure: %d\r\n", (int)pr_buffer);
 	err_code = ble_ambient_sensor_update(m_pr.m_amb, (uint8_t *) &pr_buffer,

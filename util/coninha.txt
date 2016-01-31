@@ -1,0 +1,266 @@
+###RTT Client: ************************************************************ 
+###RTT Client: *           SEGGER MICROCONTROLLER GmbH & Co KG            * 
+###RTT Client: *   Solutions for real time microcontroller applications   * 
+###RTT Client: ************************************************************ 
+###RTT Client: *                                                          * 
+###RTT Client: *  (c) 2012 - 2014  SEGGER Microcontroller GmbH & Co KG    * 
+###RTT Client: *                                                          * 
+###RTT Client: *     www.segger.com     Support: support@segger.com       * 
+###RTT Client: *                                                          * 
+###RTT Client: ************************************************************ 
+###RTT Client: *                                                          * 
+###RTT Client: * SEGGER J-Link RTT Client   Compiled Nov 13 2015 18:34:13 * 
+###RTT Client: *                                                          * 
+###RTT Client: ************************************************************ 
+
+###RTT Client: -----------------------------------------------
+###RTT Client: Connecting to J-Link RTT Server via localhost:19021 ...... Connected.
+SEGGER J-Link V5.02k - Real time terminal output
+SEGGER J-Link EDU V8.0, SN=268000504
+Process: JLinkExe
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 11
+*******************CONA*************
+Temperature: 3178
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 7
+*******************CONA*************
+Pressure: 101770
+SparkFunTSL2561_bring_the_light
+ERRO DATA NOK
+lum: SparkFunTSL2561_bring_the_light failed.
+lum_values_handler() failed.
+Error occurred: 2025 at line 405 in file ../main.c
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 6
+*******************CONA*************
+Humidity: 42194
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Humidity soil: 3615
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Rain: 4095
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 11
+Temperature: 3174
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 11
+*******************CONA*************
+Temperature: 3151
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 7
+*******************CONA*************
+Pressure: 101768
+SparkFunTSL2561_bring_the_light
+ERRO DATA NOK
+lum: SparkFunTSL2561_bring_the_light failed.
+lum_values_handler() failed.
+Error occurred: 2025 at line 405 in file ../main.c
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 6
+*******************CONA*************
+Humidity: 42460
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Humidity soil: 3391
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Rain: 3855
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 11
+*******************CONA*************
+Temperature: 3148
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 7
+*******************CONA*************
+Pressure: 101762
+SparkFunTSL2561_bring_the_light
+ERRO DATA NOK
+lum: SparkFunTSL2561_bring_the_light failed.
+lum_values_handler() failed.
+Error occurred: 2025 at line 405 in file ../main.c
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 6
+*******************CONA*************
+Humidity: 42490
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Humidity soil: 4095
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Rain: 3855
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 11
+*******************CONA*************
+Temperature: 3148
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 7
+*******************CONA*************
+Pressure: 101768
+SparkFunTSL2561_bring_the_light
+ERRO DATA NOK
+lum: SparkFunTSL2561_bring_the_light failed.
+lum_values_handler() failed.
+Error occurred: 2025 at line 405 in file ../main.c
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 6
+*******************CONA*************
+Humidity: 42512
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Humidity soil: 3711
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Rain: 4095
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 11
+*******************CONA*************
+Temperature: 3150
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 7
+*******************CONA*************
+Pressure: 101760
+SparkFunTSL2561_bring_the_light
+ERRO DATA NOK
+lum: SparkFunTSL2561_bring_the_light failed.
+lum_values_handler() failed.
+Error occurred: 2025 at line 405 in file ../main.c
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 6
+*******************CONA*************
+Humidity: 42481
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Humidity soil: 3919
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Rain: 4095
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 11
+*******************CONA*************
+Temperature: 3153
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 7
+*******************CONA*************
+Pressure: 101765
+SparkFunTSL2561_bring_the_light
+ERRO DATA NOK
+lum: SparkFunTSL2561_bring_the_light failed.
+lum_values_handler() failed.
+Error occurred: 2025 at line 405 in file ../main.c
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 6
+*******************CONA*************
+Humidity: 42440
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Humidity soil: 3455
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Rain: 3951
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 11
+*******************CONA*************
+Temperature: 3153
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 7
+*******************CONA*************
+Pressure: 101760
+SparkFunTSL2561_bring_the_light
+ERRO DATA NOK
+lum: SparkFunTSL2561_bring_the_light failed.
+lum_values_handler() failed.
+Error occurred: 2025 at line 405 in file ../main.c
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 6
+*******************CONA*************
+Humidity: 42462
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Humidity soil: 3871
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Rain: 3999
+Reading battery value...
+Battery value: 127. Charging status: 1.
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 11
+*******************CONA*************
+Temperature: 3150
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 7
+*******************CONA*************
+Pressure: 101765
+SparkFunTSL2561_bring_the_light
+ERRO DATA NOK
+lum: SparkFunTSL2561_bring_the_light failed.
+lum_values_handler() failed.
+Error occurred: 2025 at line 405 in file ../main.c
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 6
+*******************CONA*************
+Humidity: 42437
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Humidity soil: 3615
+Mounted SD card!
+*******************CONA*************
+Yo bitch I wrote stuff of this size: 5
+*******************CONA*************
+Rain: 3951

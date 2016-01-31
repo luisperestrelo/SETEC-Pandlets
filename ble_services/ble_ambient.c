@@ -704,14 +704,28 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 	type_to_handle[4].value = (p_amb->humsolo_value);
 	#endif	
 
-	type_to_handle[5].type = BLE_AMBIENT_SD;
+	type_to_handle[5].type = BLE_AMBIENT_RAIN;
+	#if HUMSOLO_ENABLED
+	type_to_handle[5].handle = &(p_amb->rain_handles);
+	type_to_handle[5].config_handle = &(p_amb->rain_configuration_handles);
+	type_to_handle[5].value = (p_amb->rain_value);
+	#endif	
+
+	type_to_handle[6].type = BLE_AMBIENT_UV;
+	#if HUMSOLO_ENABLED
+	type_to_handle[6].handle = &(p_amb->uv_handles);
+	type_to_handle[6].config_handle = &(p_amb->uv_configuration_handles);
+	type_to_handle[6].value = (p_amb->uv_value);
+	#endif	
+
+	type_to_handle[7].type = BLE_AMBIENT_SD;
 	#if SD_ENABLED
-	type_to_handle[5].handle = &(p_amb->sd_handles);
-	type_to_handle[5].config_handle = &(p_amb->sd_configuration_handles);
-	type_to_handle[5].value = (p_amb->sd_value);
+	type_to_handle[7].handle = &(p_amb->sd_handles);
+	type_to_handle[7].config_handle = &(p_amb->sd_configuration_handles);
+	type_to_handle[7].value = (p_amb->sd_value);
 	#endif	
 	return err_code;											
-}
+} 	
 
 
 /**@brief Function for adding the Ambient Service service.

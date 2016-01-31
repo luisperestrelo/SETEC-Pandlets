@@ -30,8 +30,10 @@
 
 #ifdef BORON
 #define DEVICE_NAME                       "UVA-2"								// Name of device. Will be included in the advertising data.
-#define DEVICE_ID                         1										// ID of device. Will be included in the advertising data.
+#define DEVICE_ID                         2										// ID of device. Will be included in the advertising data.
 #endif
+
+#define READ_FREQ			  2000
 
 #define MANUFACTURER_NAME                 "FhP-AICOS"							// Manufacturer. Will be passed to Device Information Service.
 #define APPEARANCE                        0		         					      // Appearance. Used for whatever is needed. Random value for now.

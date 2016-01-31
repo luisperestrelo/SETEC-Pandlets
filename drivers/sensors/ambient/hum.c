@@ -40,7 +40,7 @@ uint32_t hum_configs_update(){
 			break;
 		case 0b111:
 		default: //If not recognized set max rate
-			m_hum.ticks = msec_to_ticks(120000);     //0.5 Hz
+			m_hum.ticks = msec_to_ticks(READ_FREQ);     //0.5 Hz
 			break;
 	}
 
@@ -59,10 +59,11 @@ uint32_t hum_values_handler() {
 		hum_printf("hum: bme280_read_pressure() failed.\r\n");
 		return err_code;
 	}
-
-    char buf[20];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_HUM_ID,(int)hum_buffer,(int)getTimeStamp());
-	log2sd(buf, "TEMP.txt");
+	char val[20];
+	add_zeroes((int)hum_buffer, val);
+    	char buf[20];
+	sprintf(buf, ",%s", val);
+	log2sd(buf, "READINGS.txt");
 
 	hum_printf("Humidity: %d\r\n", (int)hum_buffer);
 

@@ -21,7 +21,7 @@
 
 
 /***************** HUMSOLO *********************/
-#define HUMSOLO_INITIAL_CONFIG          0b11110000										  //Initial configuration of the HUMSOLO sensor. Disabled, 0.5Hz.
+#define HUMSOLO_INITIAL_CONFIG          0b11110001										  //Initial configuration of the HUMSOLO sensor. Disabled, 0.5Hz.
 #define HUMSOLO_DEBUG                   1												  //Enables HUM RTT debug
 
 
@@ -30,11 +30,11 @@
 #define LUM_DEBUG                   1												  //Enables LUM RTT debug
 
 /***************** RAIN *********************/
-#define RAIN_INITIAL_CONFIG          0b11110000										  //Initial configuration of the RAIN sensor. Disabled, 0.5Hz.
+#define RAIN_INITIAL_CONFIG          0b11110001										  //Initial configuration of the RAIN sensor. Disabled, 0.5Hz.
 #define RAIN_DEBUG                   1												  //Enables RAIN RTT debug
 
 /***************** UV *********************/
-#define UV_INITIAL_CONFIG          0b11110000										  //Initial configuration of the RAIN sensor. Disabled, 0.5Hz.
+#define UV_INITIAL_CONFIG          0b11110001										  //Initial configuration of the RAIN sensor. Disabled, 0.5Hz.
 #define UV_DEBUG                   1												  //Enables RAIN RTT debug
 
 /***************** SD *********************/

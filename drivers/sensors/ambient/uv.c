@@ -48,7 +48,7 @@ uint32_t uv_configs_update(){
 			break;
 		case 0b111:
 		default: //If not recognized set max rate
-			m_uv.ticks = msec_to_ticks(2000);     //0.5 Hz
+			m_uv.ticks = msec_to_ticks(READ_FREQ);     //0.5 Hz
 			break;
 	}
 
@@ -74,8 +74,8 @@ uint32_t uv_values_handler() {
 	}
 	
     char buf[12];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_UV_ID,(int)uv_buffer,000);
-	log2sd(buf, "TEMP.txt");
+    sprintf(buf, ",%d", (int)uv_buffer);
+	log2sd(buf, "READINGS.txt");
 
 	uv_printf("UV: %d\r\n", (int)uv_buffer);
 

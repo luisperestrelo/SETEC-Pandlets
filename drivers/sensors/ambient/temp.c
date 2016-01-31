@@ -40,7 +40,7 @@ uint32_t temp_configs_update(){
 			break;
 		case 0b111:
 		default: //If not recognized set max rate
-			m_temp.ticks = msec_to_ticks(120000);     //0.5 Hz
+			m_temp.ticks = msec_to_ticks(READ_FREQ);     //0.5 Hz
 			break;
 	}
 
@@ -61,10 +61,15 @@ uint32_t temp_values_handler() {
 		return err_code;
 	}
 	
+
+	char val[20];
+	char time_val[20];
+	add_zeroes((int)temp_buffer, val);
+	add_zeroes((int)getTimeStamp(), time_val);
 	char buf[20];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_TEMP_ID,(int)temp_buffer,(int)getTimeStamp());
+	sprintf(buf, "\r\n%d,%s,%s", DEVICE_ID,time_val,val);
     
-    log2sd(buf, "TEMP.txt");
+	log2sd(buf, "READINGS.txt");
         
 	temp_printf("Temperature: %d\n", (int)temp_buffer);
 	err_code = ble_ambient_sensor_update(m_temp.m_amb, (uint8_t *) &temp_buffer,

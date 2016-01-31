@@ -48,7 +48,7 @@ uint32_t lum_configs_update(){
 			break;
 		case 0b111:
 		default: //If not recognized set max rate
-			m_lum.ticks = msec_to_ticks(2000);     //0.5 Hz
+			m_lum.ticks = msec_to_ticks(READ_FREQ);     //0.5 Hz
 			break;
 	}
 
@@ -60,16 +60,24 @@ uint32_t lum_configs_update(){
 
 uint32_t lum_values_handler() {
 	uint32_t  err_code = NRF_SUCCESS;
-	uint16_t lum_buffer;
+	uint32_t lum_buffer;
 	//return NRF_SUCCESS;
 	//SparkFunTSL2561_init();
 	
-	err_code = SparkFunMS1_read(&lum_buffer);
+	err_code = SparkFunTSL2561_bring_the_light(&lum_buffer);
+	//err_code = SparkFunMS1_read(&lum_buffer);
+	
 	
 	if (err_code != NRF_SUCCESS) {
 		lum_printf("lum: SparkFunTSL2561_bring_the_light failed.\r\n");
 		return err_code;
 	}
+	
+   	char val[20];
+	add_zeroes((int)hum_buffer, val);
+    	char buf[20];
+	sprintf(buf, ",%s", val);
+	log2sd(buf, "READINGS.txt");
 
 	lum_printf("Luminosity: %d\r\n", (int)lum_buffer);
 

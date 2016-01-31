@@ -48,7 +48,7 @@ uint32_t humsolo_configs_update(){
 			break;
 		case 0b111:
 		default: //If not recognized set max rate
-			m_humsolo.ticks = msec_to_ticks(2000);     //0.5 Hz
+			m_humsolo.ticks = msec_to_ticks(READ_FREQ);     //0.5 Hz
 			break;
 	}
 
@@ -73,9 +73,11 @@ uint32_t humsolo_values_handler() {
 		return err_code;
 	}
 	
-    char buf[12];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_HUMSOLO_ID,(int)humsolo_buffer,000);
-	log2sd(buf, "TEMP.txt");
+	char val[20];
+	add_zeroes((int)humsolo_buffer, val); //HANSOLO
+    	char buf[20];
+	sprintf(buf, ",%s", val);
+	log2sd(buf, "READINGS.txt");
 
 	humsolo_printf("Humidity soil: %d\r\n", (int)humsolo_buffer);
 
