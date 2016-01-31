@@ -389,23 +389,10 @@ void sensors_init(void){
 	APP_ERROR_CHECK(rain_configs_update());
 	#endif /* RAIN_ENABLED */
 	
-	#if UV_ENABLED
-	APP_ERROR_CHECK(uv_init(&m_amb));
-	APP_ERROR_CHECK(uv_configs_update());
-	#endif /* UV_ENABLED */
-	
 	#if SD_ENABLED
 	APP_ERROR_CHECK(sd_init(&m_amb));
 //	APP_ERROR_CHECK(sd_configs_update());
 	#endif /* SD_ENABLED */
-	
-	#if INST_ENABLED
-	APP_ERROR_CHECK(inst_init(&m_amb));
-	#endif /* INST_ENABLED */
-	
-	#if ALERT_ENABLED
-	APP_ERROR_CHECK(alert_init(&m_amb));
-	#endif /* ALERT_ENABLED */
 	
 #endif
 
@@ -465,22 +452,10 @@ void application_work_start(void *data, uint16_t size){
 	flag |= (m_rain.IS_RAIN_ENABLED);
 	#endif
 	
-	#if UV_ENABLED == 1
-	flag |= (m_uv.IS_UV_ENABLED);
-	#endif
-	
 	#if SD_ENABLED == 1
 	flag |= (m_sd2app.IS_SD_ENABLED);
 	#endif
-	
-	#if INST_ENABLED == 1
-	flag |= (m_inst.IS_INST_ENABLED);
-	#endif
-	
-	#if ALERT_ENABLED == 1
-	flag |= (m_alert.IS_ALERT_ENABLED);
-	#endif
-	
+		
 	if(flag){
 		APP_ERROR_CHECK(app_timer_start(m_base_timer_id,
 			APP_TIMER_TICKS(BASE_TIMER_FREQ, APP_TIMER_PRESCALER), NULL));

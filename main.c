@@ -239,9 +239,6 @@ void on_low_bat_evt(){
 	//#endif
     //#endif /*AMBIENT_SERVICE_ENABLED*/
 
-    printf("Configurations reseted. \r\n");
-    printf("From now on, only reads are allowed until the battery is charged. \r\n");
-
 	enable_high_voltage(false);
 }
 
@@ -462,14 +459,6 @@ static void power_manage(void){
     APP_ERROR_CHECK(err_code);
 }
 
-static void show_error(void)
-{
-	printf("ERROR UART!\n");
-  while(true)
-  {
-  }
-}
-
 /**@brief Function for initialization.
  */
 static void setup(void){
@@ -543,7 +532,8 @@ int main(void){
 			if (x>60) {
 					mpu9x50_reset();
 					mpu9x50_initMoveSensor(MPU_ADDRESS);
-					setflagACC(0xF);printf("moved: %d\n",x);
+					setflagACC(0xF);
+					printf("moved: %d\n",x);
 				}
     }
 }

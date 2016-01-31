@@ -14,7 +14,7 @@ uint32_t rain_init(ble_ambient_t *m_amb_init){
 
 
 uint32_t rain_configs_update(){
-	rain_printf("\r\nh Rain Configurations Update\r\n");
+	rain_printf("\r\nRain Configurations Update\r\n");
 
 	uint8_t configuration = (m_rain.m_amb)->rain_configuration;
 

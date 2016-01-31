@@ -87,7 +87,7 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMB_RATE_BITS                 0b11100000
 #define AMB_SLEEP_BIT                 0b00010000
 
-#define AMB_NUMBER_OF_SENSORS         8
+#define AMB_NUMBER_OF_SENSORS         10
 
 
 /**@brief Ambient sensor type. */

@@ -129,17 +129,6 @@ ble_ambient_t                           m_amb;										    // Ambient Service s
 #include "sd2app.h"      																	//device driver for SD to app
 #endif
 
-//***************** INST ***********************/
-#if INST_ENABLED == 1
-#include "install.h"      																	//device driver for Install
-#endif
-
-//***************** ALERT ***********************/
-#if ALERT_ENABLED == 1
-#include "alert.h"      																	//device driver for Install
-#endif
-
-
 #endif /**AMBIENT_SERVICE_ENABLED*/
 
 
