@@ -71,7 +71,7 @@
 #define HUMSOLO_ENABLED						1      							      //Enables Humidity sensor 
 #define LUM_ENABLED							1      							      //Enables Luminosity sensor 
 #define RAIN_ENABLED						1      							      //Enables Rain sensor 
-#define UV_ENABLED						    1      							      //Enables UV sensor 
+#define UV_ENABLED						    0      							      //Enables UV sensor 
 #define SD_ENABLED							1      							      //Enables SD Card 
 
 #endif /* AMBIENT_SERVICE_ENABLED */

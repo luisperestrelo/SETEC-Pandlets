@@ -35,7 +35,7 @@ static void on_disconnect(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
 static void on_write(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
-#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || UV_ENABLED || SD_ENABLED
+#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || HUMSOLO_ENABLED || RAIN_ENABLED || LUM_ENABLED || UV_ENABLED || SD_ENABLED
 	ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
 #endif
 	

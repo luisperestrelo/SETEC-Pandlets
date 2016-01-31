@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "nrf_gpio.h"
 #include "nosso.h"
 
 /* Utilities includes */

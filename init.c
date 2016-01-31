@@ -30,10 +30,11 @@ void gpio_init(void){
 
 	//Configure GPIO'S
 	nrf_gpio_cfg_input(GPIO_1, GPIO_PIN_CNF_PULL_Pullup);
+	nrf_gpio_cfg_input(GPIO_2, GPIO_PIN_CNF_PULL_Pullup);
 
-	nrf_gpio_cfg_input(GPIO_2,GPIO_PIN_CNF_PULL_Pullup);
+	nrf_gpio_cfg_input(GPIO_3,GPIO_PIN_CNF_PULL_Pullup);
 
-	nrf_gpio_cfg_output(GPIO_3);
+	//nrf_gpio_cfg_output(GPIO_3);
 	nrf_gpio_cfg_output(GPIO_4);
 }
 

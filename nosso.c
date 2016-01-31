@@ -3,30 +3,46 @@
 
 
 static unsigned long timeStamp2 = 0;
-
 static unsigned long GPS = 0;
+static unsigned long flagBAT = 0;
+static unsigned long flagACC = 0;
+
 
 unsigned long getTimeStamp(){
 	
 	return timeStamp2;
 }
 
-
-void setTimeStamp(unsigned long x){
+unsigned long getflagBAT(){
 	
-	timeStamp2=x;
+	return flagBAT;
 }
-
+unsigned long getflagACC(){
+	
+	return flagACC;
+}
 unsigned long getGPS(){
 	
 	return GPS;
 }
 
-
+void setTimeStamp(unsigned long x){
+	
+	timeStamp2=x;
+}
+void setflagBAT(unsigned long x){
+	
+	flagBAT=x;
+}
+void setflagACC(unsigned long x){
+	
+	flagACC=x;
+}
 void setGPS(unsigned long x){
 	
 	GPS=x;
 }
+
 
 void increTimeStamp(){
 	
