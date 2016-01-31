@@ -17,7 +17,7 @@
 #include "nrf_delay.h"
 #include "nrf_gpio.h"
 #include "boards.h"
-//#include "ble.h"
+#include "ble.h"
 #include "ble_srv_common.h"
 #include "ble_advdata.h"
 #include "ble_conn_params.h"
@@ -43,7 +43,6 @@
 dm_application_instance_t               m_app_handle;                                   // Application identifier allocated by device manager
 app_timer_id_t				            m_base_timer_id;							    // Base timer for reads
 app_timer_id_t				            m_watchdog_timer_id;		        		    // Watchdog timer for reloads
-app_timer_id_t				            m_rtc_timer_id;		        		    		// RTC timer for counting time
 
 /*******************************************************************************
  *                   Peripheral and general drivers
@@ -320,9 +319,6 @@ void base_timer_handler(void * p_context);
 
 
 void watchdog_timer_handler(void * p_context);
-
-
-void rtc_timer_handler(void * p_context);
 
 
 void advertising_start(void);

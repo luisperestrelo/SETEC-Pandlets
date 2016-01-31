@@ -65,7 +65,7 @@
 
 /* WATCHDOG */
 #define WATCHDOG_TIMER                   5000								      // ms
-#define WATCHDOG_TIMEOUT                 10 * 32768 							  //10 secs
+#define WATCHDOG_TIMEOUT                 500 * 32768 							  //500 secs
 
 /*************************************************
 * Board specific defines                         *

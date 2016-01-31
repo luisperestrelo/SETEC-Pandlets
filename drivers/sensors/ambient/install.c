@@ -187,10 +187,10 @@ uint32_t inst_reset_configs(){
 	}
 
 	//Reset sensor values
-	uint8_t inst_buffer[AMB_INST_MAX_PACKET_VALUE];
-	for(uint8_t i = 0; i < AMB_INST_MAX_PACKET_VALUE; i++) inst_buffer[i] = INVALID_SENSOR_VALUE;
+	uint8_t inst_buffer[INST_RX_PACKET_VALUE];
+	for(uint8_t i = 0; i < INST_RX_PACKET_VALUE; i++) inst_buffer[i] = INVALID_SENSOR_VALUE;
 
-	check_ble_service_err_code(ble_ambient_sensor_update(m_inst.m_amb, inst_buffer, AMB_INST_MAX_PACKET_VALUE, BLE_AMBIENT_INST));
+	check_ble_service_err_code(ble_ambient_sensor_update(m_inst.m_amb, inst_buffer, INST_RX_PACKET_VALUE, BLE_AMBIENT_INST));
 
 	return NRF_SUCCESS;
 }

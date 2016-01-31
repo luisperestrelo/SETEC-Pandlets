@@ -454,15 +454,6 @@ void watchdog_timer_handler(void * p_context){
 }
 
 
-/**@brief Handles the RTC reload.
- */
-void rtc_timer_handler(void * p_context){
-	increTimeStamp();
-	//timeStamp2++; //Increment timestamp
-	//printf("TIMESTAMPA NA CONA: %d\n", (int)timeStamp2);
-}
-
-
 /**@brief Function for entering sleep. 
  */
 static void power_manage(void){
@@ -542,8 +533,6 @@ int main(void){
     advertising_start();
     
     app_sched_event_put(NULL, 0, application_work_start); //Start base timer.
-    
-    app_timer_start(m_rtc_timer_id, APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER), NULL);
 
     // Enter main loop
     for (;;){
