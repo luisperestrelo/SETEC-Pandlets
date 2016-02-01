@@ -15,7 +15,7 @@ uint32_t humsolo_init(ble_ambient_t *m_amb_init){
 
 	m_humsolo.timer_count           = 0;
 	m_humsolo.m_amb                 = m_amb_init;
-	m_humsolo.IS_HUMSOLO_ENABLED    = false;
+	m_humsolo.IS_HUMSOLO_ENABLED    = true;
 
 	return NRF_SUCCESS;
 }
@@ -48,7 +48,7 @@ uint32_t humsolo_configs_update(){
 			break;
 		case 0b111:
 		default: //If not recognized set max rate
-			m_humsolo.ticks = msec_to_ticks(2000);     //0.5 Hz
+			m_humsolo.ticks = msec_to_ticks(READ_FREQ);     //0.5 Hz
 			break;
 	}
 
@@ -61,23 +61,21 @@ uint32_t humsolo_configs_update(){
 uint32_t humsolo_values_handler() {
 	uint32_t  err_code = NRF_SUCCESS;
 	uint16_t humsolo_buffer;
-	//return NRF_SUCCESS;
-	//SparkFunTSL2561_init();
-	
-	//err_code = SparkFunTSL2561_bring_the_light(&lum_buffer);
-	err_code = SparkFunMS1_read(&humsolo_buffer);
-	
-	
+
+	err_code = SparkFunMS1_read3(&humsolo_buffer);
+	//err_code = bme280_read_humidity(&hum_buffer);
 	if (err_code != NRF_SUCCESS) {
-		humsolo_printf("humsolo: SparkFunMS1_read failed.\r\n");
+		humsolo_printf("hum: bme280_humsolo_pressure() failed.\r\n");
 		return err_code;
 	}
 	
-    char buf[12];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_HUMSOLO_ID,(int)humsolo_buffer,000);
-	log2sd(buf, "TEMP.txt");
+	char val[20];
+	add_zeroes((int)humsolo_buffer, val); //HANSOLO
+    char buf[20];
+	sprintf(buf, ",%s", val);
+	log2sd(buf, "READINGS.txt");
 
-	humsolo_printf("Humidity soil: %d\r\n", (int)humsolo_buffer);
+	humsolo_printf("Humidity Soil: %d\r\n", (int)humsolo_buffer);
 
 	err_code = ble_ambient_sensor_update(m_humsolo.m_amb, (uint8_t *) &humsolo_buffer,
 			AMB_HUMSOLO_MAX_PACKET_VALUE, BLE_AMBIENT_HUMSOLO);

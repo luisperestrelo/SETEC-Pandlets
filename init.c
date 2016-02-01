@@ -30,10 +30,11 @@ void gpio_init(void){
 
 	//Configure GPIO'S
 	nrf_gpio_cfg_input(GPIO_1, GPIO_PIN_CNF_PULL_Pullup);
+	nrf_gpio_cfg_input(GPIO_2, GPIO_PIN_CNF_PULL_Pullup);
 
-	nrf_gpio_cfg_input(GPIO_2,GPIO_PIN_CNF_PULL_Pullup);
+	nrf_gpio_cfg_input(GPIO_3,GPIO_PIN_CNF_PULL_Pullup);
 
-	nrf_gpio_cfg_output(GPIO_3);
+	//nrf_gpio_cfg_output(GPIO_3);
 	nrf_gpio_cfg_output(GPIO_4);
 }
 
@@ -226,17 +227,13 @@ void services_init(void){
 	#if HUMSOLO_ENABLED
     amb_init.humsolo_init_configuration = HUMSOLO_INITIAL_CONFIG;
 	#endif
-
+	
+	#if RAIN_ENABLED
+    amb_init.rain_init_configuration = RAIN_INITIAL_CONFIG;
+	#endif
+	
 	#if SD_ENABLED
     amb_init.sd_init_configuration = SD_INITIAL_CONFIG;
-	#endif
-	
-	#if INST_ENABLED
-    amb_init.inst_init_configuration = INST_INITIAL_CONFIG;
-	#endif
-	
-	#if ALERT_ENABLED
-    amb_init.alert_init_configuration = ALERT_INITIAL_CONFIG;
 	#endif
 
     err_code = ble_ambient_init(&m_amb, &amb_init); //perform service initiation
@@ -375,19 +372,11 @@ void sensors_init(void){
 	APP_ERROR_CHECK(lum_configs_update());
 	#endif /* LUM_ENABLED */
 	
-	#if SD_ENABLED
-	APP_ERROR_CHECK(sd_init(&m_amb));
-//	APP_ERROR_CHECK(sd_configs_update());
-	#endif /* SD_ENABLED */
-	
-	#if INST_ENABLED
-	APP_ERROR_CHECK(inst_init(&m_amb));
-	#endif /* INST_ENABLED */
-	
-	#if ALERT_ENABLED
-	APP_ERROR_CHECK(alert_init(&m_amb));
-	#endif /* ALERT_ENABLED */
-	
+	#if RAIN_ENABLED
+	APP_ERROR_CHECK(rain_init(&m_amb));
+	APP_ERROR_CHECK(rain_configs_update());
+	#endif /* RAIN_ENABLED */
+		
 #endif
 
 	twi_busy = false;
@@ -442,16 +431,8 @@ void application_work_start(void *data, uint16_t size){
 	flag |= (m_lum.IS_LUM_ENABLED);
 	#endif
 	
-	#if SD_ENABLED == 1
-	flag |= (m_sd2app.IS_SD_ENABLED);
-	#endif
-	
-	#if INST_ENABLED == 1
-	flag |= (m_inst.IS_INST_ENABLED);
-	#endif
-	
-	#if ALERT_ENABLED == 1
-	flag |= (m_alert.IS_ALERT_ENABLED);
+	#if RAIN_ENABLED == 1
+	flag |= (m_rain.IS_RAIN_ENABLED);
 	#endif
 	
 	if(flag){

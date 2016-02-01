@@ -15,7 +15,7 @@ uint32_t lum_init(ble_ambient_t *m_amb_init){
 
 	m_lum.timer_count           = 0;
 	m_lum.m_amb                 = m_amb_init;
-	m_lum.IS_LUM_ENABLED        = false;
+	m_lum.IS_LUM_ENABLED        = true;
 
 	return NRF_SUCCESS;
 }
@@ -48,7 +48,7 @@ uint32_t lum_configs_update(){
 			break;
 		case 0b111:
 		default: //If not recognized set max rate
-			m_lum.ticks = msec_to_ticks(2000);     //0.5 Hz
+			m_lum.ticks = msec_to_ticks(READ_FREQ);     //0.5 Hz
 			break;
 	}
 
@@ -73,9 +73,11 @@ uint32_t lum_values_handler() {
 		return err_code;
 	}
 	
-    char buf[12];
-    sprintf(buf, "%d,%d,%d,%d,\n", DEVICE_ID,SENSOR_LUM_ID,(int)lum_buffer,000);
-	log2sd(buf, "TEMP.txt");
+   	char val[20];
+	add_zeroes((int)lum_buffer, val);
+    char buf[20];
+	sprintf(buf, ",%s", val);
+	log2sd(buf, "READINGS.txt");
 
 	lum_printf("Luminosity: %d\r\n", (int)lum_buffer);
 

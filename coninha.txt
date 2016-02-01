@@ -1,0 +1,1114 @@
+###RTT Client: ************************************************************ 
+###RTT Client: *           SEGGER MICROCONTROLLER GmbH & Co KG            * 
+###RTT Client: *   Solutions for real time microcontroller applications   * 
+###RTT Client: ************************************************************ 
+###RTT Client: *                                                          * 
+###RTT Client: *  (c) 2012 - 2014  SEGGER Microcontroller GmbH & Co KG    * 
+###RTT Client: *                                                          * 
+###RTT Client: *     www.segger.com     Support: support@segger.com       * 
+###RTT Client: *                                                          * 
+###RTT Client: ************************************************************ 
+###RTT Client: *                                                          * 
+###RTT Client: * SEGGER J-Link RTT Client   Compiled Nov 13 2015 18:34:13 * 
+###RTT Client: *                                                          * 
+###RTT Client: ************************************************************ 
+
+###RTT Client: -----------------------------------------------
+###RTT Client: Connecting to J-Link RTT Server via localhost:19021 ... Connected.
+SEGGER J-Link V5.02k - Real time terminal output
+SEGGER J-Link EDU V8.0, SN=268000504
+Process: JLinkExe
+GPIO inits ok!
+LEDS ok!
+timers ok!
+watchdog_init ok!
+gpiote ok!
+ble_stack ok!
+scheduler_init ok!
+sec_params ok!
+gap_parameters_init ok!
+services ok!
+advertising ok!
+conn_params ok!
+drivers_init ok!
+temp_init() 
+
+External Temperature Configurations Update
+temp_configs_update() Ok!
+
+pr_init() 
+
+Pressure Configurations Update
+pr_configs_update() Ok!
+
+hum_init() 
+
+Humidity Configurations Update
+hum_configs_update() Ok!
+
+humsolo_init() 
+
+humidity soil Configurations Update
+humsolo_configs_update() Ok!
+
+rain_init() 
+
+h Rain Configurations Update
+rain_configs_update() Ok!
+
+uv_init() 
+
+h UV Configurations Update
+uv_configs_update() Ok!
+
+sd2app_init() 
+sensors_init ok!
+Reading battery value...
+Battery value: 144. Charging status: 0.
+Advertising...
+Configured pin 29 in mode 1 
+application_work_start() timer started! 
+Mounted SD card!
+POS: 0
+Bytes: 636
+data: 
+2,00000000,00002425
+Temperature: 2425
+Mounted SD card!
+POS: 21
+Bytes: 636
+data: ,00102527
+Pressure: 102527
+Mounted SD card!
+POS: 53
+Bytes: 636
+data: 
+2,00000002,00002276
+Temperature: 2276
+Mounted SD card!
+POS: 74
+Bytes: 636
+data: ,00102229
+Pressure: 102229
+Mounted SD card!
+POS: 83
+Bytes: 636
+data: ,00070073
+Humidity: 70073
+Mounted SD card!
+POS: 92
+Bytes: 636
+data: ,00003279
+Humidity soil: 3279
+Mounted SD card!
+POS: 101
+Bytes: 636
+data: ,3615
+Rain: 3615
+Mounted SD card!
+POS: 106
+Bytes: 636
+data: 
+2,00000004,00002292
+Temperature: 2292
+Mounted SD card!
+POS: 127
+Bytes: 636
+data: ,00102247
+Pressure: 102247
+Mounted SD card!
+POS: 136
+Bytes: 636
+data: ,00069844
+Humidity: 69844
+Mounted SD card!
+POS: 145
+Bytes: 636
+data: ,00003647
+Humidity soil: 3647
+Mounted SD card!
+POS: 154
+Bytes: 636
+data: ,3119
+Rain: 3119
+Mounted SD card!
+POS: 159
+Bytes: 636
+data: 
+2,00000006,00002301
+Temperature: 2301
+Mounted SD card!
+POS: 180
+Bytes: 636
+data: ,00102243
+Pressure: 102243
+Mounted SD card!
+POS: 189
+Bytes: 636
+data: ,00069604
+Humidity: 69604
+Mounted SD card!
+POS: 198
+Bytes: 636
+data: ,00003791
+Humidity soil: 3791
+Mounted SD card!
+POS: 207
+Bytes: 636
+data: ,3615
+Rain: 3615
+Mounted SD card!
+POS: 212
+Bytes: 636
+data: 
+2,00000008,00002312
+Temperature: 2312
+Mounted SD card!
+POS: 233
+Bytes: 636
+data: ,00102254
+Pressure: 102254
+Mounted SD card!
+POS: 242
+Bytes: 636
+data: ,00069333
+Humidity: 69333
+Mounted SD card!
+POS: 251
+Bytes: 636
+data: ,00003279
+Humidity soil: 3279
+Mounted SD card!
+POS: 260
+Bytes: 636
+data: ,3823
+Rain: 3823
+Mounted SD card!
+POS: 265
+Bytes: 636
+data: 
+2,00000010,00002321
+Temperature: 2321
+Mounted SD card!
+POS: 286
+Bytes: 636
+data: ,00102255
+Pressure: 102255
+Mounted SD card!
+POS: 295
+Bytes: 636
+data: ,00069092
+Humidity: 69092
+Mounted SD card!
+POS: 304
+Bytes: 636
+data: ,00003343
+Humidity soil: 3343
+Mounted SD card!
+POS: 313
+Bytes: 636
+data: ,3471
+Error occurred: deadbeef at line 1013 in file src\rem.c
+An assert on the Softdevice occured. Reseting in 5s...
+GPIO inits ok!
+LEDS ok!
+timers ok!
+watchdog_init ok!
+gpiote ok!
+ble_stack ok!
+scheduler_init ok!
+sec_params ok!
+gap_parameters_init ok!
+services ok!
+advertising ok!
+conn_params ok!
+drivers_init ok!
+temp_init() 
+
+External Temperature Configurations Update
+temp_configs_update() Ok!
+
+pr_init() 
+
+Pressure Configurations Update
+pr_configs_update() Ok!
+
+hum_init() 
+
+Humidity Configurations Update
+hum_configs_update() Ok!
+
+humsolo_init() 
+
+humidity soil Configurations Update
+humsolo_configs_update() Ok!
+
+rain_init() 
+
+h Rain Configurations Update
+rain_configs_update() Ok!
+
+uv_init() 
+
+h UV Configurations Update
+uv_configs_update() Ok!
+
+sd2app_init() 
+sensors_init ok!
+Reading battery value...
+Battery value: 144. Charging status: 0.
+Mounted SD card!
+Advertising...
+Configured pin 29 in mode 1 
+application_work_start() timer started! 
+Mounted SD card!
+POS: 0
+Bytes: 636
+data: 
+2,00000000,00002425
+Temperature: 2425
+Mounted SD card!
+POS: 21
+Bytes: 636
+data: ,00102358
+Pressure: 102358
+Mounted SD card!
+POS: 30
+Bytes: 636
+data: ,00067902
+Humidity: 67902
+Mounted SD card!
+POS: 39
+Bytes: 636
+data: ,00003103
+Humidity soil: 3103
+Mounted SD card!
+POS: 48
+Bytes: 636
+data: ,3519
+Rain: 3519
+Mounted SD card!
+POS: 53
+Bytes: 636
+data: 
+2,00000002,00002374
+Temperature: 2374
+Mounted SD card!
+POS: 74
+Bytes: 636
+data: ,00102241
+Pressure: 102241
+Mounted SD card!
+POS: 83
+Bytes: 636
+data: ,00067537
+Humidity: 67537
+Mounted SD card!
+POS: 92
+Bytes: 636
+data: ,00003343
+Humidity soil: 3343
+Mounted SD card!
+POS: 101
+Bytes: 636
+data: ,3823
+Rain: 3823
+Mounted SD card!
+POS: 106
+Bytes: 636
+data: 
+2,00000004,00002388
+Temperature: 2388
+Mounted SD card!
+POS: 127
+Bytes: 636
+data: ,00102245
+Pressure: 102245
+Mounted SD card!
+POS: 136
+Bytes: 636
+data: ,00067214
+Humidity: 67214
+An Hardfault occured. Reseting in 5s...
+GPIO inits ok!
+LEDS ok!
+timers ok!
+watchdog_init ok!
+gpiote ok!
+ble_stack ok!
+scheduler_init ok!
+sec_params ok!
+gap_parameters_init ok!
+services ok!
+advertising ok!
+conn_params ok!
+drivers_init ok!
+temp_init() 
+
+External Temperature Configurations Update
+temp_configs_update() Ok!
+
+pr_init() 
+
+Pressure Configurations Update
+pr_configs_update() Ok!
+
+hum_init() 
+
+Humidity Configurations Update
+hum_configs_update() Ok!
+
+humsolo_init() 
+
+humidity soil Configurations Update
+humsolo_configs_update() Ok!
+
+rain_init() 
+
+h Rain Configurations Update
+rain_configs_update() Ok!
+
+uv_init() 
+
+h UV Configurations Update
+uv_configs_update() Ok!
+
+sd2app_init() 
+sensors_init ok!
+Reading battery value...
+Battery value: 144. Charging status: 0.
+Mounted SD card!
+Advertising...
+Configured pin 29 in mode 1 
+application_work_start() timer started! 
+Mounted SD card!
+POS: 0
+Bytes: 636
+data: 
+2,00000000,00002425
+Temperature: 2425
+Mounted SD card!
+POS: 21
+Bytes: 636
+data: ,00102282
+Pressure: 102282
+Mounted SD card!
+POS: 30
+Bytes: 636
+data: ,00065974
+Humidity: 65974
+Mounted SD card!
+POS: 39
+Bytes: 636
+data: ,00003311
+Humidity soil: 3311
+Mounted SD card!
+POS: 48
+Bytes: 636
+data: ,3647
+Rain: 3647
+Mounted SD card!
+POS: 53
+Bytes: 636
+data: 
+2,00000002,00002418
+Temperature: 2418
+Mounted SD card!
+POS: 74
+Bytes: 636
+data: ,00102249
+Pressure: 102249
+Mounted SD card!
+POS: 83
+Bytes: 636
+data: ,00065674
+Humidity: 65674
+Mounted SD card!
+POS: 92
+Bytes: 636
+data: ,00002975
+Humidity soil: 2975
+Mounted SD card!
+POS: 101
+Bytes: 636
+data: ,3375
+Rain: 3375
+Mounted SD card!
+POS: 106
+Bytes: 636
+data: 
+2,00000004,00002427
+Temperature: 2427
+Mounted SD card!
+POS: 127
+Bytes: 636
+data: ,00102258
+Pressure: 102258
+Mounted SD card!
+POS: 136
+Bytes: 636
+data: ,00065378
+Humidity: 65378
+Mounted SD card!
+POS: 145
+Bytes: 636
+data: ,00003599
+Humidity soil: 3599
+Mounted SD card!
+POS: 154
+Bytes: 636
+data: ,3199
+Rain: 3199
+Mounted SD card!
+POS: 159
+Bytes: 636
+data: 
+2,00000006,00002433
+Temperature: 2433
+Mounted SD card!
+POS: 180
+Bytes: 636
+data: ,00102264
+Pressure: 102264
+Mounted SD card!
+POS: 189
+Bytes: 636
+data: ,00065098
+Humidity: 65098
+Mounted SD card!
+POS: 198
+Bytes: 636
+data: ,00003567
+Humidity soil: 3567
+Mounted SD card!
+POS: 207
+Bytes: 636
+data: ,3423
+Rain: 3423
+Mounted SD card!
+POS: 212
+Bytes: 636
+data: 
+2,00000008,00002437
+Temperature: 2437
+Mounted SD card!
+POS: 233
+Bytes: 636
+data: ,00102256
+Pressure: 102256
+Mounted SD card!
+POS: 242
+Bytes: 636
+data: ,00064837
+Humidity: 64837
+Mounted SD card!
+POS: 251
+Bytes: 636
+data: ,00003631
+Humidity soil: 3631
+Mounted SD card!
+POS: 260
+Bytes: 636
+data: ,2767
+Rain: 2767
+Mounted SD card!
+POS: 265
+Bytes: 636
+data: 
+2,00000010,00002441
+Temperature: 2441
+Mounted SD card!
+POS: 286
+Bytes: 636
+data: ,00102256
+Pressure: 102256
+Mounted SD card!
+POS: 295
+Bytes: 636
+data: ,00064622
+Humidity: 64622
+Mounted SD card!
+POS: 304
+Bytes: 636
+data: ,00003487
+Humidity soil: 3487
+Mounted SD card!
+POS: 313
+Bytes: 636
+data: ,3743
+Rain: 3743
+Mounted SD card!
+POS: 318
+Bytes: 636
+data: 
+2,00000012,00002443
+Temperature: 2443
+Mounted SD card!
+POS: 339
+Bytes: 636
+data: ,00102265
+Pressure: 102265
+Mounted SD card!
+POS: 348
+Bytes: 636
+data: ,00064370
+Humidity: 64370
+Mounted SD card!
+POS: 357
+Bytes: 636
+data: ,00003103
+Humidity soil: 3103
+Mounted SD card!
+POS: 366
+Bytes: 636
+data: ,3215
+Rain: 3215
+Mounted SD card!
+POS: 371
+Bytes: 636
+data: 
+2,00000014,00002446
+Temperature: 2446
+Mounted SD card!
+POS: 392
+Bytes: 636
+data: ,00102265
+Pressure: 102265
+Mounted SD card!
+POS: 401
+Bytes: 636
+data: ,00064152
+Humidity: 64152
+Mounted SD card!
+POS: 410
+Bytes: 636
+data: ,00003583
+Humidity soil: 3583
+Mounted SD card!
+POS: 419
+Bytes: 636
+data: ,3167
+Rain: 3167
+Mounted SD card!
+POS: 424
+Bytes: 636
+data: 
+2,00000016,00002447
+Temperature: 2447
+Mounted SD card!
+POS: 445
+Bytes: 636
+data: ,00102265
+Pressure: 102265
+Mounted SD card!
+POS: 454
+Bytes: 636
+data: ,00063931
+Humidity: 63931
+Mounted SD card!
+POS: 463
+Bytes: 636
+data: ,00003247
+Humidity soil: 3247
+Mounted SD card!
+POS: 472
+Bytes: 636
+data: ,3359
+Rain: 3359
+Mounted SD card!
+POS: 477
+Bytes: 636
+data: 
+2,00000018,00002448
+Temperature: 2448
+Mounted SD card!
+POS: 498
+Bytes: 636
+data: ,00102265
+Pressure: 102265
+Mounted SD card!
+POS: 507
+Bytes: 636
+data: ,00063722
+Humidity: 63722
+Mounted SD card!
+POS: 516
+Bytes: 636
+data: ,00003631
+Humidity soil: 3631
+Mounted SD card!
+POS: 525
+Bytes: 636
+data: ,3231
+Rain: 3231
+Mounted SD card!
+POS: 530
+Bytes: 636
+data: 
+2,00000021,00002450
+Temperature: 2450
+Mounted SD card!
+POS: 551
+Bytes: 636
+data: ,00102268
+Pressure: 102268
+Mounted SD card!
+POS: 560
+Bytes: 636
+data: ,00063547
+Humidity: 63547
+Mounted SD card!
+POS: 569
+Bytes: 636
+data: ,00003295
+Humidity soil: 3295
+Mounted SD card!
+POS: 578
+Bytes: 636
+data: ,3791
+Rain: 3791
+Mounted SD card!
+POS: 583
+Bytes: 636
+data: 
+2,00000023,00002451
+Temperature: 2451
+Mounted SD card!
+POS: 604
+Bytes: 636
+data: ,00102265
+Pressure: 102265
+Mounted SD card!
+POS: 613
+Bytes: 636
+data: ,00063360
+Humidity: 63360
+Mounted SD card!
+POS: 622
+Bytes: 636
+data: ,00003839
+Humidity soil: 3839
+Mounted SD card!
+POS: 631
+Bytes: 636
+data: ,3215
+Rain: 3215
+Mounted SD card!
+POS: 636
+Bytes: 636
+data: 
+2,00000025,00002451
+Temperature: 2451
+Mounted SD card!
+POS: 21
+Bytes: 636
+data: ,00102265
+Pressure: 102265
+Mounted SD card!
+POS: 30
+Bytes: 636
+data: ,00063203
+Humidity: 63203
+Mounted SD card!
+POS: 39
+Bytes: 636
+data: ,00003327
+Humidity soil: 3327
+Mounted SD card!
+POS: 48
+Bytes: 636
+data: ,3759
+Rain: 3759
+Mounted SD card!
+POS: 53
+Bytes: 636
+data: 
+2,00000027,00002454
+Temperature: 2454
+Mounted SD card!
+POS: 74
+Bytes: 636
+data: ,00102269
+Pressure: 102269
+Mounted SD card!
+POS: 83
+Bytes: 636
+data: ,00063053
+Humidity: 63053
+Mounted SD card!
+POS: 92
+Bytes: 636
+data: ,00003119
+Humidity soil: 3119
+Mounted SD card!
+POS: 101
+Bytes: 636
+data: ,3263
+Rain: 3263
+Mounted SD card!
+POS: 106
+Bytes: 636
+data: 
+2,00000029,00002455
+Temperature: 2455
+Mounted SD card!
+POS: 127
+Bytes: 636
+data: ,00102263
+Pressure: 102263
+Mounted SD card!
+POS: 136
+Bytes: 636
+data: ,00062888
+Humidity: 62888
+Mounted SD card!
+POS: 145
+Bytes: 636
+data: ,00003679
+Humidity soil: 3679
+Mounted SD card!
+POS: 154
+Bytes: 636
+data: ,3183
+Rain: 3183
+Mounted SD card!
+POS: 159
+Bytes: 636
+data: 
+2,00000031,00002455
+Temperature: 2455
+Mounted SD card!
+POS: 180
+Bytes: 636
+data: ,00102256
+Pressure: 102256
+Mounted SD card!
+POS: 189
+Bytes: 636
+data: ,00062743
+Humidity: 62743
+Mounted SD card!
+POS: 198
+Bytes: 636
+data: ,00003311
+Humidity soil: 3311
+Mounted SD card!
+POS: 207
+Bytes: 636
+data: ,3471
+Rain: 3471
+Mounted SD card!
+POS: 212
+Bytes: 636
+data: 
+2,00000033,00002458
+Temperature: 2458
+Mounted SD card!
+POS: 233
+Bytes: 636
+data: ,00102269
+Pressure: 102269
+Mounted SD card!
+POS: 242
+Bytes: 636
+data: ,00062604
+Humidity: 62604
+Mounted SD card!
+POS: 251
+Bytes: 636
+data: ,00003359
+Humidity soil: 3359
+Mounted SD card!
+POS: 260
+Bytes: 636
+data: ,3103
+Rain: 3103
+Mounted SD card!
+POS: 265
+Bytes: 636
+data: 
+2,00000035,00002456
+Temperature: 2456
+Mounted SD card!
+POS: 286
+Bytes: 636
+data: ,00102261
+Pressure: 102261
+Mounted SD card!
+POS: 295
+Bytes: 636
+data: ,00062478
+Humidity: 62478
+Mounted SD card!
+POS: 304
+Bytes: 636
+data: ,00003807
+Humidity soil: 3807
+Mounted SD card!
+POS: 313
+Bytes: 636
+data: ,3567
+Rain: 3567
+Mounted SD card!
+POS: 318
+Bytes: 636
+data: 
+2,00000037,00002458
+Temperature: 2458
+Mounted SD card!
+POS: 339
+Bytes: 636
+data: ,00102264
+Pressure: 102264
+Mounted SD card!
+POS: 348
+Bytes: 636
+data: ,00062371
+Humidity: 62371
+Mounted SD card!
+POS: 357
+Bytes: 636
+data: ,00003487
+Humidity soil: 3487
+Mounted SD card!
+POS: 366
+Bytes: 636
+data: ,3631
+Rain: 3631
+Mounted SD card!
+POS: 371
+Bytes: 636
+data: 
+2,00000039,00002459
+Temperature: 2459
+Mounted SD card!
+POS: 392
+Bytes: 636
+data: ,00102264
+Pressure: 102264
+Mounted SD card!
+POS: 401
+Bytes: 636
+data: ,00062271
+Humidity: 62271
+Mounted SD card!
+POS: 410
+Bytes: 636
+data: ,00003727
+Humidity soil: 3727
+Mounted SD card!
+POS: 419
+Bytes: 636
+data: ,3231
+Rain: 3231
+Mounted SD card!
+POS: 424
+Bytes: 636
+data: 
+2,00000041,00002462
+Temperature: 2462
+Mounted SD card!
+POS: 445
+Bytes: 636
+data: ,00102262
+Pressure: 102262
+Mounted SD card!
+POS: 454
+Bytes: 636
+data: ,00062176
+Humidity: 62176
+Mounted SD card!
+POS: 463
+Bytes: 636
+data: ,00003711
+Humidity soil: 3711
+Mounted SD card!
+POS: 472
+Bytes: 636
+data: ,2927
+Rain: 2927
+Mounted SD card!
+POS: 477
+Bytes: 636
+data: 
+2,00000043,00002464
+Temperature: 2464
+Mounted SD card!
+POS: 498
+Bytes: 636
+data: ,00102267
+Pressure: 102267
+Mounted SD card!
+POS: 507
+Bytes: 636
+data: ,00062078
+Humidity: 62078
+Mounted SD card!
+POS: 516
+Bytes: 636
+data: ,00003455
+Humidity soil: 3455
+Mounted SD card!
+POS: 525
+Bytes: 636
+data: ,3311
+Rain: 3311
+Mounted SD card!
+POS: 530
+Bytes: 636
+data: 
+2,00000045,00002465
+Temperature: 2465
+Mounted SD card!
+POS: 551
+Bytes: 636
+data: ,00102262
+Pressure: 102262
+Mounted SD card!
+POS: 560
+Bytes: 636
+data: ,00061968
+Humidity: 61968
+Mounted SD card!
+POS: 569
+Bytes: 636
+data: ,00003695
+Humidity soil: 3695
+Mounted SD card!
+POS: 578
+Bytes: 636
+data: ,2911
+Rain: 2911
+Mounted SD card!
+POS: 583
+Bytes: 636
+data: 
+2,00000048,00002464
+Temperature: 2464
+Mounted SD card!
+POS: 604
+Bytes: 636
+data: ,00102262
+Pressure: 102262
+Mounted SD card!
+POS: 613
+Bytes: 636
+data: ,00061835
+Humidity: 61835
+Mounted SD card!
+POS: 622
+Bytes: 636
+data: ,00003023
+Humidity soil: 3023
+Mounted SD card!
+POS: 631
+Bytes: 636
+data: ,3343
+Rain: 3343
+Mounted SD card!
+POS: 636
+Bytes: 636
+data: 
+2,00000050,00002465
+Temperature: 2465
+Mounted SD card!
+POS: 21
+Bytes: 636
+data: ,00102267
+Pressure: 102267
+Mounted SD card!
+POS: 30
+Bytes: 636
+data: ,00061746
+Humidity: 61746
+Mounted SD card!
+POS: 39
+Bytes: 636
+data: ,00003647
+Humidity soil: 3647
+Mounted SD card!
+POS: 48
+Bytes: 636
+data: ,3407
+Rain: 3407
+Mounted SD card!
+POS: 53
+Bytes: 636
+data: 
+2,00000052,00002465
+Temperature: 2465
+Mounted SD card!
+POS: 74
+Bytes: 636
+data: ,00102262
+Pressure: 102262
+Mounted SD card!
+POS: 83
+Bytes: 636
+data: ,00061635
+Humidity: 61635
+Mounted SD card!
+POS: 92
+Bytes: 636
+data: ,00003583
+Humidity soil: 3583
+Mounted SD card!
+POS: 101
+Bytes: 636
+data: ,3679
+Rain: 3679
+Mounted SD card!
+POS: 106
+Bytes: 636
+data: 
+2,00000054,00002464
+Temperature: 2464
+Mounted SD card!
+POS: 127
+Bytes: 636
+data: ,00102254
+Pressure: 102254
+Mounted SD card!
+POS: 136
+Bytes: 636
+data: ,00061535
+Humidity: 61535
+Mounted SD card!
+POS: 145
+Bytes: 636
+data: ,00003999
+Humidity soil: 3999
+Mounted SD card!
+POS: 154
+Bytes: 636
+data: ,3103
+Rain: 3103
+Mounted SD card!
+POS: 159
+Bytes: 636
+data: 
+2,00000056,00002469
+Temperature: 2469
+Mounted SD card!
+POS: 180
+Bytes: 636
+data: ,00102262
+Pressure: 102262
+Mounted SD card!
+POS: 189
+Bytes: 636
+data: ,00061429
+Humidity: 61429
+Mounted SD card!
+POS: 198
+Bytes: 636
+data: ,00003663
+Humidity soil: 3663
+Mounted SD card!
+POS: 207
+Bytes: 636
+data: ,3071
+Rain: 3071
+Mounted SD card!
+POS: 212
+Bytes: 636

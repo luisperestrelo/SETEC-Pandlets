@@ -11,8 +11,6 @@
 
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    // Handle of the current connection.
 
-//static uint32_t timeStamp = 0;
-
 
 /**@brief Function for error handling, which is called when an error has occurred. 
  *
@@ -30,16 +28,16 @@ void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p
 	char buffer[128];
 	sprintf(buffer, "Error occurred: %x at line %u in file %s\n", (unsigned int)error_code, (unsigned int)line_num, p_file_name);
 
-	if(sd_card.fs_type == 0) { //SD card not mounted
+	//if(sd_card.fs_type == 0) { //SD card not mounted
 		//Mount the SD card
-		if(f_mount(&sd_card, "", 1) == 0){
-			log_to_sd("pandlet.txt", buffer, strlen(buffer));
-			f_mount(NULL, "", 1);
-		}
-	}
-	else { //SD card already mounted, someone is logging to it!
-		log_to_sd("pandlet.txt", buffer, strlen(buffer));
-	}
+		//if(f_mount(&sd_card, "", 1) == 0){
+		//	log_to_sd("pandlet.txt", buffer, strlen(buffer));
+		//	f_mount(NULL, "", 1);
+		//}
+	//}
+	//else { //SD card already mounted, someone is logging to it!
+	//	log_to_sd("pandlet.txt", buffer, strlen(buffer));
+	//}
 	#endif /* SD_LOG */
 }
 
@@ -172,6 +170,10 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 			//#if HUMSOLO_ENABLED
             //APP_ERROR_CHECK(humsolo_reset_configs());
 			//#endif
+			
+			//#if RAIN_ENABLED
+            //APP_ERROR_CHECK(rain_reset_configs());
+			//#endif
 						
 			//#if HUM_ENABLED
 			//APP_ERROR_CHECK(hum_reset_configs());
@@ -201,36 +203,39 @@ static void on_ble_evt(ble_evt_t * p_ble_evt){
 
 
 void on_low_bat_evt(){
+	
+	//setflagBAT(0xF);
 	//Low battery detected. Disable all functionality!
 	printf("on_low_bat_evt() \r\nReseting all configurations...\r\n");
 
-	application_work_stop(); //Stop base timer.
+//	application_work_stop(); //Stop base timer.
 
-     /********* AMBIENT SERVICE ********/
-	#if AMBIENT_SERVICE_ENABLED
- 	#if TEMP_ENABLED
-    APP_ERROR_CHECK(temp_reset_configs());
-	#endif
+     ///********* AMBIENT SERVICE ********/
+	//#if AMBIENT_SERVICE_ENABLED
+ 	//#if TEMP_ENABLED
+    //APP_ERROR_CHECK(temp_reset_configs());
+	//#endif
 
-	#if PR_ENABLED
-    APP_ERROR_CHECK(pr_reset_configs());
-	#endif
+	//#if PR_ENABLED
+    //APP_ERROR_CHECK(pr_reset_configs());
+	//#endif
 
-	#if LUM_ENABLED
-    APP_ERROR_CHECK(lum_reset_configs());
-	#endif
+	//#if LUM_ENABLED
+    //APP_ERROR_CHECK(lum_reset_configs());
+	//#endif
 	
-	#if HUMSOLO_ENABLED
-    APP_ERROR_CHECK(humsolo_reset_configs());
-	#endif
+	//#if HUMSOLO_ENABLED
+    //APP_ERROR_CHECK(humsolo_reset_configs());
+	//#endif
 	
-	#if HUM_ENABLED
-	APP_ERROR_CHECK(hum_reset_configs());
-	#endif
-    #endif /*AMBIENT_SERVICE_ENABLED*/
-
-    printf("Configurations reseted. \r\n");
-    printf("From now on, only reads are allowed until the battery is charged. \r\n");
+	//#if RAIN_ENABLED
+    //APP_ERROR_CHECK(rain_reset_configs());
+	//#endif
+	
+	//#if HUM_ENABLED
+	//APP_ERROR_CHECK(hum_reset_configs());
+	//#endif
+    //#endif /*AMBIENT_SERVICE_ENABLED*/
 
 	enable_high_voltage(false);
 }
@@ -329,6 +334,13 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 			APP_ERROR_CHECK(humsolo_configs_update()); //Update Humsolo configurations.
             break;
 		#endif
+		
+		#if RAIN_ENABLED == 1
+        case BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED:
+        	printf("BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED: 0x%x\n", m_amb.rain_configuration);
+			APP_ERROR_CHECK(rain_configs_update()); //Update Rain configurations.
+            break;
+		#endif
 
 		#if HUM_ENABLED == 1
 		case BLE_AMBIENT_EVT_HUM_CONFIG_CHANGED:
@@ -406,6 +418,11 @@ void base_timer_handler(void * p_context){
 	#if HUMSOLO_ENABLED == 1
 	APP_ERROR_CHECK(humsolo_timer_handler()); //Call handler for Hum solo sensor
 	#endif
+	
+	/*********** RAIN *************/
+	#if RAIN_ENABLED == 1
+	APP_ERROR_CHECK(rain_timer_handler()); //Call handler for Rain sensor
+	#endif
 
 #endif
 
@@ -426,14 +443,6 @@ static void power_manage(void){
 	
     uint32_t err_code = sd_app_evt_wait(); //Go to sleep and wait for events.
     APP_ERROR_CHECK(err_code);
-}
-
-static void show_error(void)
-{
-	printf("ERROR UART!\n");
-  while(true)
-  {
-  }
 }
 
 /**@brief Function for initialization.
@@ -494,21 +503,27 @@ static void setup(void){
 int main(void){
 	
     setup();
-
+    
+	if(f_mount(&sd_card, "", 1) == 0){
+		printf("Mounted SD card!\n");
+	}
+	f_mount(NULL, "", 1);
+                
     // Start execution
     advertising_start();
     
-    app_sched_event_put(NULL, 0, application_work_start); //Start base timer.
-    
-    //app_timer_start(m_rtc_timer_id, APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER), NULL);
-    
-	//uint32_t lum_buffer = 0;
 
     // Enter main loop
     for (;;){
 		app_sched_execute();
-		/*SparkFunTSL2561_bring_the_light(&lum_buffer);
-		lum_printf("Luminosity: %d\r\n", (int)lum_buffer);*/
 		power_manage(); //go to sleep
+		
+			int x=(int)mpu9x50_getInterruptStatus();
+			if (x>60) {
+					mpu9x50_reset();
+					mpu9x50_initMoveSensor(MPU_ADDRESS);
+					setflagACC(0xF);
+					printf("moved: %d\n",x);
+				}
     }
 }

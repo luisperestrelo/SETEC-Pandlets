@@ -20,6 +20,7 @@
 #include "utils.h"
 
 #include "fhp_gpio.h"
+#include "nosso.h"
 
 bool low_battery;
 bool high_voltage_on;

@@ -35,7 +35,7 @@ static void on_disconnect(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
 static void on_write(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
-#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || SD_ENABLED || INST_ENABLED || ALERT_ENABLED
+#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || SD_ENABLED || INST_ENABLED || ALERT_ENABLED || HUMSOLO_ENABLED || RAIN_ENABLED
 	ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
 #endif
 	
@@ -143,7 +143,28 @@ static void on_write(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
 		}
 	}
 	#endif
-		
+	
+	//***************** RAIN ***********************/
+	#if RAIN_ENABLED
+	//Sensor configuration written and with right size
+	if((p_evt_write->handle == p_amb->rain_configuration_handles.value_handle) &&
+			(p_evt_write->len == 1)) {
+
+		if (p_amb->evt_handler != NULL){
+			ble_ambient_evt_t amb_evt;
+
+			amb_evt.evt_type = BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED;
+			amb_evt.p_ble_evt = p_ble_evt;
+
+			//Save new configuration value
+			ble_ambient_config_update(p_amb, p_evt_write->data[0], BLE_AMBIENT_RAIN);
+
+			//Signal the app that the configuration has changed
+			p_amb->evt_handler(p_amb, &amb_evt);
+		}
+	}
+	#endif
+
     //***************** SD ***********************/
 	#if SD_ENABLED
 	//Sensor configuration written and with right size
@@ -261,7 +282,7 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
     ble_gatts_attr_md_t attr_md_no_write;
     ble_gatts_attr_md_t attr_md_read_write;
 
-#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || HUMSOLO_ENABLED || SD_ENABLED || INST_ENABLED || ALERT_ENABLED
+#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || HUMSOLO_ENABLED || RAIN_ENABLED || UV_ENABLED || SD_ENABLED || INST_ENABLED || ALERT_ENABLED
     ble_uuid_t          ble_char_uuid;
 #endif
 
@@ -540,6 +561,51 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 		return err_code;
 	#endif
 
+	///***************** RAIN ***********************/
+	#if RAIN_ENABLED
+	//Set atributes struct
+	ble_char_uuid.type = p_amb->uuid_type;
+	ble_char_uuid.uuid = AMBIENT_UUID_RAIN_CHAR;
+
+	attr_char.p_uuid    = &ble_char_uuid;
+	attr_char.p_attr_md = &attr_md_no_write;
+	attr_char.init_len  = AMB_RAIN_MAX_PACKET_VALUE;
+	attr_char.init_offs = 0;
+	attr_char.max_len   = AMB_RAIN_MAX_PACKET_VALUE;
+	attr_char.p_value   = p_amb->rain_value;
+
+	char_md.char_props.write  = 0;
+	char_md.char_props.write_wo_resp = 0;
+
+	//Add luminosity characteristic
+	err_code = sd_ble_gatts_characteristic_add(p_amb->service_handle, &char_md,
+									&attr_char, &p_amb->rain_handles);
+
+	if(err_code != NRF_SUCCESS)
+		return err_code;
+
+	//Set atributes struct
+	ble_char_uuid.type = p_amb->uuid_type;
+	ble_char_uuid.uuid = AMBIENT_UUID_RAIN_CONFIG_CHAR;
+
+	attr_char.p_uuid    = &ble_char_uuid;
+	attr_char.p_attr_md = &attr_md_read_write;
+	attr_char.init_len  = sizeof(uint8_t);
+	attr_char.init_offs = 0;
+	attr_char.max_len   = sizeof(uint8_t);
+	attr_char.p_value   = &(p_amb->rain_configuration);
+
+	char_md.char_props.write  = 1;
+	char_md.char_props.write_wo_resp = 1;
+
+	//Add temp configuration characteristic
+	err_code = sd_ble_gatts_characteristic_add(p_amb->service_handle, &char_md,
+									&attr_char, &p_amb->rain_configuration_handles);
+
+	if(err_code != NRF_SUCCESS)
+		return err_code;
+	#endif
+	
 	///***************** SD ***********************/
 	#if SD_ENABLED
 	//Set atributes struct
@@ -556,7 +622,7 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 	char_md.char_props.write  = 0;
 	char_md.char_props.write_wo_resp = 0;
 
-	//Add sd characteristic
+	//Add SD characteristic
 	err_code = sd_ble_gatts_characteristic_add(p_amb->service_handle, &char_md,
 									&attr_char, &p_amb->sd_handles);
 
@@ -732,9 +798,16 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 	type_to_handle[7].config_handle = &(p_amb->alert_configuration_handles);
 	type_to_handle[7].value = (p_amb->alert_value);
 	#endif	
-	return err_code;
+	
+	type_to_handle[8].type = BLE_AMBIENT_RAIN;
+	#if RAIN_ENABLED
+	type_to_handle[8].handle = &(p_amb->rain_handles);
+	type_to_handle[8].config_handle = &(p_amb->rain_configuration_handles);
+	type_to_handle[8].value = (p_amb->rain_value);
+	#endif	
+	
+	return err_code;	
 }
-
 
 /**@brief Function for adding the Ambient Service service.
  *
@@ -777,6 +850,11 @@ uint32_t ble_ambient_init(ble_ambient_t * p_amb, const ble_ambient_init_t * p_am
 	#if LUM_ENABLED
 	for(uint8_t i = 0; i < AMB_LUM_MAX_PACKET_VALUE; i++) p_amb->lum_value[i]            = INVALID_SENSOR_VALUE;
 	p_amb->lum_configuration           = p_amb_init->lum_init_configuration;
+	#endif	
+	
+	#if RAIN_ENABLED
+	for(uint8_t i = 0; i < AMB_RAIN_MAX_PACKET_VALUE; i++) p_amb->rain_value[i]          = INVALID_SENSOR_VALUE;
+	p_amb->rain_configuration           = p_amb_init->rain_init_configuration;
 	#endif
 
 	#if SD_ENABLED
@@ -939,7 +1017,7 @@ int lerCartao2(ble_ambient_t * m_amb){
  */
 uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configuration, ble_ambient_sensor_type type){
 	//new data!
-#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || HUMSOLO_ENABLED || SD_ENABLED || INST_ENABLED || ALERT_ENABLED
+#if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || HUMSOLO_ENABLED || RAIN_ENABLED || SD_ENABLED || INST_ENABLED || ALERT_ENABLED
 	uint16_t len = 1;
 #endif
 	uint32_t err_code = NRF_SUCCESS;
@@ -1011,7 +1089,19 @@ uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configu
 		break;
 		#endif
 		
-	
+		#if RAIN_ENABLED
+		case BLE_AMBIENT_RAIN:
+		// Save new configuration value
+		p_amb->rain_configuration = sensor_configuration;
+
+		// Update database
+		err_code = sd_ble_gatts_value_set(p_amb->rain_configuration_handles.value_handle,
+										  0,
+										  &len,
+										  &sensor_configuration);
+		break;
+		#endif
+		
 		#if SD_ENABLED
 		case BLE_AMBIENT_SD:
 		// Save new configuration value
@@ -1038,6 +1128,15 @@ uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configu
 										  &len,
 										  &sensor_configuration);
 		
+		uint8_t buf=0;
+		//buf=(uint8_t) ((((uint8_t) getflagACC()) << 4) && ((uint8_t) getflagBAT()));
+		buf=((uint8_t) getflagBAT());
+	//	printf("buf antes: %d\n",buf);
+		if((uint8_t) getflagACC()!=0) buf=buf+128;
+	//	printf("buf: %d, bat: %d, acc: %d\n",buf,(int)getflagBAT(),(int)getflagACC());
+		ble_ambient_sensor_update(p_amb, &buf, AMB_ALERT_MAX_PACKET_VALUE, BLE_AMBIENT_ALERT);
+		setflagACC(0);
+		
 		break;
 		#endif
 		
@@ -1055,7 +1154,7 @@ uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configu
 void rtc_timer_handler(void * p_context){
 	increTimeStamp();
 	//timeStamp2++; //Increment timestamp
-	printf("TIMESTAMPA NA CONA: %d\n", (int)getTimeStamp());
+	//printf("TIMESTAMPA NA CONA: %d\n", (int)getTimeStamp());
 }
 
 
@@ -1095,6 +1194,7 @@ uint32_t ble_install_config_update(ble_ambient_t * p_amb, uint8_t * sensor_confi
 		printf("TIMESTAMP RECEBIDO: %d\n", (int)timestampArray);
 		setTimeStamp(timestampArray);
 		app_timer_start(m_rtc_timer_id, APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER), NULL);
+		app_sched_event_put(NULL, 0, application_work_start); //Start base timer.
 		
 		ble_ambient_sensor_update(p_amb, sensor_configuration, INST_TX_PACKET_VALUE, BLE_AMBIENT_INST);
 		

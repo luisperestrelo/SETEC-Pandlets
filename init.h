@@ -114,21 +114,10 @@ ble_ambient_t                           m_amb;										    // Ambient Service s
 #include "humsolo.h"      																	//device driver for Humidity sensor
 #endif
 
-//***************** SD ***********************/
-#if SD_ENABLED == 1
-#include "sd2app.h"      																	//device driver for SD to app
+//***************** RAIN ***********************/
+#if RAIN_ENABLED == 1
+#include "rain.h"      																	//device driver for Rain sensor
 #endif
-
-//***************** INST ***********************/
-#if INST_ENABLED == 1
-#include "install.h"      																	//device driver for Install
-#endif
-
-//***************** ALERT ***********************/
-#if ALERT_ENABLED == 1
-#include "alert.h"      																	//device driver for Install
-#endif
-
 
 #endif /**AMBIENT_SERVICE_ENABLED*/
 
@@ -230,9 +219,6 @@ void reset_configs(int id);
 void check_ble_service_err_code(uint32_t err_code);
 
 
-/**@brief Function for starting the application timers.
- */
-void application_work_start(void *data, uint16_t size);
 
 
 /**@brief Function for stopping the application timers.

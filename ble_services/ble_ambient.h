@@ -26,6 +26,7 @@
 #include "app_util.h"
 #include "app_timer.h"
 #include "utils.h"
+#include "nosso.h"
 
 app_timer_id_t				            m_rtc_timer_id;		        		    		// RTC timer for counting time
 app_timer_id_t				            m_sd_timer_id;		        		    		// SD timer for counting time
@@ -61,16 +62,19 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMBIENT_UUID_ALERT_CHAR                 0x1147  //Alert Values
 #define AMBIENT_UUID_ALERT_CONFIG_CHAR          0x1148  //Alert Configuration
 
+#define AMBIENT_UUID_RAIN_CHAR                  0x1149  //Rain Values
+#define AMBIENT_UUID_RAIN_CONFIG_CHAR           0x1150  //Rain Configuration
+
 #define AMB_TEMP_MAX_PACKET_VALUE               0x04   //4 byte per packet
 #define AMB_PR_MAX_PACKET_VALUE                 0x04   //4 byte per packet
 #define AMB_HUM_MAX_PACKET_VALUE                0x04   //4 byte per packet   
 #define AMB_HUMSOLO_MAX_PACKET_VALUE            0x04   //4 byte per packet
-#define AMB_LUM_MAX_PACKET_VALUE                0x04   //4 byte per packet
+#define AMB_LUM_MAX_PACKET_VALUE                0x04   //4 byte per packet  
+#define AMB_RAIN_MAX_PACKET_VALUE            	0x04   //4 byte per packet
 #define AMB_SD_MAX_PACKET_VALUE                 0x14   //20 byte per packet
+#define AMB_ALERT_MAX_PACKET_VALUE              0x01   //1 byte per packet
 #define INST_RX_PACKET_VALUE               		0x0C   //12 byte per packet
 #define INST_TX_PACKET_VALUE               		0x08   //8 byte per packet
-#define AMB_ALERT_MAX_PACKET_VALUE              0x02   //2 byte per packet
-
 #define INVALID_SENSOR_VALUE                    0xFF   //Default value for the sensor values
  
 //Bit masks for the configuration packet.
@@ -78,7 +82,7 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMB_RATE_BITS                 0b11100000
 #define AMB_SLEEP_BIT                 0b00010000
 
-#define AMB_NUMBER_OF_SENSORS         8
+#define AMB_NUMBER_OF_SENSORS         10
 
 
 /**@brief Ambient sensor type. */
@@ -91,7 +95,8 @@ typedef enum
     BLE_AMBIENT_HUMSOLO,
     BLE_AMBIENT_SD,
     BLE_AMBIENT_INST,
-    BLE_AMBIENT_ALERT
+    BLE_AMBIENT_ALERT,
+    BLE_AMBIENT_RAIN
     
 } ble_ambient_sensor_type;
 
@@ -105,7 +110,8 @@ typedef enum
     BLE_AMBIENT_EVT_HUMSOLO_CONFIG_CHANGED,
     BLE_AMBIENT_EVT_SD_CONFIG_CHANGED,
     BLE_AMBIENT_EVT_INST_CONFIG_CHANGED,
-    BLE_AMBIENT_EVT_ALERT_CONFIG_CHANGED
+    BLE_AMBIENT_EVT_ALERT_CONFIG_CHANGED,
+    BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED
 } ble_ambient_evt_type_t;
 
 /**@brief Maps all update types. Really useful for a compact update function.*/
@@ -159,6 +165,10 @@ typedef struct
 
 	#if HUMSOLO_ENABLED
     uint8_t                       humsolo_init_configuration;                      // Sensor configuration value to init the struct.
+	#endif
+	
+	#if RAIN_ENABLED
+    uint8_t                       rain_init_configuration;                      // Sensor configuration value to init the struct.
 	#endif
 
 	#if SD_ENABLED
@@ -226,6 +236,14 @@ typedef struct ble_ambient_s
 
 	uint8_t                       lum_value[AMB_LUM_MAX_PACKET_VALUE];         // Humidity value placeholder.
 	uint8_t                       lum_configuration;      					   // Humidity sensor configuration value placeholder.
+	#endif
+	
+	#if RAIN_ENABLED == 1
+	ble_gatts_char_handles_t      rain_handles;                                 // Handles related to the Rain value characteristic.
+	ble_gatts_char_handles_t      rain_configuration_handles;                   // Handles related to the Rain sensor configuration characteristic.
+
+	uint8_t                       rain_value[AMB_RAIN_MAX_PACKET_VALUE];         // Rain value placeholder.
+	uint8_t                       rain_configuration;      					   // Rain sensor configuration value placeholder.
 	#endif
 
 	#if SD_ENABLED == 1
@@ -306,6 +324,9 @@ uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configu
 void rtc_timer_handler(void * p_context);
 
 void sd_timer_handler(void * p_context);
+/**@brief Function for starting the application timers.
+ */
+void application_work_start(void *data, uint16_t size);
 
 
 /**@brief Function for updating the Install config values.

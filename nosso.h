@@ -3,13 +3,15 @@
 
 
 unsigned long getTimeStamp();
+unsigned long getflagBAT();
+unsigned long getflagACC();
 
 void setTimeStamp(unsigned long x);
+void setflagBAT(unsigned long x);
+void setflagACC(unsigned long x);
 
 void increTimeStamp();
 
-unsigned long getGPS();
 
-void setGPS(unsigned long x);
 
 #endif /* __NOSSO_H__ */
