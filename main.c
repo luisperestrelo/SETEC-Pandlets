@@ -303,7 +303,7 @@ void sys_evt_dispatch(uint32_t sys_evt){
 void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 	printf("ble_amb_evt() \r\n");
 
-	application_work_stop(); //Stop base timer.
+	//application_work_stop(); //Stop base timer.
 
     switch (p_evt->evt_type)
     {
@@ -380,9 +380,84 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
     //The scheduler doesn't have higher priority than BLE, so, in a event where multiple configs
     //are changed, the scheduled events only occur in the end of the BLE events, reducing multiple
     //timer starts and stops.
-    app_sched_event_put(NULL, 0, application_work_start); //Start base timer.
+   // app_sched_event_put(NULL, 0, application_work_start); //Start base timer.
 }
 #endif /* AMBIENT_SERVICE_ENABLED */
+
+
+void sensor_timer_handler(void * p_context){
+	UNUSED_PARAMETER(p_context);
+	
+	static int STATE=0;
+	
+	
+	
+	
+	
+#if AMBIENT_SERVICE_ENABLED == 1
+
+	/*********** TEMP *************/
+	if (STATE == 0) {
+	#if TEMP_ENABLED == 1
+		if(!twi_busy)
+			{
+				if(NRF_SUCCESS == temp_values_handler()) //Call handler for Temp sensor
+				STATE = 2;
+				}
+			#endif
+
+	}
+
+	/*********** PR *************/
+	else if (STATE == 1) {
+		#if PR_ENABLED == 0
+		//if(NRF_SUCCESS == pr_values_handler()); //Call handler for Pr sensor
+		STATE = 2;
+		#endif
+	}
+	
+	/*********** LUM *************/
+	else if (STATE == 2) {
+		#if LUM_ENABLED == 1
+		if(!twi_busy && NRF_SUCCESS == lum_values_handler()) //Call handler for Lum sensor
+		STATE = 3;
+		#endif
+
+	}
+
+	else if (STATE == 3) {
+	/*********** HUM *************/
+		#if HUM_ENABLED == 1
+		if(!twi_busy && NRF_SUCCESS == hum_values_handler()) //Call handler for Hum sensor
+			STATE = 4;
+		#endif
+	}
+	
+	else if (STATE == 4){
+	/*********** HUMSOLO *************/ //HANSOLO
+		#if HUMSOLO_ENABLED == 1
+		if(NRF_SUCCESS == humsolo_values_handler()) //Call handler for Hum solo sensor
+			STATE = 5;
+		#endif
+	}
+	
+	/*********** RAIN *************/
+	else if (STATE == 5) {
+		#if RAIN_ENABLED == 1
+		if(NRF_SUCCESS == rain_values_handler()){ //Call handler for Rain sensor
+			app_timer_stop(m_sensor_timer_id);
+			STATE = 0;
+		}
+		#endif
+
+	}
+
+#endif
+
+	enable_high_voltage(false); //try to disable 5V sensors (checks if they are on)
+	
+}
+
 
 
 /**@brief Function to handle the base timer interrupt.
@@ -391,42 +466,8 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
  */
 void base_timer_handler(void * p_context){	
 	UNUSED_PARAMETER(p_context);
-
-#if AMBIENT_SERVICE_ENABLED == 1
-
-	/*********** TEMP *************/
-	#if TEMP_ENABLED == 1
-	APP_ERROR_CHECK(temp_timer_handler()); //Call handler for Temp sensor
-	#endif
-
-	/*********** PR *************/
-	#if PR_ENABLED == 1
-	APP_ERROR_CHECK(pr_timer_handler()); //Call handler for Pr sensor
-	#endif
-	
-	/*********** LUM *************/
-	#if LUM_ENABLED == 1
-	APP_ERROR_CHECK(lum_timer_handler()); //Call handler for Lum sensor
-	#endif
-
-	/*********** HUM *************/
-	#if HUM_ENABLED == 1
-	APP_ERROR_CHECK(hum_timer_handler()); //Call handler for Hum sensor
-	#endif
-
-	/*********** HUMSOLO *************/
-	#if HUMSOLO_ENABLED == 1
-	APP_ERROR_CHECK(humsolo_timer_handler()); //Call handler for Hum solo sensor
-	#endif
-	
-	/*********** RAIN *************/
-	#if RAIN_ENABLED == 1
-	APP_ERROR_CHECK(rain_timer_handler()); //Call handler for Rain sensor
-	#endif
-
-#endif
-
-	enable_high_voltage(false); //try to disable 5V sensors (checks if they are on)
+	APP_ERROR_CHECK(app_timer_start(m_sensor_timer_id,
+			APP_TIMER_TICKS(SENSORS_TIMER_FREQ, APP_TIMER_PRESCALER), NULL));
 }
 
 

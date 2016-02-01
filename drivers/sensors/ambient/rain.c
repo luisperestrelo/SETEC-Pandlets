@@ -62,7 +62,7 @@ uint32_t rain_values_handler() {
 	sprintf(buf, ",%d", (int)err_code); //bool, has no zeroes.
 	log2sd(buf, "READINGS.txt");
 
-	rain_printf("Rain: %d  value: %d \r\n", (int)err_code,(int)rain_buffer);
+//	rain_printf("Rain: %d  value: %d \r\n", (int)err_code,(int)rain_buffer);
 
 	err_code = ble_ambient_sensor_update(m_rain.m_amb, (uint8_t *) &err_code,
 			AMB_RAIN_MAX_PACKET_VALUE, BLE_AMBIENT_RAIN);

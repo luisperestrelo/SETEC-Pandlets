@@ -43,6 +43,7 @@
 dm_application_instance_t               m_app_handle;                                   // Application identifier allocated by device manager
 app_timer_id_t				            m_base_timer_id;							    // Base timer for reads
 app_timer_id_t				            m_watchdog_timer_id;		        		    // Watchdog timer for reloads
+app_timer_id_t				            m_sensor_timer_id;		        		    	// sensor timer for reloads
 
 /*******************************************************************************
  *                   Peripheral and general drivers
@@ -293,6 +294,7 @@ void on_low_bat_evt();
 */
 void base_timer_handler(void * p_context);
 
+void sensor_timer_handler(void * p_context);
 
 void watchdog_timer_handler(void * p_context);
 

@@ -63,6 +63,7 @@ void timers_init(void){
 
     // Create timers.
     APP_ERROR_CHECK(app_timer_create(&m_base_timer_id, APP_TIMER_MODE_REPEATED, base_timer_handler));
+    APP_ERROR_CHECK(app_timer_create(&m_sensor_timer_id, APP_TIMER_MODE_REPEATED,sensor_timer_handler));
     APP_ERROR_CHECK(app_timer_create(&m_gauge_timer_id, APP_TIMER_MODE_REPEATED, gauge_timer_handler));
     APP_ERROR_CHECK(app_timer_create(&m_watchdog_timer_id, APP_TIMER_MODE_REPEATED, watchdog_timer_handler));
     APP_ERROR_CHECK(app_timer_create(&m_rtc_timer_id, APP_TIMER_MODE_REPEATED, rtc_timer_handler));

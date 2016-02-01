@@ -1,10 +1,10 @@
 #include "utils.h"
 
 #define AMB_NUMBER_OF_SENSORS 10
-#define BYTES_PER_LINE 8 * (AMB_NUMBER_OF_SENSORS-5) + 1 + 2 + 9
+#define BYTES_PER_LINE 8 * (AMB_NUMBER_OF_SENSORS-6) + 1 + 2 + 6 + 10
 //#define BYTES_PER_LINE 53 //
 //#define BYTES_START_OVERWRITE 2*7*24*BYTES_PER_LINE // 2 semanas, escritas de hora em hora, 55 bytes por linha.
-#define BYTES_START_OVERWRITE 12*BYTES_PER_LINE // For testing.
+#define BYTES_START_OVERWRITE 644 // For testing.
 uint64_t msec_to_ticks(uint32_t msec){
 	return msec/BASE_TIMER_FREQ;
 }
@@ -33,6 +33,32 @@ void check_ble_service_err_code(uint32_t err_code){
 	while(fgets
 }*/
 
+void add_zeroes_twenty(int val, char buf[]){ 
+	if (val < 10)
+		sprintf(buf, "0000000000000000000%d", val);
+	else if (val < 100)
+		sprintf(buf, "000000000000000000%d", val);
+	else if (val < 1000)
+		sprintf(buf, "00000000000000000%d", val);
+	else if (val < 10000)
+		sprintf(buf, "0000000000000000%d", val);
+	else if (val < 100000)
+		sprintf(buf, "000000000000000%d", val);
+	else if (val < 1000000)
+		sprintf(buf, "00000000000000%d", val);
+	else if (val < 10000000)
+		sprintf(buf, "0000000000000%d", val);
+	else if (val < 100000000)
+		sprintf(buf, "000000000000%d", val);
+	else if (val < 1000000000)
+		sprintf(buf, "00000000000%d", val);
+	else if (val < 10000000000)
+		sprintf(buf, "0000000000%d", val);
+	else if (val < 100000000000)
+		sprintf(buf, "000000000%d", val);
+	else
+		sprintf(buf, "%d", val);
+}
 
 void add_zeroes(int val, char buf[]){ // vao ter todos 8
 	if (val < 10)
@@ -58,12 +84,11 @@ void add_zeroes(int val, char buf[]){ // vao ter todos 8
 //It will take around 40 ms to complete!
 uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_size){
 	FIL file;       // File object
-	static int file_position = 0;
+	static int file_position = 20;
 	static int file_position_prev = 0;
-	//printf("POS: %d\n", file_position);
-	//printf("Bytes: %d\n", BYTES_START_OVERWRITE);
-	//printf("**************FILE SIZE : %d\n", (int)f_size(&file));
-	//printf("**************WRITING : %d BYTES\n", (int)buffer_size);
+	//uint32_t buffer_file_size = 20;
+//	printf("POS: %d\n", file_position);
+//	printf("WRITING : %d BYTES\n", (int)buffer_size);
 
 
 
@@ -71,20 +96,35 @@ uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_siz
 	//Open file
 	if(f_open(&file, filename, FA_OPEN_ALWAYS | FA_WRITE ) != FR_OK){ //Could be that the file already exists
 		if(f_open(&file, filename, FA_WRITE) != FR_OK){
-		printf("RETURN 1");
+//		printf("RETURN 1");
 		return SD_LOG_FAILED;
 				}
 		}
-	
+//	printf("Abriu\n");
+//	printf("FILE SIZE : %d\n", (int)f_size(&file));
 
 	UINT aux = 0;	
 
 	if (file_position >= BYTES_START_OVERWRITE)
 	{
-		file_position = 0;
+		file_position = 20;
 	}
 	
-
+	
+		if(f_lseek(&file, 0) != FR_OK){ // WRITE SIZE AT THE FIRST LINE
+//			printf("RETURN 2");
+			return SD_LOG_FAILED;
+		}
+				
+		char buf[25];
+		add_zeroes_twenty((int)f_size(&file), buf);
+//		printf("f_buf size: %d, f_buf: %s\n", strlen(buf), buf);
+		//sprintf(buf, "%s\r\n", buf); // 8 caracteres + 2 ? . Se calhar nao quero o \n?
+		
+		if((f_write(&file, buf, (uint32_t) strlen(buf), &aux) != FR_OK)){
+//			printf("RETURN 3\n");
+			return SD_LOG_FAILED;
+		}
 
 	//Move to the end of the file and append file_name_size
 	/*if(f_lseek(&file, f_size(&file) + buffer_size) != FR_OK)
@@ -92,11 +132,11 @@ uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_siz
 		
 	//Move to the end of the file and append file_name_size
 	if(f_lseek(&file, file_position) != FR_OK){
-		printf("RETURN 2");
+//		printf("RETURN 2");
 		return SD_LOG_FAILED;
 				}
 
-	
+//	printf("Fez Seek\n");
 
 	//Move pointer to the beginning of the new data
 	/*if(f_lseek(&file, f_size(&file) - buffer_size) != FR_OK)
@@ -114,16 +154,15 @@ uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_siz
 	
 
 
-	if(strcmp(filename, "READINGS.txt"))
-		printf("escrita doutro gajo\n");
 		
-	printf("data: %s\n", data);
+//	printf("data: %s\n", data);
 
 	if (!strcmp(filename, "READINGS.txt") && (int) buffer_size < 25 && data != NULL && strlen(data) < 25 && strlen(data) > 0){
 		if((f_write(&file, data, buffer_size, &aux) != FR_OK)){
-			printf("RETURN 3");
+			//printf("RETURN 3");
 			return SD_LOG_FAILED;
-				}
+		}
+		printf("Fez write\n");		
 		file_position += (int) buffer_size;
 		
 		}
@@ -134,9 +173,11 @@ uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_siz
 		
 	
 
-	//printf("**************FILE_POSITION (AFTER SUMMATION): %d\n", file_position);
+//	printf("**************FILE_POSITION (AFTER SUMMATION): %d\n", file_position);
 
 	f_close(&file);
+	
+//	printf("Fechou\n");
 }
 
 int log2sd(char* message, char *filename){ // returns -1 if SD_LOG is disabled
@@ -148,13 +189,15 @@ int log2sd(char* message, char *filename){ // returns -1 if SD_LOG is disabled
         if(sd_card.fs_type == 0) { //SD card not mounted
                 //Mount the SD card
                 if(f_mount(&sd_card, "", 1) == 0){
-                printf("Mounted SD card!\n");
+            //    printf("Mounted SD card!\n");
                         log_to_sd(filename, buffer, strlen(buffer));
                         f_mount(NULL, "", 1);
                 }
         }
         else { //SD card already mounted, someone is logging to it!
+              //  printf("Fui parar aqui!\n");
                 log_to_sd(filename, buffer, strlen(buffer));
+                        f_mount(NULL, "", 1);
         }
        
         return 0;

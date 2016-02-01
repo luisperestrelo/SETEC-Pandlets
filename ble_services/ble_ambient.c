@@ -189,13 +189,13 @@ static void on_write(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
     //***************** INST ***********************/
 	#if INST_ENABLED
 	//Sensor configuration written and with right size
-	/*printf("p_evt_write->len: %d\n", (int)p_evt_write->len);
+	printf("p_evt_write->len: %d\n", (int)p_evt_write->len);
 	printf("INST_RX_PACKET_VALUE: %d\n", (int)INST_RX_PACKET_VALUE);
 	int i=0;
 	while (i<p_evt_write->len) {
 		printf("Valor %d: %d\n", i+1, (int)p_evt_write->data[i]);
 		i++;
-	}*/
+	}
 	if((p_evt_write->handle == p_amb->inst_configuration_handles.value_handle) &&
 			(p_evt_write->len == INST_RX_PACKET_VALUE)) {
 		if (p_amb->evt_handler != NULL){
@@ -970,6 +970,13 @@ void sd_timer_handler(void * p_context){
 	unsigned int bytesread;
 	
 	f_read(&file_sens, buf, AMB_SD_MAX_PACKET_VALUE, &bytesread);
+	int x=0;
+	printf("Data: ");
+	while(bytesread>x){
+			printf("%c",buf[x]);
+			x++;
+		}
+	printf("\n");
 	printf("Li %u bytes\n", bytesread);
 	ble_ambient_sensor_update(m_amb_sd, (uint8_t *) buf, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);
 	if (bytesread < AMB_SD_MAX_PACKET_VALUE){
@@ -989,12 +996,12 @@ int lerCartao2(ble_ambient_t * m_amb){
 		//Mount the SD card
 		if(f_mount(&sd_card, "", 1) == 0){
 			printf("Mounted SD card!\n");
-			if(f_open(&file_sens, "TEMP.TXT", FA_READ) != FR_OK){ //Could be that the file already exists
+			if(f_open(&file_sens, "READINGS.txt", FA_READ) != FR_OK){ //Could be that the file already exists
 				printf("ERROR Opening!\n");
 				return 0;
 			}
 			m_amb_sd = m_amb;
-			app_timer_start(m_sd_timer_id, APP_TIMER_TICKS(50, APP_TIMER_PRESCALER), NULL);
+			app_timer_start(m_sd_timer_id, APP_TIMER_TICKS(100, APP_TIMER_PRESCALER), NULL);
 		} else {
 			printf("Unable to mount\n");
 		}
@@ -1193,7 +1200,9 @@ uint32_t ble_install_config_update(ble_ambient_t * p_amb, uint8_t * sensor_confi
 		timestampArray = (timeArray[0] << 24) + (timeArray[1] << 16) + (timeArray[2] << 8) + timeArray[3];
 		printf("TIMESTAMP RECEBIDO: %d\n", (int)timestampArray);
 		setTimeStamp(timestampArray);
+		app_timer_stop(m_rtc_timer_id);
 		app_timer_start(m_rtc_timer_id, APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER), NULL);
+		
 		app_sched_event_put(NULL, 0, application_work_start); //Start base timer.
 		
 		ble_ambient_sensor_update(p_amb, sensor_configuration, INST_TX_PACKET_VALUE, BLE_AMBIENT_INST);

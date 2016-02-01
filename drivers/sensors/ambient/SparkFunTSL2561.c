@@ -66,7 +66,7 @@ bool begin(char i2c_address)
 }
 
 uint32_t SparkFunTSL2561_init(){
-	printf("SparkFunTSL2561_init\n");
+	//printf("SparkFunTSL2561_init\n");
 	gain = 0;
 
 	// Enter main loop: always returns true	
@@ -105,7 +105,7 @@ uint32_t SparkFunTSL2561_bring_the_light(uint32_t *lux){
 	SparkFunTSL2561_init();
 	
 	data0=data1=0;
-	printf("SparkFunTSL2561_bring_the_light\n");
+	//printf("SparkFunTSL2561_bring_the_light\n");
 	if (!SFE_TSL2561_getData(&data0,&data1))
 	{
 		printf("ERRO DATA NOK\n");
