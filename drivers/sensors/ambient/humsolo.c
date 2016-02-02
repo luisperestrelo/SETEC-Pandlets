@@ -59,15 +59,10 @@ uint32_t humsolo_configs_update(){
 
 
 uint32_t humsolo_values_handler() {
-	uint32_t  err_code = NRF_SUCCESS;
+	//uint32_t  err_code = NRF_SUCCESS;
 	uint16_t humsolo_buffer;
-
-	err_code = SparkFunMS1_read3(&humsolo_buffer);
-	//err_code = bme280_read_humidity(&hum_buffer);
-	if (err_code != NRF_SUCCESS) {
-		humsolo_printf("hum: bme280_humsolo_pressure() failed.\r\n");
-		return err_code;
-	}
+	
+	SparkFunMS1_read3(&humsolo_buffer);
 	
 	char val[20];
 	add_zeroes((int)humsolo_buffer, val); //HANSOLO
@@ -75,11 +70,11 @@ uint32_t humsolo_values_handler() {
 	sprintf(buf, ",%s", val);
 	log2sd(buf, "READINGS.txt");
 
-	humsolo_printf("Humidity Soil: %d\r\n", (int)humsolo_buffer);
+//	humsolo_printf("Humidity Soil: %d\r\n", (int)humsolo_buffer);
 
-	err_code = ble_ambient_sensor_update(m_humsolo.m_amb, (uint8_t *) &humsolo_buffer,
-			AMB_HUMSOLO_MAX_PACKET_VALUE, BLE_AMBIENT_HUMSOLO);
-	check_ble_service_err_code(err_code);
+	//err_code = ble_ambient_sensor_update(m_humsolo.m_amb, (uint8_t *) &humsolo_buffer,
+			//AMB_HUMSOLO_MAX_PACKET_VALUE, BLE_AMBIENT_HUMSOLO);
+	//check_ble_service_err_code(err_code);
 
 	return NRF_SUCCESS;
 }

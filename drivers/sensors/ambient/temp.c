@@ -57,7 +57,7 @@ uint32_t temp_values_handler() {
 	err_code = bme280_read_temperature(&temp_buffer);
 
 	if (err_code != NRF_SUCCESS) {
-		temp_printf("temp: bme280_read_temperature() failed.\r\n");
+//		temp_printf("temp: bme280_read_temperature() failed.\r\n");
 		return err_code;
 	}
 	
@@ -71,7 +71,7 @@ uint32_t temp_values_handler() {
     
 	log2sd(buf, "READINGS.txt");
         
-	temp_printf("Temperature: %d\n", (int)temp_buffer);
+//	temp_printf("Temperature: %d\n", (int)temp_buffer);
 	err_code = ble_ambient_sensor_update(m_temp.m_amb, (uint8_t *) &temp_buffer,
 	AMB_TEMP_MAX_PACKET_VALUE, BLE_AMBIENT_TEMP);
 	check_ble_service_err_code(err_code);

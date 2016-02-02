@@ -43,6 +43,7 @@
 dm_application_instance_t               m_app_handle;                                   // Application identifier allocated by device manager
 app_timer_id_t				            m_base_timer_id;							    // Base timer for reads
 app_timer_id_t				            m_watchdog_timer_id;		        		    // Watchdog timer for reloads
+app_timer_id_t				            m_sensor_timer_id;		        		    	// sensor timer for reloads
 
 /*******************************************************************************
  *                   Peripheral and general drivers
@@ -117,16 +118,6 @@ ble_ambient_t                           m_amb;										    // Ambient Service s
 //***************** RAIN ***********************/
 #if RAIN_ENABLED == 1
 #include "rain.h"      																	//device driver for Rain sensor
-#endif
-
-//***************** UV***********************/
-#if UV_ENABLED == 1
-#include "uv.h"      																	//device driver for UV sensor
-#endif
-
-//***************** SD ***********************/
-#if SD_ENABLED == 1
-#include "sd2app.h"      																	//device driver for SD to app
 #endif
 
 #endif /**AMBIENT_SERVICE_ENABLED*/
@@ -229,9 +220,6 @@ void reset_configs(int id);
 void check_ble_service_err_code(uint32_t err_code);
 
 
-/**@brief Function for starting the application timers.
- */
-void application_work_start(void *data, uint16_t size);
 
 
 /**@brief Function for stopping the application timers.
@@ -306,6 +294,7 @@ void on_low_bat_evt();
 */
 void base_timer_handler(void * p_context);
 
+void sensor_timer_handler(void * p_context);
 
 void watchdog_timer_handler(void * p_context);
 

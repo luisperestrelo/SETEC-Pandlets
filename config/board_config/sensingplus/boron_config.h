@@ -66,7 +66,7 @@
 #if AMBIENT_SERVICE_ENABLED
 
 #define TEMP_ENABLED                        1      							      //Enables External Temperature sensor
-#define PR_ENABLED                          1      							      //Enables Pressure sensor
+#define PR_ENABLED                          0      							      //Enables Pressure sensor
 #define HUM_ENABLED							1      							      //Enables Humidity sensor
 #define HUMSOLO_ENABLED						1      							      //Enables Humidity solo sensor
 #define LUM_ENABLED							1      							      //Enables Luminosity sensor

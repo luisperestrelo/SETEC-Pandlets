@@ -65,16 +65,12 @@ static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0
 #define AMBIENT_UUID_RAIN_CHAR                  0x1149  //Rain Values
 #define AMBIENT_UUID_RAIN_CONFIG_CHAR           0x1150  //Rain Configuration
 
-#define AMBIENT_UUID_UV_CHAR                    0x1151  //UV Values
-#define AMBIENT_UUID_UV_CONFIG_CHAR             0x1152  //UV Configuration
-
 #define AMB_TEMP_MAX_PACKET_VALUE               0x04   //4 byte per packet
 #define AMB_PR_MAX_PACKET_VALUE                 0x04   //4 byte per packet
 #define AMB_HUM_MAX_PACKET_VALUE                0x04   //4 byte per packet   
 #define AMB_HUMSOLO_MAX_PACKET_VALUE            0x04   //4 byte per packet
 #define AMB_LUM_MAX_PACKET_VALUE                0x04   //4 byte per packet  
 #define AMB_RAIN_MAX_PACKET_VALUE            	0x04   //4 byte per packet
-#define AMB_UV_MAX_PACKET_VALUE                	0x04   //4 byte per packet
 #define AMB_SD_MAX_PACKET_VALUE                 0x14   //20 byte per packet
 #define AMB_ALERT_MAX_PACKET_VALUE              0x01   //1 byte per packet
 #define INST_RX_PACKET_VALUE               		0x0C   //12 byte per packet
@@ -100,8 +96,7 @@ typedef enum
     BLE_AMBIENT_SD,
     BLE_AMBIENT_INST,
     BLE_AMBIENT_ALERT,
-    BLE_AMBIENT_RAIN,
-    BLE_AMBIENT_UV
+    BLE_AMBIENT_RAIN
     
 } ble_ambient_sensor_type;
 
@@ -116,8 +111,7 @@ typedef enum
     BLE_AMBIENT_EVT_SD_CONFIG_CHANGED,
     BLE_AMBIENT_EVT_INST_CONFIG_CHANGED,
     BLE_AMBIENT_EVT_ALERT_CONFIG_CHANGED,
-    BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED,
-    BLE_AMBIENT_EVT_UV_CONFIG_CHANGED
+    BLE_AMBIENT_EVT_RAIN_CONFIG_CHANGED
 } ble_ambient_evt_type_t;
 
 /**@brief Maps all update types. Really useful for a compact update function.*/
@@ -175,10 +169,6 @@ typedef struct
 	
 	#if RAIN_ENABLED
     uint8_t                       rain_init_configuration;                      // Sensor configuration value to init the struct.
-	#endif
-	
-	#if UV_ENABLED
-    uint8_t                       uv_init_configuration;                      // Sensor configuration value to init the struct.
 	#endif
 
 	#if SD_ENABLED
@@ -342,6 +332,9 @@ uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configu
 void rtc_timer_handler(void * p_context);
 
 void sd_timer_handler(void * p_context);
+/**@brief Function for starting the application timers.
+ */
+void application_work_start(void *data, uint16_t size);
 
 
 /**@brief Function for updating the Install config values.

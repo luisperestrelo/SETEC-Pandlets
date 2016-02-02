@@ -69,7 +69,7 @@ uint32_t lum_values_handler() {
 	
 	
 	if (err_code != NRF_SUCCESS) {
-		lum_printf("lum: SparkFunTSL2561_bring_the_light failed.\r\n");
+	//	lum_printf("lum: SparkFunTSL2561_bring_the_light failed.\r\n");
 		return err_code;
 	}
 	
@@ -79,7 +79,7 @@ uint32_t lum_values_handler() {
 	sprintf(buf, ",%s", val);
 	log2sd(buf, "READINGS.txt");
 
-	lum_printf("Luminosity: %d\r\n", (int)lum_buffer);
+//	lum_printf("Luminosity: %d\r\n", (int)lum_buffer);
 
 	err_code = ble_ambient_sensor_update(m_lum.m_amb, (uint8_t *) &lum_buffer,
 			AMB_LUM_MAX_PACKET_VALUE, BLE_AMBIENT_LUM);

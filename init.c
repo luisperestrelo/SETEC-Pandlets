@@ -63,6 +63,7 @@ void timers_init(void){
 
     // Create timers.
     APP_ERROR_CHECK(app_timer_create(&m_base_timer_id, APP_TIMER_MODE_REPEATED, base_timer_handler));
+    APP_ERROR_CHECK(app_timer_create(&m_sensor_timer_id, APP_TIMER_MODE_REPEATED,sensor_timer_handler));
     APP_ERROR_CHECK(app_timer_create(&m_gauge_timer_id, APP_TIMER_MODE_REPEATED, gauge_timer_handler));
     APP_ERROR_CHECK(app_timer_create(&m_watchdog_timer_id, APP_TIMER_MODE_REPEATED, watchdog_timer_handler));
     APP_ERROR_CHECK(app_timer_create(&m_rtc_timer_id, APP_TIMER_MODE_REPEATED, rtc_timer_handler));
@@ -232,20 +233,8 @@ void services_init(void){
     amb_init.rain_init_configuration = RAIN_INITIAL_CONFIG;
 	#endif
 	
-	#if UV_ENABLED
-    amb_init.uv_init_configuration = UV_INITIAL_CONFIG;
-	#endif
-	
 	#if SD_ENABLED
     amb_init.sd_init_configuration = SD_INITIAL_CONFIG;
-	#endif
-	
-	#if INST_ENABLED
-    amb_init.inst_init_configuration = INST_INITIAL_CONFIG;
-	#endif
-	
-	#if ALERT_ENABLED
-    amb_init.alert_init_configuration = ALERT_INITIAL_CONFIG;
 	#endif
 
     err_code = ble_ambient_init(&m_amb, &amb_init); //perform service initiation
@@ -389,11 +378,6 @@ void sensors_init(void){
 	APP_ERROR_CHECK(rain_configs_update());
 	#endif /* RAIN_ENABLED */
 	
-	#if SD_ENABLED
-	APP_ERROR_CHECK(sd_init(&m_amb));
-//	APP_ERROR_CHECK(sd_configs_update());
-	#endif /* SD_ENABLED */
-	
 #endif
 
 	twi_busy = false;
@@ -450,10 +434,6 @@ void application_work_start(void *data, uint16_t size){
 	
 	#if RAIN_ENABLED == 1
 	flag |= (m_rain.IS_RAIN_ENABLED);
-	#endif
-	
-	#if SD_ENABLED == 1
-	flag |= (m_sd2app.IS_SD_ENABLED);
 	#endif
 		
 	if(flag){
