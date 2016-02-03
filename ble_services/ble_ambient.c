@@ -1209,8 +1209,6 @@ uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configu
  */
 void rtc_timer_handler(void * p_context){
 	increTimeStamp();
-	//timeStamp2++; //Increment timestamp
-	//printf("TIMESTAMPA NA CONA: %d\n", (int)getTimeStamp());
 }
 
 

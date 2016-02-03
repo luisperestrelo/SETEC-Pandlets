@@ -29,8 +29,8 @@
 #define IS_SRVC_CHANGED_CHARACT_PRESENT   0                                     // Include or not the service_changed characteristic.
 
 #ifdef BORON
-#define DEVICE_NAME                       "UVA-1"								// Name of device. Will be included in the advertising data.
-#define DEVICE_ID                         1										// ID of device. Will be included in the advertising data.
+#define DEVICE_NAME                       "UVA-2"								// Name of device. Will be included in the advertising data.
+#define DEVICE_ID                         2										// ID of device. Will be included in the advertising data.
 #endif
 
 #define READ_FREQ			  			  10000
