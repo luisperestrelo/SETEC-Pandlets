@@ -64,7 +64,7 @@ uint32_t temp_values_handler() {
 
 	char val[20];
 	char time_val[20];
-	add_zeroes((int)temp_buffer, val);
+	add_zeroes_temp((int)temp_buffer, val);
 	add_zeroes((int)getTimeStamp(), time_val);
 	char buf[20];
 	sprintf(buf, "\n%d,%s,%s", DEVICE_ID,time_val,val);

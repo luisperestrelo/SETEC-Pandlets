@@ -74,7 +74,7 @@ uint32_t lum_values_handler() {
 	//	lum_printf("lum: SparkFunTSL2561_bring_the_light failed.\r\n");
 		return err_code;
 	}
-	
+		
    	char val[20];
 	add_zeroes((int)lum_buffer, val);
     char buf[20];

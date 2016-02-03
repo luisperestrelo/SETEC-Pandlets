@@ -69,10 +69,10 @@ uint32_t humsolo_values_handler() {
 		//return err_code;
 	//}
 	
-	char val[20];
-	add_zeroes((int)humsolo_buffer, val); //HANSOLO
+	//char val[20];
+	//add_zeroes((int)humsolo_buffer, val); //HANSOLO
     char buf[20];
-	sprintf(buf, ",%s", val);
+	sprintf(buf, ",%3d", (int)humsolo_buffer*100/4095);
 	log2sd(buf, "READINGS.txt");
 
 //	humsolo_printf("Humidity Soil: %d\r\n", (int)humsolo_buffer);

@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "utils.h"
 
 #define AMB_NUMBER_OF_SENSORS 10
 #define BYTES_PER_LINE 8 * (AMB_NUMBER_OF_SENSORS - 6) + 1 + 2 + 6 + 10
@@ -85,23 +86,73 @@ void add_zeroes_twenty(int val, char buf[]){
 		sprintf(buf, "%d", val);
 }
 
-void add_zeroes(int val, char buf[]){ // vao ter todos 8
+void add_zeroes(int val, char buf[]){ // vao ter todos 6
 	if (val < 10)
-		sprintf(buf, "0000000%d", val);
-	else if (val < 100)
-		sprintf(buf, "000000%d", val);
-	else if (val < 1000)
 		sprintf(buf, "00000%d", val);
-	else if (val < 10000)
+	else if (val < 100)
 		sprintf(buf, "0000%d", val);
-	else if (val < 100000)
+	else if (val < 1000)
 		sprintf(buf, "000%d", val);
-	else if (val < 1000000)
+	else if (val < 10000)
+		sprintf(buf, "00%d", val);
+	else if (val < 100000)
+		sprintf(buf, "0%d", val);
+	/*else if (val < 1000000)
 		sprintf(buf, "00%d", val);
 	else if (val < 10000000)
-		sprintf(buf, "0%d", val);
+		sprintf(buf, "0%d", val); */
 	else
 		sprintf(buf, "%d", val);
+}
+
+
+
+void add_zeroes_temp(int val, char buf[]){ // vai ter 5
+	int neg = 0;
+	
+	if (val<0)
+		{
+			neg=1;
+			val = val * -1;
+		}
+		
+	if(neg){
+		if (val < 10) 
+			sprintf(buf, "-000%d", val);
+		else if (val < 100)
+			sprintf(buf, "-00%d", val);
+		else if (val < 1000)
+			sprintf(buf, "-0%d", val);
+		else if (val < 10000)
+			sprintf(buf, "-%d", val);
+		/*else if (val < 100000)
+			sprintf(buf, "0%d", val);
+		else if (val < 1000000)
+			sprintf(buf, "00%d", val);
+		else if (val < 10000000)
+			sprintf(buf, "0%d", val); */
+		else
+			sprintf(buf, "%d", val);
+		}
+		
+		else{
+		if (val < 10) 
+			sprintf(buf, "0000%d", val);
+		else if (val < 100)
+			sprintf(buf, "000%d", val);
+		else if (val < 1000)
+			sprintf(buf, "00%d", val);
+		else if (val < 10000)
+			sprintf(buf, "0%d", val);
+		/*else if (val < 100000)
+			sprintf(buf, "0%d", val);
+		else if (val < 1000000)
+			sprintf(buf, "00%d", val);
+		else if (val < 10000000)
+			sprintf(buf, "0%d", val); */
+		else
+			sprintf(buf, "%d", val);
+		}
 }
 
 #if SD_LOG

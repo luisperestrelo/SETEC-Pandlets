@@ -37,6 +37,7 @@ FATFS sd_card;
 int log2sd(char* message, char *filename);
 int lerCartao();
 
+
 int changeFreq(int hourFreq, int maxDay);
 int deleteFile();
 int getBaseTimer();
@@ -66,6 +67,7 @@ uint64_t msec_to_ticks(uint32_t msec);
 char * itoa_embedded (int32_t value, char *result, int base, const int value_type);
 void check_ble_service_err_code(uint32_t err_code);
 
+void add_zeroes_temp(int val, char buf[]);
 void add_zeroes_twenty(int val, char buf[]);
 void add_zeroes(int val, char buf[]);
 

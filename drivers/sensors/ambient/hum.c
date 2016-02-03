@@ -60,10 +60,11 @@ uint32_t hum_values_handler() {
 		return err_code;
 	}
 	
-	char val[20];
-	add_zeroes((int)hum_buffer, val);
-    	char buf[20];
-	sprintf(buf, ",%s", val);
+	//char val[20];
+	//add_zeroes((int)hum_buffer, val);
+	
+    char buf[20];
+	sprintf(buf, ",%3d", (int)hum_buffer*100/65535);
 	log2sd(buf, "READINGS.txt");
 
 //	hum_printf("Humidity: %d\r\n", (int)hum_buffer);
