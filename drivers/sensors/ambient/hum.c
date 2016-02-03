@@ -68,6 +68,7 @@ uint32_t hum_values_handler() {
 
 //	hum_printf("Humidity: %d\r\n", (int)hum_buffer);
 
+  //  hum_printf("li\n");    
 	//err_code = ble_ambient_sensor_update(m_hum.m_amb, (uint8_t *) &hum_buffer,
 			//AMB_HUM_MAX_PACKET_VALUE, BLE_AMBIENT_HUM);
 	check_ble_service_err_code(err_code);

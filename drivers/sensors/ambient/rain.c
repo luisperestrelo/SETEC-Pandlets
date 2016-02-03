@@ -57,11 +57,12 @@ uint32_t rain_values_handler() {
 	uint8_t rain_buffer;
 		
 	err_code = SparkFunMS1_read1(&rain_buffer);
-	
+		
     char buf[12];
 	sprintf(buf, ",%d", (int)err_code); //bool, has no zeroes.
 	log2sd(buf, "READINGS.txt");
-	
+   // rain_printf("li\n");    
+
 //	rain_printf("Rain: %d  value: %d \r\n", (int)err_code,(int)rain_buffer);
 
 	err_code = ble_ambient_sensor_update(m_rain.m_amb, (uint8_t *) &err_code,

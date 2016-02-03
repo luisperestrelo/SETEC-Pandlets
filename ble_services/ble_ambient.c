@@ -3,6 +3,11 @@
 
 //static int flag_lido;
 
+FIL file_sens;       // File object
+ble_ambient_t * m_amb_sd;
+int bytes_sent = 0;
+int flag_sd = 0;
+
 #if AMBIENT_SERVICE_ENABLED
 
 
@@ -35,7 +40,6 @@ static void on_disconnect(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
  * @param[in]   p_ble_evt   Event received from the BLE stack.
  */
 static void on_write(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
-
 #if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || SD_ENABLED || INST_ENABLED || ALERT_ENABLED || HUMSOLO_ENABLED || RAIN_ENABLED
 	ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
 #endif
@@ -165,7 +169,7 @@ static void on_write(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
 		}
 	}
 	#endif
-	
+
     //***************** SD ***********************/
 	#if SD_ENABLED
 	//Sensor configuration written and with right size
@@ -256,6 +260,10 @@ void ble_ambient_on_ble_evt(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
 
         case BLE_GATTS_EVT_WRITE:
             on_write(p_amb, p_ble_evt);
+            break;
+            
+        case BLE_EVT_TX_COMPLETE:
+            sd_handler();
             break;
 
         default:
@@ -778,7 +786,7 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 	type_to_handle[4].config_handle = &(p_amb->humsolo_configuration_handles);
 	type_to_handle[4].value = (p_amb->humsolo_value);
 	#endif
-	
+
 	type_to_handle[5].type = BLE_AMBIENT_SD;
 	#if SD_ENABLED
 	type_to_handle[5].handle = &(p_amb->sd_handles);
@@ -798,14 +806,14 @@ static uint32_t sensors_char_add(ble_ambient_t * p_amb, const ble_ambient_init_t
 	type_to_handle[7].handle = &(p_amb->alert_handles);
 	type_to_handle[7].config_handle = &(p_amb->alert_configuration_handles);
 	type_to_handle[7].value = (p_amb->alert_value);
-	#endif
+	#endif	
 	
 	type_to_handle[8].type = BLE_AMBIENT_RAIN;
 	#if RAIN_ENABLED
 	type_to_handle[8].handle = &(p_amb->rain_handles);
 	type_to_handle[8].config_handle = &(p_amb->rain_configuration_handles);
 	type_to_handle[8].value = (p_amb->rain_value);
-	#endif
+	#endif	
 	
 	return err_code;	
 }
@@ -960,12 +968,9 @@ uint32_t ble_ambient_sensor_update(ble_ambient_t * p_amb, uint8_t * values, uint
 	return err_code;
 }
 
-FIL file_sens;       // File object
-ble_ambient_t * m_amb_sd;
-
 /**@brief Handles the SD reload.
  */
-void sd_timer_handler(void * p_context){
+/*void sd_timer_handler(void * p_context){
     
     char buf[AMB_SD_MAX_PACKET_VALUE];
 	unsigned int bytesread;
@@ -985,6 +990,41 @@ void sd_timer_handler(void * p_context){
 		f_close(&file_sens);
 		f_mount(NULL, "", 1);
 	}
+}*/
+
+void sd_handler() {
+	
+	if (flag_sd == 1) {
+	
+		if (bytes_sent >= f_size(&file_sens)) {
+			printf("bytes_sent >= f_size(&file_sens): %d\n", bytes_sent);
+			bytes_sent = 0;
+			flag_sd = 0;
+			f_close(&file_sens);
+			f_mount(NULL, "", 1);
+			return;
+		}
+		
+		char buf[AMB_SD_MAX_PACKET_VALUE];
+		unsigned int bytesread = 0;
+		
+		f_read(&file_sens, buf, AMB_SD_MAX_PACKET_VALUE, &bytesread);
+		int x=0;
+		printf("Data: ");
+		while(bytesread>x){
+				printf("%c",buf[x]);
+				x++;
+			}
+		printf("\n");
+		printf("Li %u bytes\n", bytesread);
+		//while (1) {
+			ble_ambient_sensor_update(m_amb_sd, (uint8_t *) buf, AMB_SD_MAX_PACKET_VALUE, BLE_AMBIENT_SD);/* == BLE_ERROR_NO_TX_BUFFERS)*/
+				//break;
+		//}
+		
+		bytes_sent += bytesread;
+		printf("bytes_sent: %d\n", bytes_sent);
+	}
 }
 
 
@@ -1002,7 +1042,10 @@ int lerCartao2(ble_ambient_t * m_amb){
 				return 0;
 			}
 			m_amb_sd = m_amb;
-			app_timer_start(m_sd_timer_id, APP_TIMER_TICKS(100, APP_TIMER_PRESCALER), NULL);
+			nrf_delay_ms(100);
+			flag_sd = 1;
+			sd_handler();
+			//app_timer_start(m_sd_timer_id, APP_TIMER_TICKS(200, APP_TIMER_PRESCALER), NULL);
 		} else {
 			printf("Unable to mount\n");
 		}
@@ -1025,7 +1068,6 @@ int lerCartao2(ble_ambient_t * m_amb){
  */
 uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configuration, ble_ambient_sensor_type type){
 	//new data!
-	
 #if TEMP_ENABLED || PR_ENABLED || HUM_ENABLED || LUM_ENABLED || HUMSOLO_ENABLED || RAIN_ENABLED || SD_ENABLED || INST_ENABLED || ALERT_ENABLED
 	uint16_t len = 1;
 #endif

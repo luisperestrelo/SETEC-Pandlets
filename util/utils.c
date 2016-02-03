@@ -1,12 +1,10 @@
 #include "utils.h"
 
 #define AMB_NUMBER_OF_SENSORS 10
-#define BYTES_PER_LINE 8 * (AMB_NUMBER_OF_SENSORS-6) + 1 + 2 + 6 + 10
+#define BYTES_PER_LINE 8 * (AMB_NUMBER_OF_SENSORS - 6) + 1 + 2 + 6 + 10
 //#define BYTES_PER_LINE 53 //
-//#define BYTES_START_OVERWRITE 2*7*24*BYTES_PER_LINE // 2 semanas, escritas de hora em hora, 55 bytes por linha.
-#define BYTES_START_OVERWRITE 644 // For testing.
-
-
+#define BYTES_START_OVERWRITE 2 * 7 * (24 * BYTES_PER_LINE) // 2 semanas, escritas de hora em hora, BYTES_PER_LINE bytes por linha.
+//#define BYTES_START_OVERWRITE 644 // For testing.
 uint64_t msec_to_ticks(uint32_t msec){
 	return msec/BASE_TIMER_FREQ;
 }
@@ -28,6 +26,12 @@ void check_ble_service_err_code(uint32_t err_code){
     }
 }
 
+
+/*void erase_line(FIL file)
+{
+	int i = 0;
+	while(fgets
+}*/
 
 void add_zeroes_twenty(int val, char buf[]){ 
 	if (val < 10)
@@ -85,6 +89,9 @@ uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_siz
 	//uint32_t buffer_file_size = 20;
 //	printf("POS: %d\n", file_position);
 //	printf("WRITING : %d BYTES\n", (int)buffer_size);
+
+
+
 	
 	//Open file
 	if(f_open(&file, filename, FA_OPEN_ALWAYS | FA_WRITE ) != FR_OK){ //Could be that the file already exists
@@ -93,6 +100,7 @@ uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_siz
 		return SD_LOG_FAILED;
 				}
 		}
+//	printf("Abriu\n");
 //	printf("FILE SIZE : %d\n", (int)f_size(&file));
 
 	UINT aux = 0;	
@@ -126,7 +134,9 @@ uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_siz
 	if(f_lseek(&file, file_position) != FR_OK){
 //		printf("RETURN 2");
 		return SD_LOG_FAILED;
-	}
+				}
+
+//	printf("Fez Seek\n");
 
 	//Move pointer to the beginning of the new data
 	/*if(f_lseek(&file, f_size(&file) - buffer_size) != FR_OK)
@@ -142,6 +152,9 @@ uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_siz
 	
 	file_position_prev = file_position;
 	
+
+
+		
 //	printf("data: %s\n", data);
 
 	if (!strcmp(filename, "READINGS.txt") && (int) buffer_size < 25 && data != NULL && strlen(data) < 25 && strlen(data) > 0){
@@ -149,6 +162,7 @@ uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_siz
 			//printf("RETURN 3");
 			return SD_LOG_FAILED;
 		}
+		printf("Fez write\n");		
 		file_position += (int) buffer_size;
 	}
 	
@@ -156,9 +170,13 @@ uint32_t log_to_sd(const char * filename, const char * data, uint32_t buffer_siz
 	if (file_position - file_position_prev > 40)
 		file_position = file_position_prev;
 		
-	//	printf("**************FILE_POSITION (AFTER SUMMATION): %d\n", file_position);
+	
+
+//	printf("**************FILE_POSITION (AFTER SUMMATION): %d\n", file_position);
 
 	f_close(&file);
+	
+//	printf("Fechou\n");
 }
 
 int log2sd(char* message, char *filename){ // returns -1 if SD_LOG is disabled

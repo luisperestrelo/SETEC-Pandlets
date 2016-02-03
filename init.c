@@ -67,7 +67,7 @@ void timers_init(void){
     APP_ERROR_CHECK(app_timer_create(&m_gauge_timer_id, APP_TIMER_MODE_REPEATED, gauge_timer_handler));
     APP_ERROR_CHECK(app_timer_create(&m_watchdog_timer_id, APP_TIMER_MODE_REPEATED, watchdog_timer_handler));
     APP_ERROR_CHECK(app_timer_create(&m_rtc_timer_id, APP_TIMER_MODE_REPEATED, rtc_timer_handler));
-    APP_ERROR_CHECK(app_timer_create(&m_sd_timer_id, APP_TIMER_MODE_REPEATED, sd_timer_handler));
+    //APP_ERROR_CHECK(app_timer_create(&m_sd_timer_id, APP_TIMER_MODE_REPEATED, sd_timer_handler));
 }
 
 
@@ -377,7 +377,7 @@ void sensors_init(void){
 	APP_ERROR_CHECK(rain_init(&m_amb));
 	APP_ERROR_CHECK(rain_configs_update());
 	#endif /* RAIN_ENABLED */
-	
+		
 #endif
 
 	twi_busy = false;
@@ -435,7 +435,7 @@ void application_work_start(void *data, uint16_t size){
 	#if RAIN_ENABLED == 1
 	flag |= (m_rain.IS_RAIN_ENABLED);
 	#endif
-		
+	
 	if(flag){
 		APP_ERROR_CHECK(app_timer_start(m_base_timer_id,
 			APP_TIMER_TICKS(BASE_TIMER_FREQ, APP_TIMER_PRESCALER), NULL));

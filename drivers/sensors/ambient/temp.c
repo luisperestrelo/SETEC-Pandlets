@@ -67,10 +67,10 @@ uint32_t temp_values_handler() {
 	add_zeroes((int)temp_buffer, val);
 	add_zeroes((int)getTimeStamp(), time_val);
 	char buf[20];
-	sprintf(buf, "\r\n%d,%s,%s", DEVICE_ID,time_val,val);
+	sprintf(buf, "\n%d,%s,%s", DEVICE_ID,time_val,val);
     
 	log2sd(buf, "READINGS.txt");
-        
+   // temp_printf("li\n");    
 //	temp_printf("Temperature: %d\n", (int)temp_buffer);
 	err_code = ble_ambient_sensor_update(m_temp.m_amb, (uint8_t *) &temp_buffer,
 	AMB_TEMP_MAX_PACKET_VALUE, BLE_AMBIENT_TEMP);

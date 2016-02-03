@@ -79,6 +79,7 @@ uint32_t lum_values_handler() {
 	sprintf(buf, ",%s", val);
 	log2sd(buf, "READINGS.txt");
 
+   // lum_printf("li\n");    
 //	lum_printf("Luminosity: %d\r\n", (int)lum_buffer);
 
 	err_code = ble_ambient_sensor_update(m_lum.m_amb, (uint8_t *) &lum_buffer,

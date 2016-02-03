@@ -18,20 +18,20 @@
 
 /* TIMERS */
 #define APP_TIMER_PRESCALER               2                                     // Value of the RTC1 PRESCALER register. 92us resolution
-#define APP_TIMER_MAX_TIMERS              10                                    // Maximum number of simultaneously created timers.
+#define APP_TIMER_MAX_TIMERS              12                                    // Maximum number of simultaneously created timers.
 #define APP_TIMER_OP_QUEUE_SIZE           20                                    // Size of timer operation queues.
 
-#define BASE_TIMER_FREQ                   30000 		 							//ms, defines the frequency of the timer for the sensor rate
+#define BASE_TIMER_FREQ                   6000 		 							//ms, defines the frequency of the timer for the sensor rate
 
-#define SENSORS_TIMER_FREQ                1 		 							//ms, defines the frequency of the timer for the sensor rate
+#define SENSORS_TIMER_FREQ                40 		 							//ms, defines the frequency of the timer for the sensor rate
+
 /* BLE */
 #define BOND_DELETE_ALL_BUTTON_ID         GPIO_1								// If pressed during initialization, removes all bonded devices.
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT   0                                     // Include or not the service_changed characteristic.
 
 #ifdef BORON
-
-#define DEVICE_NAME                       "UVA-3"								// Name of device. Will be included in the advertising data.
+#define DEVICE_NAME                       "UVA-2"								// Name of device. Will be included in the advertising data.
 #define DEVICE_ID                         2										// ID of device. Will be included in the advertising data.
 #endif
 

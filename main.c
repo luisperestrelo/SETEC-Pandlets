@@ -341,7 +341,7 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 			APP_ERROR_CHECK(rain_configs_update()); //Update Rain configurations.
             break;
 		#endif
-		
+
 		#if HUM_ENABLED == 1
 		case BLE_AMBIENT_EVT_HUM_CONFIG_CHANGED:
         	printf("BLE_AMBIENT_EVT_HUM_CONFIG_CHANGED: 0x%x\n", m_amb.hum_configuration);
@@ -449,6 +449,7 @@ void sensor_timer_handler(void * p_context){
 			STATE = 0;
 		}
 		#endif
+
 	}
 
 #endif
@@ -551,18 +552,19 @@ int main(void){
                 
     // Start execution
     advertising_start();
+    
 
     // Enter main loop
     for (;;){
 		app_sched_execute();
 		power_manage(); //go to sleep
 		
-			int x=(int)mpu9x50_getInterruptStatus();
-			if (x>60) {
-					mpu9x50_reset();
-					mpu9x50_initMoveSensor(MPU_ADDRESS);
-					setflagACC(0xF);
-					printf("moved: %d\n",x);
-				}
+			//int x=(int)mpu9x50_getInterruptStatus();
+			//if (x>60) {
+					//mpu9x50_reset();
+					//mpu9x50_initMoveSensor(MPU_ADDRESS);
+					//setflagACC(0xF);
+					//printf("moved: %d\n",x);
+				//}
     }
 }

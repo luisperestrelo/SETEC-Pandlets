@@ -29,7 +29,7 @@
 #include "nosso.h"
 
 app_timer_id_t				            m_rtc_timer_id;		        		    		// RTC timer for counting time
-app_timer_id_t				            m_sd_timer_id;		        		    		// SD timer for counting time
+//app_timer_id_t				            m_sd_timer_id;		        		    		// SD timer for counting time
 
 static const ble_uuid128_t AMBIENT_UUID_BASE = {{0xDD, 0xA3, 0x44, 0xA5, 0xFA, 0x22, 0xAD, 0x1A, 0x11, 0x21, 0x22, 0x22, 0x00, 0x00, 0x00, 0x00}};
 
@@ -246,14 +246,6 @@ typedef struct ble_ambient_s
 	uint8_t                       rain_configuration;      					   // Rain sensor configuration value placeholder.
 	#endif
 
-	#if UV_ENABLED == 1
-	ble_gatts_char_handles_t      uv_handles;                                 // Handles related to the UV value characteristic.
-	ble_gatts_char_handles_t      uv_configuration_handles;                   // Handles related to the UV sensor configuration characteristic.
-
-	uint8_t                       uv_value[AMB_UV_MAX_PACKET_VALUE];         // UV value placeholder.
-	uint8_t                       uv_configuration;      					   // UV sensor configuration value placeholder.
-	#endif
-	
 	#if SD_ENABLED == 1
 	ble_gatts_char_handles_t      sd_handles;                                 // Handles related to the SD value characteristic.
 	ble_gatts_char_handles_t      sd_configuration_handles;                   // Handles related to the SD configuration characteristic.
@@ -331,7 +323,9 @@ uint32_t ble_ambient_config_update(ble_ambient_t * p_amb, uint8_t sensor_configu
 
 void rtc_timer_handler(void * p_context);
 
-void sd_timer_handler(void * p_context);
+//void sd_timer_handler(void * p_context);
+void sd_handler();
+
 /**@brief Function for starting the application timers.
  */
 void application_work_start(void *data, uint16_t size);

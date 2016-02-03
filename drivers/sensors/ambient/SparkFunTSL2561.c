@@ -76,7 +76,7 @@ uint32_t SparkFunTSL2561_init(){
 	
 	//Try to get the id
 	if (!SFE_TSL2561_getID(&ID)){
-		printf("Error getID\n");
+		//printf("Error getID\n");
 		return SparkFunTSL2561_INIT_NOK_ID;
 	}
 
@@ -102,13 +102,14 @@ uint32_t SparkFunTSL2561_init(){
 
 uint32_t SparkFunTSL2561_bring_the_light(uint32_t *lux){
 
-	SparkFunTSL2561_init();
+	if(SparkFunTSL2561_init()!=NRF_SUCCESS)
+		return SparkFunTSL2561_DATA_NOK;
 	
 	data0=data1=0;
 	//printf("SparkFunTSL2561_bring_the_light\n");
 	if (!SFE_TSL2561_getData(&data0,&data1))
 	{
-		printf("ERRO DATA NOK\n");
+	//	printf("ERRO DATA NOK\n");
 		return SparkFunTSL2561_DATA_NOK;
 	}
 
