@@ -16,8 +16,10 @@ uint32_t lum_init(ble_ambient_t *m_amb_init){
 	m_lum.timer_count           = 0;
 	m_lum.m_amb                 = m_amb_init;
 	m_lum.IS_LUM_ENABLED        = true;
+	
+	return SparkFunTSL2561_init();
 
-	return NRF_SUCCESS;
+	//return NRF_SUCCESS;
 }
 
 

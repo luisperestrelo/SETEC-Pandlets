@@ -559,12 +559,12 @@ int main(void){
 		app_sched_execute();
 		power_manage(); //go to sleep
 		
-			//int x=(int)mpu9x50_getInterruptStatus();
-			//if (x>60) {
-					//mpu9x50_reset();
-					//mpu9x50_initMoveSensor(MPU_ADDRESS);
-					//setflagACC(0xF);
-					//printf("moved: %d\n",x);
-				//}
+			int x=(int)mpu9x50_getInterruptStatus();
+			if (x>60) {
+				mpu9x50_reset();
+				mpu9x50_initMoveSensor(MPU_ADDRESS);
+				setflagACC(0xF);
+				printf("moved: %d\n",x);
+			}
     }
 }

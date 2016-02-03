@@ -21,9 +21,9 @@
 #define APP_TIMER_MAX_TIMERS              12                                    // Maximum number of simultaneously created timers.
 #define APP_TIMER_OP_QUEUE_SIZE           20                                    // Size of timer operation queues.
 
-#define BASE_TIMER_FREQ                   6000 		 							//ms, defines the frequency of the timer for the sensor rate
+#define BASE_TIMER_FREQ                   10000 		 							//ms, defines the frequency of the timer for the sensor rate
 
-#define SENSORS_TIMER_FREQ                40 		 							//ms, defines the frequency of the timer for the sensor rate
+#define SENSORS_TIMER_FREQ                1 		 							//ms, defines the frequency of the timer for the sensor rate
 
 /* BLE */
 #define BOND_DELETE_ALL_BUTTON_ID         GPIO_1								// If pressed during initialization, removes all bonded devices.
@@ -35,7 +35,7 @@
 #define DEVICE_ID                         2										// ID of device. Will be included in the advertising data.
 #endif
 
-#define READ_FREQ			  10000
+#define READ_FREQ			  			  10000
 
 #define MANUFACTURER_NAME                 "FhP-AICOS"							// Manufacturer. Will be passed to Device Information Service.
 #define APPEARANCE                        0		         					      // Appearance. Used for whatever is needed. Random value for now.
