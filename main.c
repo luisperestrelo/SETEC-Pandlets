@@ -388,74 +388,72 @@ void ble_amb_evt(ble_ambient_t * p_amb, ble_ambient_evt_t * p_evt){
 void sensor_timer_handler(void * p_context){
 	UNUSED_PARAMETER(p_context);
 	
-	static int STATE=0;
+	if(!getflag_sd()){
+			
+			static int STATE=0;
 	
-	
-	
-	
-	
-#if AMBIENT_SERVICE_ENABLED == 1
+		#if AMBIENT_SERVICE_ENABLED == 1
 
-	/*********** TEMP *************/
-	if (STATE == 0) {
-	#if TEMP_ENABLED == 1
-		if(!twi_busy)
-			{
-				if(NRF_SUCCESS == temp_values_handler()) //Call handler for Temp sensor
+			/*********** TEMP *************/
+			if (STATE == 0) {
+			#if TEMP_ENABLED == 1
+				if(!twi_busy)
+					{
+						if(NRF_SUCCESS == temp_values_handler()) //Call handler for Temp sensor
+						STATE = 2;
+						}
+					#endif
+
+			}
+
+			/*********** PR *************/
+			else if (STATE == 1) {
+				#if PR_ENABLED == 0
+				//if(NRF_SUCCESS == pr_values_handler()); //Call handler for Pr sensor
 				STATE = 2;
+				#endif
+			}
+			
+			/*********** LUM *************/
+			else if (STATE == 2) {
+				#if LUM_ENABLED == 1
+				if(!twi_busy && NRF_SUCCESS == lum_values_handler()) //Call handler for Lum sensor
+				STATE = 3;
+				#endif
+
+			}
+
+			else if (STATE == 3) {
+			/*********** HUM *************/
+				#if HUM_ENABLED == 1
+				if(!twi_busy && NRF_SUCCESS == hum_values_handler()) //Call handler for Hum sensor
+					STATE = 4;
+				#endif
+			}
+			
+			else if (STATE == 4){
+			/*********** HUMSOLO *************/ //HANSOLO
+				#if HUMSOLO_ENABLED == 1
+				if(NRF_SUCCESS == humsolo_values_handler()) //Call handler for Hum solo sensor
+					STATE = 5;
+				#endif
+			}
+			
+			/*********** RAIN *************/
+			else if (STATE == 5) {
+				#if RAIN_ENABLED == 1
+				if(NRF_SUCCESS == rain_values_handler()){ //Call handler for Rain sensor
+					app_timer_stop(m_sensor_timer_id);
+					STATE = 0;
 				}
-			#endif
+				#endif
 
-	}
+			}
 
-	/*********** PR *************/
-	else if (STATE == 1) {
-		#if PR_ENABLED == 0
-		//if(NRF_SUCCESS == pr_values_handler()); //Call handler for Pr sensor
-		STATE = 2;
 		#endif
-	}
-	
-	/*********** LUM *************/
-	else if (STATE == 2) {
-		#if LUM_ENABLED == 1
-		if(!twi_busy && NRF_SUCCESS == lum_values_handler()) //Call handler for Lum sensor
-		STATE = 3;
-		#endif
-
-	}
-
-	else if (STATE == 3) {
-	/*********** HUM *************/
-		#if HUM_ENABLED == 1
-		if(!twi_busy && NRF_SUCCESS == hum_values_handler()) //Call handler for Hum sensor
-			STATE = 4;
-		#endif
-	}
-	
-	else if (STATE == 4){
-	/*********** HUMSOLO *************/ //HANSOLO
-		#if HUMSOLO_ENABLED == 1
-		if(NRF_SUCCESS == humsolo_values_handler()) //Call handler for Hum solo sensor
-			STATE = 5;
-		#endif
-	}
-	
-	/*********** RAIN *************/
-	else if (STATE == 5) {
-		#if RAIN_ENABLED == 1
-		if(NRF_SUCCESS == rain_values_handler()){ //Call handler for Rain sensor
-			app_timer_stop(m_sensor_timer_id);
-			STATE = 0;
 		}
-		#endif
 
-	}
 
-#endif
-
-	enable_high_voltage(false); //try to disable 5V sensors (checks if they are on)
-	
 }
 
 

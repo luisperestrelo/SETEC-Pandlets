@@ -3,13 +3,38 @@
 #define AMB_NUMBER_OF_SENSORS 10
 #define BYTES_PER_LINE 8 * (AMB_NUMBER_OF_SENSORS - 6) + 1 + 2 + 6 + 10
 //#define BYTES_PER_LINE 53 //
-#define BYTES_START_OVERWRITE 2 * 7 * (24 * BYTES_PER_LINE) // 2 semanas, escritas de hora em hora, BYTES_PER_LINE bytes por linha.
+//#define BYTES_START_OVERWRITE 2 * 7 * (24 * BYTES_PER_LINE) // 2 semanas, escritas de hora em hora, BYTES_PER_LINE bytes por linha.
 //#define BYTES_START_OVERWRITE 644 // For testing.
+
+
+static int BYTES_START_OVERWRITE = 7 * (12 * BYTES_PER_LINE);
+
+static int BASE_TIMER_FREQ= 6000;		 							//ms, defines the frequency of the timer for the sensor rate
+
+
+
+int changeFreq(int hourFreq, int maxDay){
+	
+	
+	BYTES_START_OVERWRITE = maxDay * ((24/hourFreq) * BYTES_PER_LINE);
+	//BASE_TIMER_FREQ = hourFreq*3600*1000;
+	BASE_TIMER_FREQ = 6000;
+}
+	
+int getBaseTimer(){
+	return BASE_TIMER_FREQ;
+	}
+
+	
+int deleteFile(){
+	  f_unlink ("READINGS.txt");
+	}
+	
 uint64_t msec_to_ticks(uint32_t msec){
 	return msec/BASE_TIMER_FREQ;
 }
-
-
+	
+	
 /**@brief Function for checking ble_acl error codes.
  *
  * @param[in]   err_code   Error code containing information about what went wrong.
