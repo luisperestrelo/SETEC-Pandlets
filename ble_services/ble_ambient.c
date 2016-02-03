@@ -6,7 +6,6 @@
 FIL file_sens;       // File object
 ble_ambient_t * m_amb_sd;
 int bytes_sent = 0;
-int flag_sd = 0;
 
 #if AMBIENT_SERVICE_ENABLED
 
@@ -31,6 +30,12 @@ static void on_connect(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
 static void on_disconnect(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
     UNUSED_PARAMETER(p_ble_evt);
     p_amb->conn_handle = BLE_CONN_HANDLE_INVALID;
+    if(getflag_sd()==1){
+		bytes_sent = 0;
+		setflag_sd(0);
+		f_close(&file_sens);
+		f_mount(NULL, "", 1);
+	}
 }
 
 
@@ -194,13 +199,13 @@ static void on_write(ble_ambient_t * p_amb, ble_evt_t * p_ble_evt){
     //***************** INST ***********************/
 	#if INST_ENABLED
 	//Sensor configuration written and with right size
-	printf("p_evt_write->len: %d\n", (int)p_evt_write->len);
-	printf("INST_RX_PACKET_VALUE: %d\n", (int)INST_RX_PACKET_VALUE);
-	int i=0;
-	while (i<p_evt_write->len) {
-		printf("Valor %d: %d\n", i+1, (int)p_evt_write->data[i]);
-		i++;
-	}
+	//printf("p_evt_write->len: %d\n", (int)p_evt_write->len);
+	//printf("INST_RX_PACKET_VALUE: %d\n", (int)INST_RX_PACKET_VALUE);
+	//int i=0;
+	//while (i<p_evt_write->len) {
+		//printf("Valor %d: %d\n", i+1, (int)p_evt_write->data[i]);
+		//i++;
+	//}
 	if((p_evt_write->handle == p_amb->inst_configuration_handles.value_handle) &&
 			(p_evt_write->len == INST_RX_PACKET_VALUE)) {
 		if (p_amb->evt_handler != NULL){
@@ -994,12 +999,12 @@ uint32_t ble_ambient_sensor_update(ble_ambient_t * p_amb, uint8_t * values, uint
 
 void sd_handler() {
 	
-	if (flag_sd == 1) {
+	if (getflag_sd() == 1) {
 	
 		if (bytes_sent >= f_size(&file_sens)) {
 			printf("bytes_sent >= f_size(&file_sens): %d\n", bytes_sent);
 			bytes_sent = 0;
-			flag_sd = 0;
+			setflag_sd(0);
 			f_close(&file_sens);
 			f_mount(NULL, "", 1);
 			return;
@@ -1043,7 +1048,7 @@ int lerCartao2(ble_ambient_t * m_amb){
 			}
 			m_amb_sd = m_amb;
 			nrf_delay_ms(100);
-			flag_sd = 1;
+			setflag_sd(1);
 			sd_handler();
 			//app_timer_start(m_sd_timer_id, APP_TIMER_TICKS(200, APP_TIMER_PRESCALER), NULL);
 		} else {
@@ -1217,6 +1222,7 @@ uint32_t ble_install_config_update(ble_ambient_t * p_amb, uint8_t * sensor_confi
 	uint32_t err_code = NRF_SUCCESS;
 	uint8_t gpsArray[8];
 	uint8_t timeArray[4];
+	//uint8_t configArray[4];
 	unsigned long timestampArray;
 	int i=0;
 	
@@ -1230,10 +1236,14 @@ uint32_t ble_install_config_update(ble_ambient_t * p_amb, uint8_t * sensor_confi
 			gpsArray[i] = sensor_configuration[i];
 			i++;
 		}
-		while (i<INST_RX_PACKET_VALUE) {
+		while (i<INST_RX_PACKET_VALUE/*-4*/) {
 			timeArray[i-INST_TX_PACKET_VALUE] = sensor_configuration[i];
 			i++;
 		}
+		//while (i<INST_RX_PACKET_VALUE) {
+			//configArray[i-INST_TX_PACKET_VALUE-4] = sensor_configuration[i];
+			//i++;
+		//}
 
 		// Update database
 		err_code = sd_ble_gatts_value_set(p_amb->inst_configuration_handles.value_handle,
@@ -1242,6 +1252,12 @@ uint32_t ble_install_config_update(ble_ambient_t * p_amb, uint8_t * sensor_confi
 										  gpsArray);
 		
 		timestampArray = (timeArray[0] << 24) + (timeArray[1] << 16) + (timeArray[2] << 8) + timeArray[3];
+		
+		/*changeFreq(configArray[0],configArray[3]);*/
+		
+		//deleteFile();
+		
+		
 		printf("TIMESTAMP RECEBIDO: %d\n", (int)timestampArray);
 		setTimeStamp(timestampArray);
 		app_timer_stop(m_rtc_timer_id);

@@ -5,6 +5,7 @@
 static unsigned long timeStamp2 = 0;
 static unsigned long flagBAT = 0;
 static unsigned long flagACC = 0;
+static int flag_sd = 0;
 
 unsigned long getTimeStamp(){
 	
@@ -20,6 +21,11 @@ unsigned long getflagACC(){
 	return flagACC;
 }
 
+unsigned long getflag_sd(){
+	
+	return flag_sd;
+}
+
 void setTimeStamp(unsigned long x){
 	
 	timeStamp2=x;
@@ -33,6 +39,11 @@ void setflagBAT(unsigned long x){
 void setflagACC(unsigned long x){
 	
 	flagACC=x;
+}
+
+void setflag_sd(unsigned long x){
+	
+	flag_sd=x;
 }
 
 void increTimeStamp(){

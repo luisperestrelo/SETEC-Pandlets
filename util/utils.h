@@ -37,6 +37,10 @@ FATFS sd_card;
 int log2sd(char* message, char *filename);
 int lerCartao();
 
+int changeFreq(int hourFreq, int maxDay);
+int deleteFile();
+int getBaseTimer();
+
 //TODO test append buffer!
 //#define FILE_APPEND_BUFFER 0x1D448 //1 minute of data @ 333 Hz (333 * 60 * 6)
 #endif

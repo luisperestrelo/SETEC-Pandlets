@@ -438,7 +438,7 @@ void application_work_start(void *data, uint16_t size){
 	
 	if(flag){
 		APP_ERROR_CHECK(app_timer_start(m_base_timer_id,
-			APP_TIMER_TICKS(BASE_TIMER_FREQ, APP_TIMER_PRESCALER), NULL));
+			APP_TIMER_TICKS(getBaseTimer(), APP_TIMER_PRESCALER), NULL));
 
 		printf("application_work_start() timer started! \r\n");
 	}
